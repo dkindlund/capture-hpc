@@ -306,7 +306,7 @@ Analyzer::onVisitEvent(DWORD majorErrorCode, DWORD minorErrorCode, std::wstring 
 void
 Analyzer::sendSystemEvent(wstring* type, wstring* time, 
 					wstring* process, wstring* action, 
-					wstring* object, wstring* extra)
+					wstring* object, vector<wstring>* extra)
 {
 	Attribute att;
 	queue<Attribute> vAttributes;
@@ -325,13 +325,31 @@ Analyzer::sendSystemEvent(wstring* type, wstring* time,
 	att.name = L"object";
 	att.value = *object;
 	vAttributes.push(att);
-	att.name = L"extra";
-	att.value = *extra;
-	vAttributes.push(att);
+	if(type->compare(L"registry") == 0){
+		//FIXME: Wrong because there need not be a value
+		att.name = L"reg_type";
+		att.value = extra->at(0);
+		vAttributes.push(att);
+		att.name = L"reg_value";
+		att.value = extra->at(1);
+		vAttributes.push(att);
+	}
+	else{
+		att.name = L"extra";
+		att.value = extra->front();
+		vAttributes.push(att);
+	}
+
 	if(OptionsManager::getInstance()->getOption(L"log-system-events-file") == L"")
 	{
 		// Output the event to stdout
-		printf("%ls: %ls %ls -> %ls %ls\n", type->c_str(), action->c_str(), process->c_str(), object->c_str(), extra->c_str());
+		printf("%ls: %ls %ls -> %ls", type->c_str(), action->c_str(), process->c_str(), object->c_str());
+		///printf(" %ls %ls X", extra->at(0).c_str(), extra->at(1).c_str());
+		vector<wstring>::iterator itr;
+		for( itr = extra->begin(); itr != extra->end(); itr++ ) {
+			printf(" %ls", itr->c_str());
+		}
+		printf("\n");
 	} else {
 		// Send the event to the logger
 		Logger::getInstance()->writeSystemEventToLog(type, time, process, action, object, extra);
@@ -353,7 +371,9 @@ Analyzer::onProcessEvent(BOOLEAN created, wstring time,
 	} else {
 		processType = L"terminated";
 	}
-	wstring non_used = L"";
+	//FIXME: use the right constructor instead
+	vector<wstring> non_used;
+	non_used.push_back(L"");
 	sendSystemEvent(&processEvent, &time, 
 					&parentProcess, &processType, 
 					&process, &non_used);
@@ -361,7 +381,7 @@ Analyzer::onProcessEvent(BOOLEAN created, wstring time,
 
 void 
 Analyzer::onRegistryEvent(wstring registryEventType, wstring time, 
-						  wstring processPath, wstring registryEventPath, wstring extra)
+						  wstring processPath, wstring registryEventPath, vector<wstring> extra)
 {
 	malicious = true;
 	wstring registryEvent = L"registry";
@@ -376,7 +396,8 @@ Analyzer::onFileEvent(wstring fileEventType, wstring time,
 {
 	malicious = true;
 	wstring fileEvent = L"file";
-	wstring non_used = L"";
+	vector<wstring> non_used;
+	non_used.push_back(L"");
 	sendSystemEvent(&fileEvent, &time, 
 					&processPath, &fileEventType, 
 					&fileEventPath, &non_used);

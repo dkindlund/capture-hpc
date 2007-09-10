@@ -97,7 +97,7 @@ public:
 		ever a malcious registry event occurs
 	*/
 	void onRegistryEvent(wstring registryEventType, wstring time, 
-						 wstring processPath, wstring registryEventPath, wstring extra);
+						 wstring processPath, wstring registryEventPath, vector<wstring> extra);
 	/*
 		Function: onFileEvent
 
@@ -143,7 +143,7 @@ private:
 		Helper method which parses the monitor events into a readible XML document
 		which can be saved to a file as a CSV or sent to the server.
 	*/
-	void sendSystemEvent(wstring* type, wstring* time, wstring* process, wstring* action, wstring* object, wstring* extra);
+	void sendSystemEvent(wstring* type, wstring* time, wstring* process, wstring* action, wstring* object, vector<wstring>* extra);
 	/*
 		Method: sendVisitEvent
 

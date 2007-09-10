@@ -263,64 +263,100 @@ RegistryMonitor::run()
 	
 					//Handle all the post-processing to format the data
 					wchar_t szTemp[256];
-					wstring extraData;
+					//wstring extraData;
+					wstring other;
+					vector<wstring> extraData;
 					switch(e->dataType){
 						case REG_NONE:
-							extraData.append(L"REG_NONE - ");
+							//extraData.append(L"REG_NONE - ");
+							extraData.push_back(L"REG_NONE");
+							extraData.push_back(L"");
 							break;
 						case REG_SZ:
-							extraData.append(L"REG_SZ - ");
-							extraData.append((wchar_t *)registryData);
+							//extraData.append(L"REG_SZ - ");
+							extraData.push_back(L"REG_SZ");
+							//extraData.append((wchar_t *)registryData);
+							extraData.push_back((wchar_t *)registryData);
 							break;
 						case REG_EXPAND_SZ:
-							extraData.append(L"REG_EXPAND_SZ - ");
-							extraData.append((wchar_t *)registryData);
+							//extraData.append(L"REG_EXPAND_SZ - ");
+							extraData.push_back(L"REG_EXPAND_SZ");
+							//extraData.append((wchar_t *)registryData);
+							extraData.push_back((wchar_t *)registryData);
 							break;
 						case REG_BINARY:
-							extraData.append(L"REG_BINARY - ");
+							//extraData.append(L"REG_BINARY - ");
+							extraData.push_back(L"REG_BINARY");
+							//FIXME: Better way?
 							if(e->dataLengthB < 256){
 								for(unsigned char n = 0; n < e->dataLengthB; n++){
 									swprintf_s(szTemp, 256, L"%x", registryData[n]);
-									extraData.append(szTemp);
+									other.append(szTemp);
 								}
+								extraData.push_back(other);
 							}
 							else{
 								for(unsigned short n = 0; n <= 255; n++){
 									swprintf_s(szTemp, 256, L"%x", registryData[n]);
-									extraData.append(szTemp);
+									other.append(szTemp);
 								}
+								extraData.push_back(other);
 							}
 							break;
 						case REG_DWORD:
-							extraData.append(L"REG_DWORD - ");
+							//extraData.append(L"REG_DWORD - ");
+							extraData.push_back(L"REG_DWORD");
 							swprintf_s(szTemp, 256, L"%lx", ((DWORD *)registryData)[0]);
-							extraData.append(szTemp);
+							//extraData.append(szTemp);
+							extraData.push_back(szTemp);
 							break;
 						case REG_DWORD_BIG_ENDIAN:
-							extraData.append(L"REG_DWORD_BIG_ENDIAN");
+							//extraData.append(L"REG_DWORD_BIG_ENDIAN");
+							extraData.push_back(L"REG_DWORD_BIG_ENDIAN");
+							//FIXME: Fill in
+							extraData.push_back(L"FILL IN");
 							break;
 						case REG_LINK:
-							extraData.append(L"REG_LINK");
+							//extraData.append(L"REG_LINK");
+							extraData.push_back(L"REG_LINK");
+							//FIXME: Fill in
+							extraData.push_back(L"FILL IN");
 							break;
 						case REG_MULTI_SZ:
-							extraData.append(L"REG_MULTI_SZ");
+							//extraData.append(L"REG_MULTI_SZ");
+							extraData.push_back(L"REG_MULTI_SZ");
+							//FIXME: Fill in
+							extraData.push_back(L"FILL IN");
 							break;
 						case REG_RESOURCE_LIST:
-							extraData.append(L"REG_RESOURCE_LIST");
+							//extraData.append(L"REG_RESOURCE_LIST");
+							extraData.push_back(L"REG_RESOURCE_LIST");
+							//FIXME: Fill in
+							extraData.push_back(L"FILL IN");
 							break;
 						case REG_FULL_RESOURCE_DESCRIPTOR:
-							extraData.append(L"REG_FULL_RESOURCE_DESCRIPTOR");
+							//extraData.append(L"REG_FULL_RESOURCE_DESCRIPTOR");
+							extraData.push_back(L"REG_FULL_RESOURCE_DESCRIPTOR");
+							//FIXME: Fill in
+							extraData.push_back(L"FILL IN");
 							break;
 						case REG_RESOURCE_REQUIREMENTS_LIST:
-							extraData.append(L"REG_RESOURCE_REQUIREMENTS_LIST");
+							//extraData.append(L"REG_RESOURCE_REQUIREMENTS_LIST");
+							extraData.push_back(L"REG_RESOURCE_REQUIREMENTS_LIST");
+							//FIXME: Fill in
 							break;
 						case REG_QWORD_LITTLE_ENDIAN:
-							extraData.append(L"REG_QWORD(_LITTLE_ENDIAN)");
+							//extraData.append(L"REG_QWORD");
+							extraData.push_back(L"REG_QWORD");
+							//FIXME: Fill in (higher priority, have seen this from VS)
+							extraData.push_back(L"FILL IN");
 							break;
 						default:
-							extraData.append(L"UNKNOWN TYPE! ");
-							swprintf_s(szTemp, 256, L" - %ld", e->dataType);
-							extraData.append(szTemp);
+							//extraData.append(L"UNKNOWN TYPE!");
+							extraData.push_back(L"UNKNOWN TYPE!");
+							swprintf_s(szTemp, 256, L"%ld", e->dataType);
+							//extraData.append(szTemp);
+							extraData.push_back(szTemp);
 							break;
 					}
 

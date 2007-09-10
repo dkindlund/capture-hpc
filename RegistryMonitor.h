@@ -154,7 +154,7 @@ typedef pair <wstring, wstring> ObjectPair;
 class RegistryMonitor : public Runnable, public Monitor
 {
 public:
-	typedef boost::signal<void (wstring, wstring, wstring, wstring, wstring)> signal_registryEvent;
+	typedef boost::signal<void (wstring, wstring, wstring, wstring, vector<wstring>)> signal_registryEvent;
 public:
 	RegistryMonitor(void);
 	virtual ~RegistryMonitor(void);

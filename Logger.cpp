@@ -47,7 +47,7 @@ Logger::convertToMultiByteString(wstring* message, size_t* charsConverted)
 void
 Logger::writeSystemEventToLog(wstring* type, wstring* time, 
 							  wstring* process, wstring* action, 
-							  wstring* object, wstring* extra)
+							  wstring* object, vector<wstring>* extra)
 {
 	if(isFileOpen())
 	{
@@ -61,8 +61,8 @@ Logger::writeSystemEventToLog(wstring* type, wstring* time,
 		message += *process;
 		message += L"\",\"";
 		message += *object;
-		message += L"\",\"";
-		message += *extra;
+//		message += L"\",\"";
+//		message += *extra;
 		message += L"\"\r\n";
 		writeToLog(&message);
 	}

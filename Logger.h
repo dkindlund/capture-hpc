@@ -42,7 +42,7 @@ public:
 	void openLogFile(wstring file);
 
 	void writeToLog(wstring* message);
-	void writeSystemEventToLog(wstring* type, wstring* time, wstring* process, wstring* action, wstring* object, wstring* extra);
+	void writeSystemEventToLog(wstring* type, wstring* time, wstring* process, wstring* action, wstring* object, vector<wstring>* extra);
 
 	void closeLogFile();
 
