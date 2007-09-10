@@ -261,7 +261,7 @@ RegistryMonitor::run()
 					convertTimefieldsToString(e->time, szTempTime, 256);
 					wstring time = szTempTime;
 	
-					//XENO: Handle all the post-processing to format the data
+					//Handle all the post-processing to format the data
 					wchar_t szTemp[256];
 					wstring extraData;
 					switch(e->dataType){

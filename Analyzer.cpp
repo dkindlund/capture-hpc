@@ -325,7 +325,6 @@ Analyzer::sendSystemEvent(wstring* type, wstring* time,
 	att.name = L"object";
 	att.value = *object;
 	vAttributes.push(att);
-	//FIXME: necessary?
 	att.name = L"extra";
 	att.value = *extra;
 	vAttributes.push(att);
@@ -354,9 +353,10 @@ Analyzer::onProcessEvent(BOOLEAN created, wstring time,
 	} else {
 		processType = L"terminated";
 	}
+	wstring non_used = L"";
 	sendSystemEvent(&processEvent, &time, 
 					&parentProcess, &processType, 
-					&process, (wstring *)NULL);
+					&process, &non_used);
 }
 
 void 
@@ -376,7 +376,8 @@ Analyzer::onFileEvent(wstring fileEventType, wstring time,
 {
 	malicious = true;
 	wstring fileEvent = L"file";
+	wstring non_used = L"";
 	sendSystemEvent(&fileEvent, &time, 
 					&processPath, &fileEventType, 
-					&fileEventPath, (wstring *)NULL);
+					&fileEventPath, &non_used);
 }
