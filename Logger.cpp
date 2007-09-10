@@ -61,9 +61,15 @@ Logger::writeSystemEventToLog(wstring* type, wstring* time,
 		message += *process;
 		message += L"\",\"";
 		message += *object;
-//		message += L"\",\"";
-//		message += *extra;
+		if(type->compare(L"registry") == 0){
+			vector<wstring>::const_iterator itr;
+			for(itr = extra->begin(); itr != extra->end(); itr++ ) {
+				message += L"\",\"";
+				message += *itr;
+			}
+		}
 		message += L"\"\r\n";
+		
 		writeToLog(&message);
 	}
 }

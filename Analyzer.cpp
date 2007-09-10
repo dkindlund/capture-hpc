@@ -344,8 +344,7 @@ Analyzer::sendSystemEvent(wstring* type, wstring* time,
 	{
 		// Output the event to stdout
 		printf("%ls: %ls %ls -> %ls", type->c_str(), action->c_str(), process->c_str(), object->c_str());
-		///printf(" %ls %ls X", extra->at(0).c_str(), extra->at(1).c_str());
-		vector<wstring>::iterator itr;
+		vector<wstring>::const_iterator itr;
 		for( itr = extra->begin(); itr != extra->end(); itr++ ) {
 			printf(" %ls", itr->c_str());
 		}
