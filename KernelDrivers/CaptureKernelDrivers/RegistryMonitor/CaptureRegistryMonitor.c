@@ -466,9 +466,6 @@ NTSTATUS RegistryCallback(IN PVOID CallbackContext,
 	KeQuerySystemTime(&CurrentSystemTime);
 	ExSystemTimeToLocalTime(&CurrentSystemTime,&CurrentLocalTime);
 	
-
-	//registryEvent.processId = PsGetCurrentProcessId();
-	//registryEvent.eventType = (REG_NOTIFY_CLASS)Argument1;
 	type = (REG_NOTIFY_CLASS)Argument1;
 	try
 	{
@@ -507,8 +504,7 @@ NTSTATUS RegistryCallback(IN PVOID CallbackContext,
 			registryEventIsValid = GetRegistryObjectCompleteName(&registryPath, NULL, deleteValueKey->Object);
 			if((registryEventIsValid) && (deleteValueKey->ValueName->Length > 0)) 
 			{
-				RtlUnicodeStringCatString(&registryPath,L"\\");
-				RtlUnicodeStringCat(&registryPath, deleteValueKey->ValueName);
+				RtlUnicodeStringCat(&valueName, deleteValueKey->ValueName);
 			}
 			break;
 		}
@@ -516,7 +512,7 @@ NTSTATUS RegistryCallback(IN PVOID CallbackContext,
 		{
 			PREG_SET_VALUE_KEY_INFORMATION setValueKey = (PREG_SET_VALUE_KEY_INFORMATION)Argument2;
 			registryEventIsValid = GetRegistryObjectCompleteName(&registryPath, NULL, setValueKey->Object);
-			if((registryEventIsValid) && (setValueKey->ValueName->Length > 0)) 
+			if(registryEventIsValid) 
 			{
 				registryDataType = setValueKey->Type;
 				registryDataLength = setValueKey->DataSize;
@@ -527,8 +523,6 @@ NTSTATUS RegistryCallback(IN PVOID CallbackContext,
 				} else {
 					DbgPrint("CaptureRegistryMonitor: ERROR can't allocate memory for setvalue data\n");
 				}
-				//RtlUnicodeStringCatString(&registryPath,L"\\");
-				//RtlUnicodeStringCat(&registryPath, setValueKey->ValueName);
 				RtlUnicodeStringCat(&valueName, setValueKey->ValueName);
 
 			}
@@ -562,8 +556,7 @@ NTSTATUS RegistryCallback(IN PVOID CallbackContext,
 			if((registryEventIsValid) && (queryValueKey->ValueName->Length > 0)) 
 			{
 				registryDataType = queryValueKey->KeyValueInformationClass;
-				RtlUnicodeStringCatString(&registryPath,L"\\");
-				RtlUnicodeStringCat(&registryPath, queryValueKey->ValueName);
+				RtlUnicodeStringCat(&valueName, queryValueKey->ValueName);
 			}
 			break;
 		}
@@ -594,7 +587,6 @@ NTSTATUS RegistryCallback(IN PVOID CallbackContext,
 			pRegistryEvent->registryPathLengthB = registryPath.Length+sizeof(WCHAR);
 			pRegistryEvent->dataType = registryDataType;
 			pRegistryEvent->dataLengthB = registryDataLength;
-			//RtlStringCbCopyUnicodeString(pRegistryEvent->registryPath, pRegistryEvent->registryPathLength, &registryPath);
 			RtlCopyBytes(pRegistryEvent->registryData, registryPath.Buffer, registryPath.Length);
 			pRegistryEvent->registryData[registryPath.Length] = '\0';
 			pRegistryEvent->registryData[registryPath.Length+1] = '\0';
@@ -639,8 +631,6 @@ void UnloadDriver(IN PDRIVER_OBJECT DriverObject)
 
     /* Get the registry manager from the device extension */
     pRegistryManager = gpDeviceObject->DeviceExtension;
-
-
 
 	if(pRegistryManager->bReady == TRUE)
 	{
