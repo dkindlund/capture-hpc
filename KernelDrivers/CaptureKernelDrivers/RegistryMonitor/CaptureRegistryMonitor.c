@@ -53,6 +53,7 @@
 #define IOCTL_CAPTURE_GET_REGEVENTS	CTL_CODE(FILE_DEVICE_UNKNOWN, 0x803, METHOD_NEITHER,FILE_READ_DATA | FILE_WRITE_DATA) 
 #define USERSPACE_CONNECTION_TIMEOUT 10
 #define REGISTRY_POOL_TAG 'pRE'
+#define MAX_REG_NAME_LEN 255
 
 typedef unsigned int UINT;
 typedef char * PCHAR;
@@ -66,6 +67,8 @@ typedef struct  _REGISTRY_EVENT {
 	ULONG dataType;
 	ULONG dataLengthB;
 	ULONG registryPathLengthB;
+	DWORD valueNameLength; //Max length is 255 WCHAR
+	WCHAR valueName[256];
 	/* Contains path and optionally data */
 	UCHAR registryData[];
 } REGISTRY_EVENT, * PREGISTRY_EVENT;
@@ -439,7 +442,7 @@ NTSTATUS RegistryCallback(IN PVOID CallbackContext,
 	LARGE_INTEGER CurrentLocalTime;
 	TIME_FIELDS TimeFields;
 	int type;
-	UNICODE_STRING registryPath;
+	UNICODE_STRING registryPath, valueName;
 	UCHAR* registryData = NULL;
 	ULONG registryDataLength = 0;
 	ULONG registryDataType = 0;
@@ -449,7 +452,12 @@ NTSTATUS RegistryCallback(IN PVOID CallbackContext,
 	registryPath.MaximumLength = NTSTRSAFE_UNICODE_STRING_MAX_CCH * sizeof(WCHAR);
 	registryPath.Buffer = ExAllocatePoolWithTag(NonPagedPool, registryPath.MaximumLength, REGISTRY_POOL_TAG); 
 
-	if(registryPath.Buffer == NULL)
+	/* Allocate a large  255 WCHAR string ... maximum name length allowed in windows */
+	valueName.Length = 0;
+	valueName.MaximumLength = MAX_REG_NAME_LEN * sizeof(WCHAR);
+	valueName.Buffer = ExAllocatePoolWithTag(NonPagedPool, registryPath.MaximumLength, REGISTRY_POOL_TAG); 
+
+	if(registryPath.Buffer == NULL || valueName.Buffer == NULL)
 	{
 		return STATUS_SUCCESS;
 	}
@@ -519,8 +527,10 @@ NTSTATUS RegistryCallback(IN PVOID CallbackContext,
 				} else {
 					DbgPrint("CaptureRegistryMonitor: ERROR can't allocate memory for setvalue data\n");
 				}
-				RtlUnicodeStringCatString(&registryPath,L"\\");
-				RtlUnicodeStringCat(&registryPath, setValueKey->ValueName);
+				//RtlUnicodeStringCatString(&registryPath,L"\\");
+				//RtlUnicodeStringCat(&registryPath, setValueKey->ValueName);
+				RtlUnicodeStringCat(&valueName, setValueKey->ValueName);
+
 			}
 			break;
 		}
@@ -577,6 +587,7 @@ NTSTATUS RegistryCallback(IN PVOID CallbackContext,
 		PREGISTRY_EVENT pRegistryEvent;
 		UINT eventSize = sizeof(REGISTRY_EVENT)+registryPath.Length+(sizeof(WCHAR))+registryDataLength;
 		pRegistryEvent = ExAllocatePoolWithTag(NonPagedPool, eventSize, REGISTRY_POOL_TAG); 
+		RtlZeroMemory(pRegistryEvent,eventSize);
 		
 		if(pRegistryEvent != NULL)
 		{	
@@ -588,6 +599,9 @@ NTSTATUS RegistryCallback(IN PVOID CallbackContext,
 			pRegistryEvent->registryData[registryPath.Length] = '\0';
 			pRegistryEvent->registryData[registryPath.Length+1] = '\0';
 			RtlCopyBytes(pRegistryEvent->registryData+pRegistryEvent->registryPathLengthB, registryData, registryDataLength);
+			pRegistryEvent->valueNameLength = valueName.Length;
+			RtlCopyBytes(pRegistryEvent->valueName, valueName.Buffer, valueName.Length);
+			pRegistryEvent->valueName[valueName.Length] = '\0';
 
 			if(registryData != NULL)
 			{
@@ -607,6 +621,12 @@ NTSTATUS RegistryCallback(IN PVOID CallbackContext,
 	{
 		ExFreePoolWithTag(registryPath.Buffer, REGISTRY_POOL_TAG);
 	}
+
+	if(valueName.Buffer != NULL)
+	{
+		ExFreePoolWithTag(valueName.Buffer, REGISTRY_POOL_TAG);
+	}
+
 	/* Always return a success ... we aren't doing any filtering, just monitoring */
 	return STATUS_SUCCESS;
 }

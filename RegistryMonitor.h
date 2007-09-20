@@ -108,6 +108,8 @@ typedef struct  _REGISTRY_EVENT {
 	ULONG dataType;
 	ULONG dataLengthB;
 	ULONG registryPathLengthB;
+	DWORD valueNameLength;
+	WCHAR valueName[256];
 	/* Contains path and optionally data */
 	UCHAR registryData[];
 } REGISTRY_EVENT, * PREGISTRY_EVENT;

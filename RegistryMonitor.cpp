@@ -266,6 +266,10 @@ RegistryMonitor::run()
 					//wstring extraData;
 					wstring other;
 					vector<wstring> extraData;
+					//CopyMemory(szTemp,e->valueName, e->valueNameLength);
+					//szTemp[e->valueNameLength] = '\0';
+					//extraData.push_back(szTemp);
+					extraData.push_back(e->valueName);
 					switch(e->dataType){
 						case REG_NONE:
 							//extraData.append(L"REG_NONE - ");
