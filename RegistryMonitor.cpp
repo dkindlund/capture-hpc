@@ -286,24 +286,11 @@ RegistryMonitor::run()
 							break;
 						case REG_BINARY:
 							extraData.push_back(L"REG_BINARY");
-							//FIXME: Better way?
-						//	if(e->dataLengthB < 256){
-								printf("data length = %d\n", e->dataLengthB);
-								for(DWORD n = 0; n < e->dataLengthB; n++){
-									//swprintf_s(szTemp, 256, L"%x", registryData[n]);
-									swprintf(szTemp, L"%x", registryData[n]);
-									//wprintf(L"%d - %s\n", n, szTemp);
-									other.append(szTemp);
-								}
-								extraData.push_back(other);
-						/*	}
-							else{
-								for(unsigned short n = 0; n <= 255; n++){
-									swprintf_s(szTemp, 256, L"%x", registryData[n]);
-									other.append(szTemp);
-								}
-								extraData.push_back(other);
-							}*/
+							for(DWORD n = 0; n < e->dataLengthB; n++){
+								swprintf(szTemp, L"%x", registryData[n]);
+								other.append(szTemp);
+							}
+							extraData.push_back(other);
 							break;
 						case REG_DWORD:
 							extraData.push_back(L"REG_DWORD");
@@ -327,7 +314,7 @@ RegistryMonitor::run()
 						// break the while condition into ending early.
 						case REG_MULTI_SZ:
 							extraData.push_back(L"REG_MULTI_SZ");
-							while(((wchar_t *)registryData)[0] != '\0' && ((wchar_t *)registryData)[1] != '\0'){
+							while(((wchar_t *)registryData)[0] != '\0' ){ //&& ((wchar_t *)registryData)[1] != '\0'){
 								other.append((wchar_t *)registryData);
 								other.append(L"-|-");
 								tmp_len = wcsnlen((wchar_t *)registryData, 512);
