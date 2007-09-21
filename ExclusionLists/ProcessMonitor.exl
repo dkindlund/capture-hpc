@@ -19,3 +19,11 @@
 +	agentsvr.exe	.*	C:\\WINDOWS\\msagent\\agentsvr.exe
 #messenger activeX
 +	msmsgs.exe	.*	C:\\Program Files\\Messenger\\msmsgs.exe
+###################################################
+### Honeyclient added/specific?			###
+###################################################
+#FIXME: Xeno - Does specifying a parent process even work? I tried
++	bash.exe	.*	C:\\cygwin\\bin\\bash\.exe
++	perl.exe	.*	C:\\cygwin\\bin\\perl\.exe
++	helpsvc.exe	.*	C:\\WINDOWS\\PCHEALTH\\HELPCTR\\Binaries\\helpsvc\.exe
++	wmiprvse.exe	.*	C:\\WINDOWS\\system32\\wbem\\wmiprvse\.exe

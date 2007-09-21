@@ -202,6 +202,26 @@
 +	DeleteValueKey	C:\\Program Files\\Messenger\\msmsgs\.exe	HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Shell Folders\\.+
 +	DeleteValueKey	C:\\Program Files\\Messenger\\msmsgs\.exe	HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Internet Settings\\.+
 +	DeleteValueKey	C:\\WINDOWS\\system32\\svchost\.exe	HKLM\\SOFTWARE\\Microsoft\\EventSystem\\.+\\Subscriptions\\.+
+
+
+###################################################
+### Honeyclient added/specific?			###
+###################################################
++	SetValueKey	.*	HKLM\\SOFTWARE\\Microsoft\\Cryptography\\RNG
++	SetValueKey	C:\\Program Files\\Internet Explorer\\iexplore\.exe	HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Shell Folders
++	SetValueKey	C:\\Program Files\\Internet Explorer\\iexplore\.exe	HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Shell Folders
++	SetValueKey	C:\\Program Files\\Internet Explorer\\iexplore\.exe	HKCU\\Software\\Microsoft\\Internet Explorer\\Main
++	SetValueKey	C:\\Program Files\\Internet Explorer\\iexplore\.exe	HKCU\\Software\\Microsoft\\Internet Explorer\\Toolbar
++	SetValueKey	C:\\Program Files\\Internet Explorer\\iexplore\.exe	HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Internet Settings
++	SetValueKey	C:\\Program Files\\Internet Explorer\\iexplore\.exe	HKLM\\SYSTEM\\ControlSet001\\Hardware Profiles\\0001\\Software\\Microsoft\\windows\\CurrentVersion\\Internet Settings
++	SetValueKey	C:\\WINDOWS\\explorer\.exe	HKCU\\SessionInformation
++	DeleteValueKey	C:\\Program Files\\Internet Explorer\\iexplore\.exe	HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Internet Settings
+
+#During debugging only
+
++	SetValueKey	F:\\Program Files\\Microsoft Visual Studio 8\\Common7\\IDE\\VCExpress\.exe	HKCU\\Software\\Microsoft\\VSCommon\\8.0.+
+
+
 ###################################################
 ### Minus List - General Malicious Activity	###
 ###################################################
@@ -226,3 +246,5 @@
 -	DeleteValueKey	.*	HLKM\\SYSTEM\\CurrentControlSet\\Control\\Session Manager\\BootExecute.*
 -	SetValueKey	.*	HLKM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\ShellServiceObjectDelayLoad\\.*
 -	DeleteValueKey	.*	HLKM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\ShellServiceObjectDelayLoad\\.*
+
+
