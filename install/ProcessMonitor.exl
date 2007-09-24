@@ -27,3 +27,4 @@
 +	perl.exe	.*	C:\\cygwin\\bin\\perl\.exe
 +	helpsvc.exe	.*	C:\\WINDOWS\\PCHEALTH\\HELPCTR\\Binaries\\helpsvc\.exe
 +	wmiprvse.exe	.*	C:\\WINDOWS\\system32\\wbem\\wmiprvse\.exe
++	sleep.exe	.*	C:\\cygwin\\bin\\sleep\.exe
