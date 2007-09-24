@@ -314,10 +314,10 @@ RegistryMonitor::run()
 						// break the while condition into ending early.
 						case REG_MULTI_SZ:
 							extraData.push_back(L"REG_MULTI_SZ");
-							while(((wchar_t *)registryData)[0] != '\0' ){ //&& ((wchar_t *)registryData)[1] != '\0'){
+							while(((wchar_t *)registryData)[0] != '\0' ){
 								other.append((wchar_t *)registryData);
 								other.append(L"-|-");
-								tmp_len = wcsnlen((wchar_t *)registryData, 512);
+								tmp_len = wcsnlen((wchar_t *)registryData, 512); //This doesn't count the null char in the length
 								registryData = (BYTE *)((wchar_t *)registryData + (tmp_len + 1));
 							}
 							extraData.push_back(other);
