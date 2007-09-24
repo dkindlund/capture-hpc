@@ -216,6 +216,24 @@
 +	SetValueKey	C:\\Program Files\\Internet Explorer\\iexplore\.exe	HKLM\\SYSTEM\\ControlSet001\\Hardware Profiles\\0001\\Software\\Microsoft\\windows\\CurrentVersion\\Internet Settings
 +	SetValueKey	C:\\WINDOWS\\explorer\.exe	HKCU\\SessionInformation
 +	DeleteValueKey	C:\\Program Files\\Internet Explorer\\iexplore\.exe	HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Internet Settings
++	SetValueKey	System	HKLM\\SYSTEM\\ControlSet001\\Enum\\Root\\LEGACY_TDTCP\\0000\\Control
++	SetValueKey	System	HKLM\\SYSTEM\\ControlSet001\\Enum\\Root\\LEGACY_RDPWD\\0000\\Control
++	DeleteValueKey	C:\\WINDOWS\\system32\\userinit\.exe	HKCU\\Software\\Microsoft\\Windows NT\\CurrentVersion\\Windows
++	SetValueKey	C:\\WINDOWS\\system32\\WgaTray\.exe	HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Shell Folders
++	SetValueKey	C:\\WINDOWS\\system32\\WgaTray\.exe	HKCU\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Shell Folders
++	SetValueKey	C:\\WINDOWS\\system32\\WgaTray\.exe	HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Internet Settings\\Cache\\Paths.*
++	SetValueKey	C:\\WINDOWS\\system32\\WgaTray\.exe	HKCU\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Internet Settings\\ZoneMap
++	SetValueKey	C:\\WINDOWS\\system32\\WgaTray\.exe	HKCU\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Internet Settings
++	DeleteValueKey	C:\\WINDOWS\\system32\\WgaTray\.exe	HKCU\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Internet Settings
++	SetValueKey	C:\\WINDOWS\\system32\\WgaTray\.exe	HKLM\\SYSTEM\\ControlSet001\\Hardware Profiles\\0001\\Software\\Microsoft\\windows\\CurrentVersion\\Internet Settings
++	SetValueKey	C:\\WINDOWS\\system32\\WgaTray\.exe	HKCU\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Internet Settings\\Connections
++	SetValueKey	C:\\WINDOWS\\system32\\wuauclt\.exe	HKLM\\SYSTEM\\ControlSet001\\Services\\Eventlog\\Application\\ESENT
++	SetValueKey	System	HKLM\\SYSTEM\\ControlSet001\\Enum\\Root\\LEGACY_CAPTUREFILEMONITOR.*
++	SetValueKey	C:\\WINDOWS\\explorer\.exe	HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\NetCache
++	DeleteValueKey	C:\\WINDOWS\\explorer\.exe	HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\NetCache
++	SetValueKey	C:\\WINDOWS\\system32\\winlogon\.exe	HKLM\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\ProfileList.*
++	SetValueKey	C:\\WINDOWS\\system32\\services\.exe	HKU\\S.+\\Software\\Microsoft\\Windows NT\\CurrentVersion\\Winlogon
++	SetValueKey	C:\\WINDOWS\\system32\\WgaTray\.exe	HKLM\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Winlogon\\Notify\\WgaLogon.*
 
 #During debugging only
 

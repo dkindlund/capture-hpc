@@ -93,14 +93,19 @@
 # msg activeX
 +	Write	C:\\Program Files\\Messenger\\msmsgs\.exe	C:\\Documents and Settings\\.+\\NTUSER.DAT.LOG
 +	Delete	C:\\Program Files\\Messenger\\msmsgs\.exe	C:\\Documents and Settings\\.+\\NTUSER.DAT.LOG
-
-###################################################
-### Honeyclient added/specific?			###
-###################################################
 +	Write	C:\\WINDOWS\\system32\\wbem\\wmiprvse\.exe	E:\$LogFile
 +	Write	C:\\WINDOWS\\system32\\wbem\\wmiprvse\.exe	E:\$Directory
 +	Write	C:\\WINDOWS\\system32\\wbem\\wmiprvse\.exe	E:\$Mft
 +	Write	C:\\WINDOWS\\system32\\wbem\\wmiprvse\.exe	F:\$LogFile
+
+###################################################
+### Honeyclient added/specific?			###
+###################################################
++	Write	C:\\WINDOWS\\system32\\wbem\\wmiprvse\.exe	C:\\WINDOWS\\system32\\wbem\\Logs\\FrameWork\.log
++	Write	C:\\WINDOWS\\system32\\wbem\\wmiprvse\.exe	C:\\WINDOWS\\system32\\wpa\.dbl
++	Write	C:\\WINDOWS\\system32\\WgaTray\.exe	C:\\Documents and Settings\\All Users\\Application Data\\Windows Genuine Advantage\\data\\data\.dat
++	Write	C:\\WINDOWS\\system32\\WgaTray\.exe	C:\\WINDOWS\\Temp\\WGANotify\.settings
++	Delete	C:\\WINDOWS\\system32\\wuauclt\.exe	C:\\WINDOWS\\SoftwareDistribution\\DataStore\\Logs\\tmp.*
 
 ###################################################
 ### Minus List - General Malicious Activity	###

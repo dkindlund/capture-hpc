@@ -28,3 +28,6 @@
 +	helpsvc.exe	.*	C:\\WINDOWS\\PCHEALTH\\HELPCTR\\Binaries\\helpsvc\.exe
 +	wmiprvse.exe	.*	C:\\WINDOWS\\system32\\wbem\\wmiprvse\.exe
 +	sleep.exe	.*	C:\\cygwin\\bin\\sleep\.exe
++	userinit.exe	.*	C:\\WINDOWS\\system32\\userinit\.exe
++	WgaTray.exe	.*	C:\\WINDOWS\\system32\\WgaTray\.exe
++	alg.exe	.*	C:\\WINDOWS\\system32\\alg\.exe
