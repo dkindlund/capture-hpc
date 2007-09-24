@@ -93,7 +93,15 @@ public:
 				analyzer->start();
 			}
 			/* Wait till a user presses a key then exit */
-			getchar();
+			/*Xeno - changed to make it only quit with a q*/
+			DWORD c;
+			while(1){
+				c = getchar();
+				if(c == 'q'){
+					break;
+
+				}
+			}
 			if((OptionsManager::getInstance()->getOption(L"server") == L""))
 			{
 				analyzer->stop();
