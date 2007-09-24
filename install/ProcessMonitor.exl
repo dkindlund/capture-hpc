@@ -27,19 +27,3 @@
 +	perl.exe	.*	C:\\cygwin\\bin\\perl\.exe
 +	helpsvc.exe	.*	C:\\WINDOWS\\PCHEALTH\\HELPCTR\\Binaries\\helpsvc\.exe
 +	wmiprvse.exe	.*	C:\\WINDOWS\\system32\\wbem\\wmiprvse\.exe
-#Stuff which was added which probably doesn't need to be here anymore
-+	sed.exe	.*	C:\\cygwin\\bin\\sed\.exe
-+	tr.exe	.*	C:\\cygwin\\bin\\tr\.exe
-+	rm.exe	.*	C:\\cygwin\\bin\\rm\.exe
-+	ping.exe	.*	C:\\cygwin\\bin\\ping\.exe
-+	dircolors.exe	.*	C:\\cygwin\\bin\\dircolors\.exe
-+	id.exe	.*	C:\\cygwin\\bin\\id\.exe
-+	hostname.exe	.*	C:\\cygwin\\bin\\hostname\.exe
-+	chmod.exe	.*	C:\\cygwin\\bin\\chmod\.exe
-+	sort.exe	.*	C:\\cygwin\\bin\\sort\.exe
-+	test.exe	.*	C:\\cygwin\\bin\\test\.exe
-+	ping.exe	.*	C:\\cygwin\\bin\\ping\.exe
-+	sleep.exe	.*	C:\\cygwin\\bin\\sleep\.exe
-+	svn.exe	.*	C:\\cygwin\\bin\\svn\.exe
-+	ssh.exe	.*	C:\\cygwin\\bin\\ssh\.exe
-

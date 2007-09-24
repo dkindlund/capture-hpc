@@ -99,7 +99,9 @@ public:
 				c = getchar();
 				if(c == 'q'){
 					break;
-
+				}
+				else{
+					Sleep(99999999);
 				}
 			}
 			if((OptionsManager::getInstance()->getOption(L"server") == L""))
