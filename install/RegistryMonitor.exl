@@ -213,6 +213,7 @@
 +	SetValueKey	C:\\Program Files\\Internet Explorer\\iexplore\.exe	HKCU\\Software\\Microsoft\\Internet Explorer\\Main
 +	SetValueKey	C:\\Program Files\\Internet Explorer\\iexplore\.exe	HKCU\\Software\\Microsoft\\Internet Explorer\\Toolbar
 +	SetValueKey	C:\\Program Files\\Internet Explorer\\iexplore\.exe	HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Internet Settings
++	SetValueKey	C:\\Program Files\\Internet Explorer\\explorer\.exe	HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Internet Settings.*
 +	SetValueKey	C:\\Program Files\\Internet Explorer\\iexplore\.exe	HKLM\\SYSTEM\\ControlSet001\\Hardware Profiles\\0001\\Software\\Microsoft\\windows\\CurrentVersion\\Internet Settings
 +	SetValueKey	C:\\WINDOWS\\explorer\.exe	HKCU\\SessionInformation
 +	DeleteValueKey	C:\\Program Files\\Internet Explorer\\iexplore\.exe	HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Internet Settings
