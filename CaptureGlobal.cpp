@@ -180,12 +180,21 @@ size_t convertTimefieldsToString(TIME_FIELDS time, wchar_t* buffer, size_t buffe
 	wcscat_s(wtime, 256, szTime);
 	wcscat_s(wtime, 256, L" ");
 	_itow_s(time.wHour,szTime,16,10);
+	if(time.wHour < 10) {
+		wcscat_s(wtime, 256, L"0");
+	}
 	wcscat_s(wtime, 256, szTime);
 	wcscat_s(wtime, 256, L":");
 	_itow_s(time.wMinute,szTime,16,10);
+	if(time.wMinute < 10) {
+		wcscat_s(wtime, 256, L"0");
+	}
 	wcscat_s(wtime, 256, szTime);
 	wcscat_s(wtime, 256, L":");
 	_itow_s(time.wSecond,szTime,16,10);
+	if(time.wSecond < 10) {
+		wcscat_s(wtime, 256, L"0");
+	}
 	wcscat_s(wtime, 256, szTime);
 	wcscat_s(wtime, 256, L".");
 	_itow_s(time.wMilliseconds,szTime,16,10);
