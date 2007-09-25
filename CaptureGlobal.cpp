@@ -168,9 +168,15 @@ size_t convertTimefieldsToString(TIME_FIELDS time, wchar_t* buffer, size_t buffe
 	wcscat_s(wtime, 256, szTime);
 	wcscat_s(wtime, 256, L"-");
 	_itow_s(time.wMonth,szTime,16,10);
+	if(time.wMonth < 10) {
+		wcscat_s(wtime, 256, L"0");
+	}
 	wcscat_s(wtime, 256, szTime);
 	wcscat_s(wtime, 256, L"-");
 	_itow_s(time.wDay,szTime,16,10);
+	if(time.wDay < 10) {
+		wcscat_s(wtime, 256, L"0");
+	}
 	wcscat_s(wtime, 256, szTime);
 	wcscat_s(wtime, 256, L" ");
 	_itow_s(time.wHour,szTime,16,10);
