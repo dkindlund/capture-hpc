@@ -457,6 +457,7 @@ NTSTATUS RegistryCallback(IN PVOID CallbackContext,
 	valueName.MaximumLength = MAX_REG_NAME_LEN * sizeof(WCHAR);
 	valueName.Buffer = ExAllocatePoolWithTag(NonPagedPool, registryPath.MaximumLength, REGISTRY_POOL_TAG); 
 
+	//FIXME: is this correct? Shouldn't it return failure of some type?
 	if(registryPath.Buffer == NULL || valueName.Buffer == NULL)
 	{
 		return STATUS_SUCCESS;

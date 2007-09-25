@@ -31,3 +31,4 @@
 +	userinit.exe	.*	C:\\WINDOWS\\system32\\userinit\.exe
 +	WgaTray.exe	.*	C:\\WINDOWS\\system32\\WgaTray\.exe
 +	alg.exe	.*	C:\\WINDOWS\\system32\\alg\.exe
++	firefox.exe	.*	C:\\Program Files\\Mozilla Firefox\\firefox\.exe

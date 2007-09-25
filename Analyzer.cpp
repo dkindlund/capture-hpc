@@ -326,7 +326,6 @@ Analyzer::sendSystemEvent(wstring* type, wstring* time,
 	att.value = *object;
 	vAttributes.push(att);
 	if(type->compare(L"registry") == 0){
-		//FIXME: Wrong because there need not be a value
 		att.name = L"reg_type";
 		att.value = extra->at(0);
 		vAttributes.push(att);
