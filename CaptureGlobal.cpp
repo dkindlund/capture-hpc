@@ -157,19 +157,20 @@ char* encode_base64(char* cleartextBuffer, unsigned int length, size_t* encodedL
 	return encodedBuffer;
 }
 
+//Formatting as ISO-8601 time format
 size_t convertTimefieldsToString(TIME_FIELDS time, wchar_t* buffer, size_t bufferLength)
 {
 	wchar_t szTime[16];
 	wchar_t wtime[256];
 	ZeroMemory(&szTime, sizeof(szTime));
 	ZeroMemory(&wtime, sizeof(wtime));
-	_itow_s(time.wDay,szTime,16,10);
+	_itow_s(time.wYear,szTime,16,10);
 	wcscat_s(wtime, 256, szTime);
-	wcscat_s(wtime, 256, L"/");
+	wcscat_s(wtime, 256, L"-");
 	_itow_s(time.wMonth,szTime,16,10);
 	wcscat_s(wtime, 256, szTime);
-	wcscat_s(wtime, 256, L"/");
-	_itow_s(time.wYear,szTime,16,10);
+	wcscat_s(wtime, 256, L"-");
+	_itow_s(time.wDay,szTime,16,10);
 	wcscat_s(wtime, 256, szTime);
 	wcscat_s(wtime, 256, L" ");
 	_itow_s(time.wHour,szTime,16,10);
