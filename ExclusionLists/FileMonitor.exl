@@ -145,3 +145,6 @@
 -	Write	.*	C:\\Documents and Settings\\.+\\Start Menu\\Programs\\Startup.+
 -	Write	.*	C:\\WINDOWS\\win.ini
 -	Write	.*	C:\\WINDOWS\\Tasks\\.+
+#### HONEYCLIENT AUTO EXCLUDE SCRIPT
++	Write	C:\\cygwin\\bin\\perl\.exe	C:\\cygwin\\tmp\\changes\.txt
++	Write	C:\\Program Files\\Windows Media Player\\setup_wm\.exe	C:\\WINDOWS\\wmsetup\.log

@@ -270,3 +270,8 @@
 -	DeleteValueKey	.*	HLKM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\ShellServiceObjectDelayLoad\\.*
 
 
+#### HONEYCLIENT AUTO EXCLUDE SCRIPT
++	SetValueKey	C:\\Program Files\\Windows Media Player\\wmplayer\.exe	HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\MountPoints2.*
++	SetValueKey	C:\\Program Files\\Windows Media Player\\setup_wm\.exe	HKLM\\SOFTWARE\\Microsoft\\MediaPlayer
++	SetValueKey	C:\\Program Files\\Windows Media Player\\wmplayer\.exe	HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Shell Folders
++	SetValueKey	C:\\Program Files\\Windows Media Player\\wmplayer\.exe	HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Internet Settings\\ZoneMap
