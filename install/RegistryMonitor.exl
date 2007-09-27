@@ -275,3 +275,6 @@
 +	SetValueKey	C:\\Program Files\\Windows Media Player\\setup_wm\.exe	HKLM\\SOFTWARE\\Microsoft\\MediaPlayer
 +	SetValueKey	C:\\Program Files\\Windows Media Player\\wmplayer\.exe	HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Shell Folders
 +	SetValueKey	C:\\Program Files\\Windows Media Player\\wmplayer\.exe	HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Internet Settings\\ZoneMap
+#### HONEYCLIENT AUTO EXCLUDE SCRIPT
++	DeleteValueKey	C:\\Program Files\\Internet Explorer\\iexplore\.exe	HKCU\\Software\\Macromedia\\FlashPlayer
++	SetValueKey	C:\\Program Files\\Internet Explorer\\iexplore\.exe	HKLM\\SOFTWARE\\Macromedia\\FlashPlayer

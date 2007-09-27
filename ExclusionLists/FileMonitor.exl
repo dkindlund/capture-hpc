@@ -148,3 +148,5 @@
 #### HONEYCLIENT AUTO EXCLUDE SCRIPT
 +	Write	C:\\cygwin\\bin\\perl\.exe	C:\\cygwin\\tmp\\changes\.txt
 +	Write	C:\\Program Files\\Windows Media Player\\setup_wm\.exe	C:\\WINDOWS\\wmsetup\.log
+#### HONEYCLIENT AUTO EXCLUDE SCRIPT
++	Delete	C:\\Program Files\\Internet Explorer\\iexplore\.exe	C:\\WINDOWS\\system32\\Macromed\\Flash\\testUpdate\.txt
