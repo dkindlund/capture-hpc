@@ -150,3 +150,10 @@
 +	Write	C:\\Program Files\\Windows Media Player\\setup_wm\.exe	C:\\WINDOWS\\wmsetup\.log
 #### HONEYCLIENT AUTO EXCLUDE SCRIPT
 +	Delete	C:\\Program Files\\Internet Explorer\\iexplore\.exe	C:\\WINDOWS\\system32\\Macromed\\Flash\\testUpdate\.txt
+#### HONEYCLIENT AUTO EXCLUDE SCRIPT
++	Delete	C:\\WINDOWS\\system32\\defrag\.exe	C:\\.*\.tmp
++	Write	C:\\WINDOWS\\system32\\svchost\.exe	C:\\$ReplaceAttribute
++	Write	C:\\WINDOWS\\system32\\svchost\.exe	C:\\$ReplaceAttribute
++	Write	C:\\WINDOWS\\system32\\wbem\\wmiprvse\.exe	E:\\$LogFile
++	Write	C:\\WINDOWS\\system32\\wbem\\wmiprvse\.exe	E:\\$Directory
++	Write	C:\\WINDOWS\\system32\\wbem\\wmiprvse\.exe	E:\\$Mft
