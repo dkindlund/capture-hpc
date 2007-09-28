@@ -157,3 +157,6 @@
 +	Write	C:\\WINDOWS\\system32\\wbem\\wmiprvse\.exe	E:\\$LogFile
 +	Write	C:\\WINDOWS\\system32\\wbem\\wmiprvse\.exe	E:\\$Directory
 +	Write	C:\\WINDOWS\\system32\\wbem\\wmiprvse\.exe	E:\\$Mft
+#### HONEYCLIENT AUTO EXCLUDE SCRIPT
++	Write	C:\\Program Files\\Internet Explorer\\iexplore\.exe	C:\\Documents and Settings\\Administrator\\Local Settings\\Temporary Internet Files\\Content\.IE5.+
++	Write	System	C:\\Documents and Settings\\Administrator\\Local Settings\\Temporary Internet Files\\Content\.IE5.+
