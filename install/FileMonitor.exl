@@ -2,9 +2,9 @@
 ###################################################
 ### Clean Windows XP SP 2 System		###
 ###################################################
-#+	Read	.*	.*
-#+	Create	.*	.*
-#+	Open	.*	.*
++	Read	.*	.*
++	Create	.*	.*
++	Open	.*	.*
 +	Write	C:\\program Files\\capture\\captureclient\.exe	C:\\program files\\capture\\logs\\.+
 +	Delete	C:\\program Files\\capture\\captureclient\.exe	C:\\program files\\capture\\.+\.zip
 #Prefetch
