@@ -246,6 +246,8 @@ RegistryMonitor::run()
 				CopyMemory(szRegistryPath, e->registryData, e->registryPathLengthB);
 				wstring registryPath = convertRegistryObjectNameToHiveName(szRegistryPath);
 				wstring processPath = ProcessManager::getInstance()->getProcessPath((DWORD)e->processId);
+				wchar_t processIdString[11];
+				swprintf_s(processIdString, 11, L"%ld", e->processId);
 				
 				/* If there is data stored retrieve it */
 				if(e->dataLengthB > 0)
@@ -266,6 +268,7 @@ RegistryMonitor::run()
 					wstring other;
 					size_t tmp_len;
 					vector<wstring> extraData;
+					extraData.push_back(processIdString);
 					extraData.push_back(e->valueName);
 
 

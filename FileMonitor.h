@@ -175,7 +175,7 @@ typedef struct  _FILE_EVENT {
 class FileMonitor : public Runnable, public Monitor
 {
 	public:
-	typedef boost::signal<void (wstring, wstring, wstring, wstring)> signal_fileEvent;
+	typedef boost::signal<void (wstring, wstring, wstring, wstring, vector<wstring> extra)> signal_fileEvent;
 public:
 	FileMonitor(void);
 	virtual ~FileMonitor(void);

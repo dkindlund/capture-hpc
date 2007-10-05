@@ -9,16 +9,12 @@ Analyzer::Analyzer(Visitor* v, Server* s)
 	captureNetworkPackets = false;
 	networkPacketDumper = NULL;
 
-
 	onOptionChangedConnection = OptionsManager::getInstance()->connect_onOptionChanged(boost::bind(&Analyzer::onOptionChanged, this, _1));
-
 
 	visitor = v;
 	visitor->onVisitEvent(boost::bind(&Analyzer::onVisitEvent, this, _1, _2, _3, _4));
 	
 	server = s;
-	
-
 
 	processMonitor->start();
 	registryMonitor->start();
@@ -95,7 +91,7 @@ Analyzer::start()
 	}
 	onProcessEventConnection = processMonitor->connect_onProcessEvent(boost::bind(&Analyzer::onProcessEvent, this, _1, _2, _3, _4, _5, _6));
 	onRegistryEventConnection = registryMonitor->connect_onRegistryEvent(boost::bind(&Analyzer::onRegistryEvent, this, _1, _2, _3, _4, _5));
-	onFileEventConnection = fileMonitor->connect_onFileEvent(boost::bind(&Analyzer::onFileEvent, this, _1, _2, _3, _4));
+	onFileEventConnection = fileMonitor->connect_onFileEvent(boost::bind(&Analyzer::onFileEvent, this, _1, _2, _3, _4, _5));
 	DebugPrint(L"Analyzer: Registered with callbacks");
 	if(collectModifiedFiles)
 	{
@@ -308,6 +304,9 @@ Analyzer::sendSystemEvent(wstring* type, wstring* time,
 					wstring* process, wstring* action, 
 					wstring* object, vector<wstring>* extra)
 {
+	/* FIXME: for now HC doesn't care about attributes...fix these if and when we use the C code 
+		for sending stuff to the server.
+	*/
 	Attribute att;
 	queue<Attribute> vAttributes;
 	att.name = L"time";
@@ -342,11 +341,22 @@ Analyzer::sendSystemEvent(wstring* type, wstring* time,
 	if(OptionsManager::getInstance()->getOption(L"log-system-events-file") == L"")
 	{
 		// Output the event to stdout
-		printf("%ls: %ls %ls -> %ls", type->c_str(), action->c_str(), process->c_str(), object->c_str());
-		vector<wstring>::const_iterator itr;
-		for( itr = extra->begin(); itr != extra->end(); itr++ ) {
-			printf(" %ls", itr->c_str());
+		if(type->compare(L"process") == 0){
+			printf("%ls %ls PID:%ls %ls PID:%ls %ls", type->c_str(), action->c_str(), 
+				extra->at(0).c_str(), process->c_str(), extra->at(1).c_str(), object->c_str());
 		}
+		else if (type->compare(L"registry") == 0){
+			printf("%ls %ls PID:%ls %ls %ls", type->c_str(), action->c_str(), extra->at(0).c_str(), process->c_str(), object->c_str());
+			vector<wstring>::const_iterator itr = extra->begin();
+			itr++;
+			for(itr; itr != extra->end(); itr++ ) {
+				printf(" %ls", itr->c_str());
+			}
+		}
+		else if (type->compare(L"file") == 0) {
+			printf("%ls %ls PID:%ls %ls %ls", type->c_str(), action->c_str(), extra->at(0).c_str(), process->c_str(), object->c_str());
+		}
+
 		printf("\n");
 	} else {
 		// Send the event to the logger
@@ -369,12 +379,19 @@ Analyzer::onProcessEvent(BOOLEAN created, wstring time,
 	} else {
 		processType = L"terminated";
 	}
+	//Xeno sez ? Is this comment still valid
 	//FIXME: use the right constructor instead
-	vector<wstring> non_used;
-	non_used.push_back(L"");
+	vector<wstring> extra;
+	wchar_t parentProcessIdString[11];
+	swprintf(parentProcessIdString, 11, L"%ld", parentProcessId);
+	extra.push_back(parentProcessIdString);
+	wchar_t processIdString[11];
+	swprintf(processIdString, 11, L"%ld", processId);
+	extra.push_back(processIdString);
+
 	sendSystemEvent(&processEvent, &time, 
 					&parentProcess, &processType, 
-					&process, &non_used);
+					&process, &extra);
 }
 
 void 
@@ -390,13 +407,11 @@ Analyzer::onRegistryEvent(wstring registryEventType, wstring time,
 
 void
 Analyzer::onFileEvent(wstring fileEventType, wstring time, 
-						 wstring processPath, wstring fileEventPath)
+						 wstring processPath, wstring fileEventPath, vector<wstring> extra)
 {
 	malicious = true;
 	wstring fileEvent = L"file";
-	vector<wstring> non_used;
-	non_used.push_back(L"");
 	sendSystemEvent(&fileEvent, &time, 
 					&processPath, &fileEventType, 
-					&fileEventPath, &non_used);
+					&fileEventPath, &extra);
 }

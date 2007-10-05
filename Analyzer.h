@@ -105,7 +105,7 @@ public:
 		ever a malcious file event occurs
 	*/
 	void onFileEvent(wstring fileEventType, wstring time, 
-						 wstring processPath, wstring fileEventPath);
+						 wstring processPath, wstring fileEventPath, vector<wstring> extra);
 
 	/*
 		Function: onOptionChanged

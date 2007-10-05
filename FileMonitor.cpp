@@ -376,6 +376,10 @@ FileMonitor::run()
 				wstring fileEventPath;
 				wstring processModuleName;
 				wstring processPath;
+				vector<wstring> extraData;
+				wchar_t processIdString[11];
+				swprintf(processIdString, 11, L"%ld", e->processId);
+				extraData.push_back(processIdString);
 
 				if(getFileEventName(e, &fileEventName))
 				{
@@ -409,7 +413,7 @@ FileMonitor::run()
 							convertTimefieldsToString(e->time, szTempTime, 256);
 							wstring time = szTempTime;
 
-							signal_onFileEvent(fileEventName, time, processPath, fileEventPath);
+							signal_onFileEvent(fileEventName, time, processPath, fileEventPath, extraData);
 						}
 					}
 				}

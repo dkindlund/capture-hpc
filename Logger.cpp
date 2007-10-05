@@ -52,24 +52,58 @@ Logger::writeSystemEventToLog(wstring* type, wstring* time,
 	if(isFileOpen())
 	{
 		wstring message = L"\"";
-		message += *time;
-		message += L"\",\"";
-		message += *type;
-		message += L"\",\"";
-		message += *action;
-		message += L"\",\"";
-		message += *process;
-		message += L"\",\"";
-		message += *object;
-		if(type->compare(L"registry") == 0){
-			vector<wstring>::const_iterator itr;
-			for(itr = extra->begin(); itr != extra->end(); itr++ ) {
+		if(type->compare(L"process") == 0){
+			message += *time;
+			message += L"\",\"";
+			message += *type;
+			message += L"\",\"";
+			message += *action;
+			message += L"\",\"";
+			message += extra->at(0); //Parent process ID
+			message += L"\",\"";
+			message += *process;
+			message += L"\",\"";
+			message += extra->at(1); //Child process ID
+			message += L"\",\"";
+			message += *object;
+		}
+		else if (type->compare(L"registry") == 0){
+			message += *time;
+			message += L"\",\"";
+			message += *type;
+			message += L"\",\"";
+			message += *action;
+			message += L"\",\"";
+			message += extra->at(0); //process ID
+			message += L"\",\"";
+			message += *process;
+			message += L"\",\"";
+			message += *object;
+			vector<wstring>::const_iterator itr = extra->begin();
+			itr++;
+			for(itr; itr != extra->end(); itr++ ) {
 				message += L"\",\"";
 				message += *itr;
 			}
 		}
+		else if (type->compare(L"file") == 0) {
+			message += *time;
+			message += L"\",\"";
+			message += *type;
+			message += L"\",\"";
+			message += *action;
+			message += L"\",\"";
+			message += extra->at(0); //process ID
+			message += L"\",\"";
+			message += *process;
+			message += L"\",\"";
+			message += *object;
+		}
+		else{
+			message += L"UNKNOWN EVENT TYPE IN writeSystemEventToLog()";
+		}
 		message += L"\"\r\n";
-		
+
 		writeToLog(&message);
 	}
 }
