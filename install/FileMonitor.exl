@@ -157,3 +157,5 @@
 +	Write	C:\\WINDOWS\\system32\\wbem\\wmiprvse\.exe	E:\\$LogFile
 +	Write	C:\\WINDOWS\\system32\\wbem\\wmiprvse\.exe	E:\\$Directory
 +	Write	C:\\WINDOWS\\system32\\wbem\\wmiprvse\.exe	E:\\$Mft
+#### HONEYCLIENT manual
++	Write	C:\\WINDOWS\\system32\\dwwin\.exe	C:\\Documents and Settings\\Administrator\\Local Settings\\Temp\\.*
