@@ -278,3 +278,4 @@
 #### HONEYCLIENT AUTO EXCLUDE SCRIPT
 +	DeleteValueKey	C:\\Program Files\\Internet Explorer\\iexplore\.exe	HKCU\\Software\\Macromedia\\FlashPlayer
 +	SetValueKey	C:\\Program Files\\Internet Explorer\\iexplore\.exe	HKLM\\SOFTWARE\\Macromedia\\FlashPlayer
++	SetValueKey	System	HKLM\\SYSTEM\\ControlSet001\\Enum\\Root\\LEGACY_HTTP\\0000\\Control
