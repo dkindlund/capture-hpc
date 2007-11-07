@@ -262,15 +262,18 @@ RegistryMonitor::run()
 					wchar_t szTempTime[256];
 					convertTimefieldsToString(e->time, szTempTime, 256);
 					wstring time = szTempTime;
-	
 					//Handle all the post-processing to format the data
 					wchar_t szTemp[256];
 					wstring other;
 					size_t tmp_len;
 					vector<wstring> extraData;
 					extraData.push_back(processIdString);
-					extraData.push_back(e->valueName);
-
+					if(e->valueNameLength > 0){
+						extraData.push_back(e->valueName);
+					}
+					else{
+						extraData.push_back(L"");
+					}
 
 					//MS description of data types:
 					//http://support.microsoft.com/kb/256986
@@ -281,74 +284,134 @@ RegistryMonitor::run()
 							break;
 						case REG_SZ:
 							extraData.push_back(L"REG_SZ");
-							extraData.push_back((wchar_t *)registryData);
-							break;
+							if(registryData != NULL){
+								extraData.push_back((wchar_t *)registryData);
+							}
+							else{
+								extraData.push_back(L"");
+							}
+								break;
 						case REG_EXPAND_SZ:
 							extraData.push_back(L"REG_EXPAND_SZ");
-							extraData.push_back((wchar_t *)registryData);
+							if(registryData != NULL){
+								extraData.push_back((wchar_t *)registryData);
+							}
+							else{
+								extraData.push_back(L"");
+							}
 							break;
 						case REG_BINARY:
 							extraData.push_back(L"REG_BINARY");
-							for(DWORD n = 0; n < e->dataLengthB; n++){
-								swprintf(szTemp, L"%x", registryData[n]);
-								other.append(szTemp);
+							if(registryData != NULL){
+								for(DWORD n = 0; n < e->dataLengthB; n++){
+									swprintf(szTemp, L"%x", registryData[n]);
+									other.append(szTemp);
+								}
+								extraData.push_back(other);
 							}
-							extraData.push_back(other);
+							else{
+								extraData.push_back(L"");
+							}
 							break;
 						case REG_DWORD:
 							extraData.push_back(L"REG_DWORD");
-							swprintf_s(szTemp, 256, L"%lx", ((DWORD *)registryData)[0]);
-							extraData.push_back(szTemp);
+							if(registryData != NULL){
+								swprintf_s(szTemp, 256, L"%lx", ((DWORD *)registryData)[0]);
+								extraData.push_back(szTemp);
+							}
+							else{
+								extraData.push_back(L"");
+							}
 							break;
 						//TODO: Untested
 						case REG_DWORD_BIG_ENDIAN:
 							extraData.push_back(L"REG_DWORD_BIG_ENDIAN");
-							swprintf_s(szTemp, 256, L"%x%x%x%x", registryData[0],registryData[1],registryData[2],registryData[3]);
-							extraData.push_back(szTemp);
+							if(registryData != NULL){
+								swprintf_s(szTemp, 256, L"%x%x%x%x", registryData[0],registryData[1],registryData[2],registryData[3]);
+								extraData.push_back(szTemp);
+							}
+							else{
+								extraData.push_back(L"");
+							}
 							break;
 						//From MS: "A Unicode string naming a symbolic link."
 						//TODO: Untested
 						case REG_LINK:
 							extraData.push_back(L"REG_LINK");
-							extraData.push_back((wchar_t *)registryData);
+							if(registryData != NULL){
+								extraData.push_back((wchar_t *)registryData);
+							}
+							else{
+								extraData.push_back(L"");
+							}
 							break;
 						//TODO: regedit won't let me make a string,empty string, string, but that 
 						// doesn't mean something else might not be able to do it. Look into it as it would
 						// break the while condition into ending early.
 						case REG_MULTI_SZ:
 							extraData.push_back(L"REG_MULTI_SZ");
-							while(((wchar_t *)registryData)[0] != '\0' ){
-								other.append((wchar_t *)registryData);
-								other.append(L"-|-");
-								tmp_len = wcsnlen((wchar_t *)registryData, 512); //This doesn't count the null char in the length
-								registryData = (BYTE *)((wchar_t *)registryData + (tmp_len + 1));
+							if(registryData != NULL){
+								while(((wchar_t *)registryData)[0] != '\0' ){
+									other.append((wchar_t *)registryData);
+									other.append(L"-|-");
+									tmp_len = wcsnlen((wchar_t *)registryData, 512); //This doesn't count the null char in the length
+									registryData = (BYTE *)((wchar_t *)registryData + (tmp_len + 1));
+								}
+								extraData.push_back(other);
 							}
-							extraData.push_back(other);
+							else{
+								extraData.push_back(L"");
+							}
 							break;
 						//TODO: Untested, "A series of nested arrays..."
 						case REG_RESOURCE_LIST:
 							extraData.push_back(L"REG_RESOURCE_LIST");
-							extraData.push_back(L"FILL IN");
+							if(registryData != NULL){
+								extraData.push_back(L"FILL IN");
+							}
+							else{
+								extraData.push_back(L"");
+							}
 							break;
 						//TODO: Untested, "A series of nested arrays..."
 						case REG_FULL_RESOURCE_DESCRIPTOR:
 							extraData.push_back(L"REG_FULL_RESOURCE_DESCRIPTOR");
-							extraData.push_back(L"FILL IN");
+							if(registryData != NULL){
+								extraData.push_back(L"FILL IN");
+							}
+							else{
+								extraData.push_back(L"");
+							}
 							break;
 						//TODO: Untested, "A series of nested arrays..."
 						case REG_RESOURCE_REQUIREMENTS_LIST:
 							extraData.push_back(L"REG_RESOURCE_REQUIREMENTS_LIST");
-							extraData.push_back(L"FILL IN");
+							if(registryData != NULL){
+								extraData.push_back(L"FILL IN");
+							}
+							else{
+								extraData.push_back(L"");
+							}
 							break;
 						case REG_QWORD_LITTLE_ENDIAN:
 							extraData.push_back(L"REG_QWORD");
-							swprintf_s(szTemp, 256, L"%lx%lx", ((DWORD *)registryData)[0],((DWORD *)registryData)[1]);
-							extraData.push_back(szTemp);
+							if(registryData != NULL){
+								swprintf_s(szTemp, 256, L"%lx%lx", ((DWORD *)registryData)[0],((DWORD *)registryData)[1]);
+								extraData.push_back(szTemp);
+							}
+							else{
+								extraData.push_back(L"");
+							}
 							break;
 						default:
 							extraData.push_back(L"UNKNOWN TYPE!");
-							swprintf_s(szTemp, 256, L"%ld", e->dataType);
-							extraData.push_back(szTemp);
+							if(registryData != NULL){
+								swprintf_s(szTemp, 256, L"%ld", e->dataType);
+								extraData.push_back(szTemp);
+							}
+							else{
+								extraData.push_back(L"");
+							}
 							break;
 					}
 					signal_onRegistryEvent(registryEventName, time, processPath, registryPath, extraData);
