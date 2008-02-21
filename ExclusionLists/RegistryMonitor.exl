@@ -20,6 +20,7 @@
 +	SetValueKey	C:\\WINDOWS\\system32\\winlogon.exe	HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Group Policy\\State\\.+
 +	SetValueKey	C:\\WINDOWS\\system32\\svchost.exe	\\REGISTRY\\USER\\.+
 +	SetValueKey	C:\\WINDOWS\\system32\\svchost.exe	HKU\\.+
++	SetValueKey	C:\\WINDOWS\\system32\\WgaTray\.exe	HKCU\\SOFTWARE\\Microsoft\\SystemCertificates\\.+
 +	SetValueKey	C:\\WINDOWS\\system32\\svchost.exe	HKCU\\Software\\Microsoft\\SystemCertificates\\Root\\.+
 +	SetValueKey	C:\\WINDOWS\\system32\\svchost.exe	HKLM\\SOFTWARE\\Microsoft\\SystemCertificates\\AuthRoot\\.+
 +	SetValueKey	C:\\WINDOWS\\system32\\svchost.exe	HKLM\\SOFTWARE\\Microsoft\\PCHealth\\.+
@@ -45,6 +46,7 @@
 +	DeleteValueKey	C:\\WINDOWS\\system32\\winlogon.exe	HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Group Policy\\State\\.+
 +	DeleteValueKey	C:\\WINDOWS\\system32\\svchost.exe	\\REGISTRY\\USER\\.+
 +	DeleteValueKey	C:\\WINDOWS\\system32\\svchost.exe	HKU\\.+
++	DeleteValueKey	C:\\WINDOWS\\system32\\WgaTray\.exe	HKCU\\SOFTWARE\\Microsoft\\SystemCertificates\\.+
 +	DeleteValueKey	C:\\WINDOWS\\system32\\svchost.exe	HKCU\\Software\\Microsoft\\SystemCertificates\\Root\\.+
 +	DeleteValueKey	C:\\WINDOWS\\system32\\svchost.exe	HKLM\\SOFTWARE\\Microsoft\\SystemCertificates\\AuthRoot\\.+
 +	DeleteValueKey	C:\\WINDOWS\\system32\\svchost.exe	HKLM\\SOFTWARE\\Microsoft\\PCHealth\\.+
@@ -239,6 +241,17 @@
 +	SetValueKey	C:\\Program Files\\Mozilla Firefox\\firefox\.exe	HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Shell Folders
 +	SetValueKey	C:\\Program Files\\Mozilla Firefox\\firefox\.exe	HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\MountPoints2.*
 +	SetValueKey	C:\\Program Files\\Mozilla Firefox\\firefox\.exe	HKLM\\SOFTWARE\\FullCircle\\TalkBack\\MozillaOrgFirefox2.*
++	SetValueKey	C:\\WINDOWS\\system32\\svchost.exe	HKLM\\SOFTWARE\\Microsoft\\WBEM.*
++	SetValueKey	C:\\WINDOWS\\system32\\wbem\\wmiprvse.exe	HKLM\\SOFTWARE\\Microsoft\\WBEM.*
++	DeleteValueKey	C:\\WINDOWS\\system32\\wbem\\wmiprvse.exe	HKLM\\SOFTWARE\\Microsoft\\WBEM.*
++	DeleteValueKey	C:\\WINDOWS\\system32\\svchost.exe	HKLM\\SOFTWARE\\Microsoft\\WBEM.*
++	SetValueKey	C:\\WINDOWS\\system32\\wbem\\wmiadap.exe	HKLM\\SOFTWARE\\Microsoft\\WBEM.*
++	SetValueKey	C:\\WINDOWS\\system32\\wbem\\wmiadap.exe	HKLM\\SYSTEM\\ControlSet001\\Services\\WmiApRpl\\Performance.*
++	SetValueKey	C:\\WINDOWS\\system32\\wbem\\wmiadap.exe	HKLM\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Perflib.*
++	DeleteValueKey	C:\\WINDOWS\\system32\\wbem\\wmiadap.exe	HKLM\\SOFTWARE\\Microsoft\\WBEM.*
++	DeleteValueKey	C:\\WINDOWS\\system32\\wbem\\wmiadap.exe	HKLM\\SYSTEM\\ControlSet001\\Services\\WmiApRpl\\Performance.*
++	DeleteValueKey	C:\\WINDOWS\\system32\\wbem\\wmiadap.exe	HKLM\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Perflib.*
+
 #During debugging only
 
 +	SetValueKey	F:\\Program Files\\Microsoft Visual Studio 8\\Common7\\IDE\\VCExpress\.exe	HKCU\\Software\\Microsoft\\VSCommon\\8.0.+
@@ -279,3 +292,22 @@
 +	DeleteValueKey	C:\\Program Files\\Internet Explorer\\iexplore\.exe	HKCU\\Software\\Macromedia\\FlashPlayer
 +	SetValueKey	C:\\Program Files\\Internet Explorer\\iexplore\.exe	HKLM\\SOFTWARE\\Macromedia\\FlashPlayer
 +	SetValueKey	System	HKLM\\SYSTEM\\ControlSet001\\Enum\\Root\\LEGACY_HTTP\\0000\\Control
+#### Honeyclient manual add (per ticket #49) Obv things could be combined into more compact regex, but don't want to for now
++	SetValueKey	C:\\Program Files\\Windows Media Player\\setup_wm\.exe	HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Shell Folders
++	SetValueKey	C:\\Program Files\\Windows Media Player\\setup_wm\.exe	HKCU\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Shell Folders
++	SetValueKey	C:\\Program Files\\Windows Media Player\\setup_wm\.exe	HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\MountPoints.+
++	SetValueKey	C:\\Program Files\\Windows Media Player\\setup_wm\.exe	HKLM\\SOFTWARE\\Microsoft\\MediaPlayer\\services
+#### Honeyclient manual add (per ticket #128)
++	SetValueKey	C:\\Program Files\\Internet Explorer\\iexplore\.exe	HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts\\\.css\\OpenWithList
++	SetValueKey	C:\\Program Files\\Internet Explorer\\iexplore\.exe	HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts\\\.css\\OpenWithProgids
+#### Honeyclient manual add from different SP2 image
++	DeleteValueKey	C:\\WINDOWS\\system32\\spoolsv\.exe	HKU\\.+\\Software\\Microsoft\\Windows NT\\CurrentVersion\\Windows
++	DeleteValueKey	C:\\WINDOWS\\system32\\spoolsv\.exe	HKCU\\Software\\Microsoft\\Windows NT\\CurrentVersion\\Windows
++	SetValueKey	C:\\WINDOWS\\system32\\spoolsv\.exe	HKLM\\SYSTEM\\ControlSet001\\Services\\Eventlog\\System\\Print
++	DeleteValueKey	C:\\WINDOWS\\system32\\spoolsv\.exe	HKU\\\.DEFAULT\\Software\\Microsoft\\Windows NT\\CurrentVersion\\Windows
++	SetValueKey	C:\\WINDOWS\\system32\\spoolsv\.exe	HKLM\\SYSTEM\\ControlSet001\\Services\\Eventlog\\System\\TCPMon
++	SetValueKey	C:\\WINDOWS\\system32\\spoolsv\.exe	HKLM\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Print\\Printers
++	SetValueKey	C:\\WINDOWS\\system32\\spoolsv\.exe	HKLM\\SYSTEM\\ControlSet001\\Control\\Print
++	DeleteValueKey	C:\\WINDOWS\\system32\\spoolsv\.exe	HKU\\.+\\Software\\Microsoft\\Windows NT\\CurrentVersion\\Windows
++	SetValueKey	C:\\WINDOWS\\system32\\spoolsv\.exe	HKLM\\SYSTEM\\ControlSet001\\Control\\Print\\Printers
++	SetValueKey	C:\\WINDOWS\\system32\\spoolsv\.exe	HKLM\\SYSTEM\\ControlSet001\\Control\\Print\\Providers

@@ -105,6 +105,7 @@
 +	Write	C:\\WINDOWS\\system32\\wbem\\wmiprvse\.exe	C:\\WINDOWS\\system32\\wpa\.dbl
 +	Write	C:\\WINDOWS\\system32\\WgaTray\.exe	C:\\Documents and Settings\\All Users\\Application Data\\Windows Genuine Advantage\\data\\data\.dat
 +	Write	C:\\WINDOWS\\system32\\WgaTray\.exe	C:\\WINDOWS\\Temp\\WGANotify\.settings
++	Write	C:\\WINDOWS\\system32\\WgaTray\.exe	C:\\Documents and Settings\\Administrator\\Application Data\\Microsoft\\CryptnetUrlCache.*
 +	Delete	C:\\WINDOWS\\system32\\wuauclt\.exe	C:\\WINDOWS\\SoftwareDistribution\\DataStore\\Logs\\tmp.*
 #Firefox
 +	Delete	C:\\Program Files\\Mozilla Firefox\\firefox\.exe	C:\\Documents and Settings\\Administrator\\Application Data\\Mozilla\\Firefox\\Profiles.*
@@ -159,3 +160,8 @@
 +	Write	C:\\WINDOWS\\system32\\wbem\\wmiprvse\.exe	E:\\$Mft
 #### HONEYCLIENT manual
 +	Write	C:\\WINDOWS\\system32\\dwwin\.exe	C:\\Documents and Settings\\Administrator\\Local Settings\\Temp\\.*
+
+#### Honeyclient manual add - Windows managment interface
++	Delete	C:\\WINDOWS\\system32\\wbem\\wmiadap\.exe	C:\\WINDOWS\\system32\\wbem\\Performance\\WmiApRpl\.ini
++	Delete	C:\\WINDOWS\\system32\\wbem\\wmiadap\.exe	C:\\WINDOWS\\system32\\wbem\\Performance\\WmiApRpl\.h
++	Delete	C:\\WINDOWS\\system32\\wbem\\wmiadap\.exe	C:\\WINDOWS\\system32\\PerfStringBackup\.TMP
