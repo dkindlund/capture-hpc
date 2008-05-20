@@ -15,7 +15,7 @@ MySoapServer::~MySoapServer(){}
 void
 MySoapServer::run(){
 
-/*   struct soap soap;
+   struct soap soap;
    SOCKET m, s; // master and slave sockets
    soap_init(&soap);
    m = soap_bind(&soap, "192.168.0.131", 1234, 100);
@@ -42,7 +42,7 @@ MySoapServer::run(){
       }
    }
    soap_done(&soap); // close master socket and detach environment
-*/
+
 }
 
 

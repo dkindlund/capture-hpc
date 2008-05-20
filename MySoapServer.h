@@ -1,4 +1,4 @@
-//#include "calc.h"
+#include "calc.h"
 #include "Thread.h"
 
 class MySoapServer : public Runnable
