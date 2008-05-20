@@ -300,11 +300,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\calc.h"
+				RelativePath=".\CaptureGlobal.h"
 				>
 			</File>
 			<File
-				RelativePath=".\CaptureGlobal.h"
+				RelativePath=".\captureGSOAP.h"
 				>
 			</File>
 			<File

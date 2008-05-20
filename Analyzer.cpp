@@ -9,15 +9,12 @@ Analyzer::Analyzer(Visitor* v, Server* s)
 	captureNetworkPackets = false;
 	networkPacketDumper = NULL;
 
-	printf("\n\n\nin analyzer\n\n\n");
 	onOptionChangedConnection = OptionsManager::getInstance()->connect_onOptionChanged(boost::bind(&Analyzer::onOptionChanged, this, _1));
 
 	visitor = v;
 	visitor->onVisitEvent(boost::bind(&Analyzer::onVisitEvent, this, _1, _2, _3, _4));
 	
 	server = s;
-
-	MySoapServer a = MySoapServer();
 
 	processMonitor->start();
 	registryMonitor->start();
