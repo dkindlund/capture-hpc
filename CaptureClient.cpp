@@ -59,6 +59,7 @@ public:
 
 		/* Start running the Capture Client */
 		visitor = new Visitor();
+		printf("entering analyzer\n");
 		analyzer =  new Analyzer(visitor, server);
 		Thread* captureClientThread = new Thread(this);
 		captureClientThread->start("CaptureClient");

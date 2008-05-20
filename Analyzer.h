@@ -35,6 +35,7 @@
 #include "FileMonitor.h"
 #include "NetworkPacketDumper.h"
 #include "FileUploader.h"
+#include "MySoapServer.h"
 
 using namespace std;
 

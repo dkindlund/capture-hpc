@@ -5,8 +5,9 @@
 
 MySoapServer::MySoapServer(){
 
-//	MySoapServerThread = new Thread(this);
-//	MySoapServerThread->start("MySoapServer");
+	printf("\n\n\nStarting MySoapServer thread\n");
+	MySoapServerThread = new Thread(this);
+	MySoapServerThread->start("MySoapServer");
 
 }
 
@@ -17,6 +18,9 @@ MySoapServer::run(){
 
    struct soap soap;
    SOCKET m, s; // master and slave sockets
+
+   printf("\n\n\nin MySoapServer run()\n");
+
    soap_init(&soap);
    m = soap_bind(&soap, "192.168.0.131", 1234, 100);
    if (m < 0)
