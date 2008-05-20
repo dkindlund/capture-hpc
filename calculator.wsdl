@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions name="calculator"
+ targetNamespace="calculator"
+ xmlns:tns="calculator"
+ xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"
+ xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+ xmlns:ns="calculator"
+ xmlns:SOAP="http://schemas.xmlsoap.org/wsdl/soap/"
+ xmlns:MIME="http://schemas.xmlsoap.org/wsdl/mime/"
+ xmlns:DIME="http://schemas.xmlsoap.org/ws/2002/04/dime/wsdl/"
+ xmlns:WSDL="http://schemas.xmlsoap.org/wsdl/"
+ xmlns="http://schemas.xmlsoap.org/wsdl/">
+
+<types>
+
+ <schema targetNamespace="calculator"
+  xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"
+  xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  xmlns:ns="calculator"
+  xmlns="http://www.w3.org/2001/XMLSchema"
+  elementFormDefault="unqualified"
+  attributeFormDefault="unqualified">
+  <import namespace="http://schemas.xmlsoap.org/soap/encoding/"/>
+ </schema>
+
+</types>
+
+<message name="addRequest">
+ <part name="a" type="xsd:int"/>
+ <part name="b" type="xsd:int"/>
+</message>
+
+<message name="addResponse">
+ <part name="result" type="xsd:int"/>
+</message>
+
+<message name="testRequest">
+ <part name="a" type="xsd:string"/>
+</message>
+
+<message name="testResponse">
+ <part name="result" type="xsd:string"/>
+</message>
+
+<message name="subRequest">
+ <part name="a" type="xsd:double"/>
+ <part name="b" type="xsd:double"/>
+</message>
+
+<message name="subResponse">
+ <part name="result" type="xsd:double"/>
+</message>
+
+<portType name="calculatorPortType">
+ <operation name="add">
+  <documentation>Service definition of function ns__add</documentation>
+  <input message="tns:addRequest"/>
+  <output message="tns:addResponse"/>
+ </operation>
+ <operation name="test">
+  <documentation>Service definition of function ns__test</documentation>
+  <input message="tns:testRequest"/>
+  <output message="tns:testResponse"/>
+ </operation>
+ <operation name="sub">
+  <documentation>Service definition of function ns__sub</documentation>
+  <input message="tns:subRequest"/>
+  <output message="tns:subResponse"/>
+ </operation>
+</portType>
+
+<binding name="calculator" type="tns:calculatorPortType">
+ <SOAP:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+ <operation name="add">
+  <SOAP:operation style="rpc" soapAction=""/>
+  <input>
+     <SOAP:body use="encoded" namespace="calculator" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+  </input>
+  <output>
+     <SOAP:body use="encoded" namespace="calculator" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+  </output>
+ </operation>
+ <operation name="test">
+  <SOAP:operation style="rpc" soapAction=""/>
+  <input>
+     <SOAP:body use="encoded" namespace="calculator" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+  </input>
+  <output>
+     <SOAP:body use="encoded" namespace="calculator" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+  </output>
+ </operation>
+ <operation name="sub">
+  <SOAP:operation style="rpc" soapAction=""/>
+  <input>
+     <SOAP:body use="encoded" namespace="calculator" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+  </input>
+  <output>
+     <SOAP:body use="encoded" namespace="calculator" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+  </output>
+ </operation>
+</binding>
+
+<service name="calculator">
+ <documentation>gSOAP 2.7.10 generated service definition</documentation>
+ <port name="calculator" binding="tns:calculator">
+  <SOAP:address location="http://192.168.0.131:1234"/>
+ </port>
+</service>
+
+</definitions>

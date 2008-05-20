@@ -40,7 +40,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="D:\WpdPack\Include;D:\expatpp\src_pp;D:\WinDDK\6000\inc;D:\boost\boost_1_34_0;D:\expatpp\expat\lib;&quot;D:\Microsoft Platform SDK for Windows Server 2003 R2\Include&quot;"
+				AdditionalIncludeDirectories="F:\Boost;&quot;F:\Program Files\Microsoft Platform SDK\Include&quot;;F:\WinDDK\6000\inc\api;&quot;F:\capture-mod\expatpp\src_pp&quot;;&quot;F:\capture-mod\expatpp\expat\lib&quot;;&quot;F:\capture-mod\WpdPack_4_0_1\WpdPack\Include&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -63,9 +63,9 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/VERBOSE:LIB"
-				AdditionalDependencies="kernel32.lib Ws2_32.lib Advapi32.lib Psapi.lib fltLib.lib shlwapi.lib expatpp.lib shell32.lib Urlmon.lib $(NOINHERIT)"
+				AdditionalDependencies="kernel32.lib Ws2_32.lib Advapi32.lib Psapi.lib fltLib.lib shlwapi.lib expatpp.lib shell32.lib Urlmon.lib wsock32.lib $(NOINHERIT)"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="D:\WinDDK\6000\lib\wxp\i386;D:\expatpp\vc_pp\expatpp\DebugMTDLL;&quot;D:\Microsoft Platform SDK for Windows Server 2003 R2\Lib&quot;;D:\boost\boost_1_34_0\lib"
+				AdditionalLibraryDirectories="F:\boost_1_34_0\lib;&quot;F:\Program Files\Microsoft Platform SDK\Lib&quot;;F:\WinDDK\6000\lib\wxp\i386;&quot;F:\capture-mod\expatpp\expat\lib&quot;;&quot;F:\capture-mod\expatpp\vc_pp\expatpp\ReleaseMT&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				TargetMachine="1"
@@ -218,6 +218,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\MySoapServer.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\NetworkAdapter.cpp"
 				>
 			</File>
@@ -258,6 +262,18 @@
 				>
 			</File>
 			<File
+				RelativePath=".\soapC.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\soapServer.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\stdsoap2.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Updater.cpp"
 				>
 			</File>
@@ -281,6 +297,10 @@
 			</File>
 			<File
 				RelativePath=".\ApplicationPlugin.h"
+				>
+			</File>
+			<File
+				RelativePath=".\calc.h"
 				>
 			</File>
 			<File
@@ -313,6 +333,10 @@
 			</File>
 			<File
 				RelativePath=".\Monitor.h"
+				>
+			</File>
+			<File
+				RelativePath=".\MySoapServer.h"
 				>
 			</File>
 			<File
@@ -360,6 +384,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\soapH.h"
+				>
+			</File>
+			<File
+				RelativePath=".\stdsoap2.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Thread.h"
 				>
 			</File>
@@ -381,10 +413,6 @@
 			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav"
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
-			<File
-				RelativePath=".\CaptureClient.rc"
-				>
-			</File>
 		</Filter>
 		<File
 			RelativePath=".\ReadMe.txt"

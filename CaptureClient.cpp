@@ -48,6 +48,7 @@ public:
 			Logger::getInstance()->openLogFile(OptionsManager::getInstance()->getOption(L"log-system-events-file"));
 
 		hStopRunning = CreateEvent(NULL, FALSE, FALSE, NULL);
+		//XENO - Right here, set up the standalone SOAP server
 		wstring serverIp = OptionsManager::getInstance()->getOption(L"server");
 		server = new Server(serverIp, 7070);
 		server->onConnectionStatusChanged(boost::bind(&CaptureClient::onConnectionStatusChanged, this, _1));
