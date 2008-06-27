@@ -77,6 +77,7 @@ public:
 	boost::signals::connection connect_onServerEvent(wstring eventType, const signal_serverEvent::slot_type& s);
 
 	void receiveServerEvent(const char* xmlDocument);
+	void notifyListeners(pElement pInputElement);
 private:
 	static bool instanceCreated;
     static EventController *pEventController;

@@ -49,8 +49,6 @@ public:
 			Logger::getInstance()->openLogFile(OptionsManager::getInstance()->getOption(L"log-system-events-file"));
 
 		hStopRunning = CreateEvent(NULL, FALSE, FALSE, NULL);
-		//XENO - Right here, set up the standalone SOAP server
-		MySoapServer a = MySoapServer();
 
 		wstring serverIp = OptionsManager::getInstance()->getOption(L"server");
 		server = new Server(serverIp, 7070);
@@ -62,8 +60,9 @@ public:
 
 		/* Start running the Capture Client */
 		visitor = new Visitor();
-		printf("entering analyzer\n");
-		analyzer =  new Analyzer(visitor, server);
+		//Set up the standalone SOAP server
+		MySoapServer a = MySoapServer(visitor);
+		analyzer = new Analyzer(visitor, server);
 		Thread* captureClientThread = new Thread(this);
 		captureClientThread->start("CaptureClient");
 	}

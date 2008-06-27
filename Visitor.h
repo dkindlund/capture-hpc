@@ -67,13 +67,14 @@ public:
 	~Visitor(void);
 
 	boost::signals::connection onVisitEvent(const signal_visitEvent::slot_type& s);
+	void onServerEvent(Element* pElement);
 private:
 	void loadClientPlugins();
 	void unloadClientPlugins();
 
 	void run();
 
-	void onServerEvent(Element* pElement);
+//	void onServerEvent(Element* pElement); //XENO: Forced public for tests
 
 	ApplicationPlugin* createApplicationPluginObject(HMODULE hPlugin);
 
@@ -85,4 +86,7 @@ private:
 	stdext::hash_map<HMODULE, std::list<ApplicationPlugin*>*> applicationPlugins;
 	boost::signals::connection onServerVisitEventConnection;
 	stdext::hash_map<wstring, ApplicationPlugin*> applicationMap;
+
+	char * threadname;
+	///int count;
 };

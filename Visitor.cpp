@@ -1,14 +1,20 @@
 #include "Visitor.h"
 
+unsigned int threadCount = 0;
+
 Visitor::Visitor(void)
 {
 	visiting = false;
 
 	hQueueNotEmpty = CreateEvent(NULL, FALSE, FALSE, NULL);
+	printf("Visitor: boost that sucka\n");
 	onServerVisitEventConnection=EventController::getInstance()->connect_onServerEvent(L"visit", boost::bind(&Visitor::onServerEvent, this, _1));
 
 	loadClientPlugins();
 
+//	threadname = new char[10];
+//	sprintf(threadname, "Visitor%d\n", threadCount);
+//	threadCount++;
 	visitorThread = new Thread(this);
 	visitorThread->start("Visitor");
 }
@@ -18,6 +24,7 @@ Visitor::~Visitor(void)
 	onServerVisitEventConnection.disconnect();
 	CloseHandle(hQueueNotEmpty);
 	unloadClientPlugins();
+	delete threadname;
 	// TODO free items in toVisit queue
 }
 
@@ -32,7 +39,9 @@ Visitor::run()
 {
 	while(true)
 	{
+		printf("Visitor::run, waiting\n");
 		WaitForSingleObject(hQueueNotEmpty, INFINITE);
+		printf("Visitor::run, runing\n");
 		VisitPair visit = toVisit.front();
 		toVisit.pop();
 		DWORD minorErrorCode = 0;
@@ -81,7 +90,7 @@ Visitor::loadClientPlugins()
 		do
 		{
 			wstring pluginDir = L"plugins\\";
-			pluginDir += FindFileData.cFileName;			
+			pluginDir += FindFileData.cFileName;
 			HMODULE hPlugin = LoadLibrary(pluginDir.c_str());
 
 			if(hPlugin != NULL)
@@ -173,6 +182,7 @@ Visitor::unloadClientPlugins()
 void
 Visitor::onServerEvent(Element* pElement)
 {
+	printf("Visitor::onServerEvent");
 	wstring applicationName = L"iexplore";
 	wstring url = L"";
 	int time = 30;

@@ -68,6 +68,29 @@ EventController::notifyListeners()
 	}
 }
 
+void
+EventController::notifyListeners(pElement pInputElement)
+{
+
+	pCurrentElement = (Element *)pInputElement;
+	if(pCurrentElement != NULL)
+	{
+		stdext::hash_map<wstring, signal_serverEvent*>::iterator it;
+		it = onServerEventMap.find(pCurrentElement->name);
+		if(it != onServerEventMap.end())
+		{
+			signal_serverEvent* signal_onServerEvent = it->second;
+			(*signal_onServerEvent)(pCurrentElement);
+		}	
+		if(pCurrentElement->data != NULL)
+		{
+			free(pCurrentElement->data);
+		}
+		delete pCurrentElement;
+		pCurrentElement = NULL;
+	}
+}
+
 void 
 EventController::receiveServerEvent(const char* xmlDocument)
 {

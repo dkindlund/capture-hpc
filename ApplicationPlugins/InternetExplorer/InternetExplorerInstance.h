@@ -24,7 +24,8 @@ private:
 private:
 	/* Below are various methods we must implement for DWebBrowserEvents.
 	   Just ignore most of them as they are just stubs. The important ones
-	   are implemented in Application_InternetExplorer.cpp */
+	   are implemented in Application_InternetExplorer.cpp 
+	XENO: To be clear, the things below are actually IUnknown or IDispatch methods*/
 	HRESULT STDMETHODCALLTYPE QueryInterface( 
                 /* [in] */ REFIID riid,
                 /* [iid_is][out] */ void __RPC_FAR *__RPC_FAR *ppvObject)

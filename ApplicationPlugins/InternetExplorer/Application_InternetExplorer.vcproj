@@ -64,7 +64,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="comsuppw.lib Version.lib Advapi32.lib"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;D:\Microsoft Platform SDK for Windows Server 2003 R2\Lib&quot;"
+				AdditionalLibraryDirectories="F:\WinDDK\6000\lib\wxp\i386;&quot;D:\Microsoft Platform SDK for Windows Server 2003 R2\Lib&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				ResourceOnlyDLL="false"

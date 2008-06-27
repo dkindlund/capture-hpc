@@ -27,7 +27,7 @@
 /*
 	Class: Thread
 
-	Class that accepts a pointer to another class that implements the <IRunnable> interface. This then wraps the c-style function 
+	Class that accepts a pointer to another class that implements the <Runnable> interface. This then wraps the c-style function 
 	for creating a thread (threadProc) and creates an OO way to initialise, start, and stop a thread.
 */
 /*
@@ -54,7 +54,7 @@ public:
 	/*
 		Constructor: Thread
 
-		Creates a thread object and stores the object which implements the IRunnable interface in <_threadObj>
+		Creates a thread object and stores the object which implements the Runnable interface in <_threadObj>
 	*/
 	Thread(Runnable *ptr) {
 		_threadObj = ptr;
@@ -110,7 +110,7 @@ protected:
 	/*
 		Variable: _threadObj
 
-		Pointer to an object which implements the IRunnable interface
+		Pointer to an object which implements the Runnable interface
 	*/
 	Runnable *_threadObj;
 

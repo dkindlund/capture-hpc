@@ -121,7 +121,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="3"
-				AdditionalIncludeDirectories="D:\WpdPack\Include;D:\expatpp\src_pp;D:\WinDDK\6000\inc;D:\boost\boost_1_34_0;D:\expatpp\expat\lib;&quot;D:\Microsoft Platform SDK for Windows Server 2003 R2\Include&quot;"
+				AdditionalIncludeDirectories="F:\Boost;&quot;F:\Program Files\Microsoft Platform SDK\Include&quot;;F:\WinDDK\6000\inc\api;&quot;F:\capture-mod\expatpp\src_pp&quot;;&quot;F:\capture-mod\expatpp\expat\lib&quot;;&quot;F:\capture-mod\WpdPack_4_0_1\WpdPack\Include&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
@@ -143,7 +143,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="kernel32.lib Ws2_32.lib Advapi32.lib Psapi.lib fltLib.lib shlwapi.lib expatpp.lib shell32.lib Urlmon.lib $(NOINHERIT)"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="D:\WinDDK\6000\lib\wxp\i386;D:\expatpp\vc_pp\expatpp\ReleaseMTDLL;&quot;D:\Microsoft Platform SDK for Windows Server 2003 R2\Lib&quot;;D:\boost\boost_1_34_0\lib"
+				AdditionalLibraryDirectories="F:\boost_1_34_0\lib;&quot;F:\Program Files\Microsoft Platform SDK\Lib&quot;;F:\WinDDK\6000\lib\wxp\i386;&quot;F:\capture-mod\expatpp\expat\lib&quot;;&quot;F:\capture-mod\expatpp\vc_pp\expatpp\ReleaseMT&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				OptimizeReferences="2"

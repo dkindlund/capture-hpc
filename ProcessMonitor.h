@@ -57,7 +57,7 @@ typedef struct _PROCESS_TUPLE
 	<ProcessManager> and then checked for exclusion and passed onto all objects which
 	are attached to the onProcessEvent slot
 
-	Implements: <IRunnable>, <VisitorListener>, <Monitor>
+	Implements: <Runnable>, <VisitorListener>, <Monitor>
 */
 class ProcessMonitor : public Runnable, public Monitor
 {
