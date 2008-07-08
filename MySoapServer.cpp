@@ -88,14 +88,14 @@ int ns__ping(struct soap *soap, char * a, char ** result)
 	att.name = L"url";
 	att.value = L"http://slashdot.org";
 	Element e;
-	e.name = L"iexplore";
+	e.name = L"visit";
 	e.attributes.push_back(att);
 	e.data = NULL;
 	e.dataLength = 0;
-//	printf("trying with notifyListeners\n");
-//	EventController::getInstance()->notifyListeners(&e);
+	printf("trying with notifyListeners\n");
+	EventController::getInstance()->notifyListeners(&e);
 	printf("trying with globVisitor\n");
-	globVisitor->onServerEvent(&e);
+//	globVisitor->onServerEvent(&e);
 
    return SOAP_OK; 
 }
