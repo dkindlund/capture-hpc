@@ -4,10 +4,10 @@
  xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/"
  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
- xmlns:ns="calculator">
+ xmlns:ns="capture">
  <SOAP-ENV:Body SOAP-ENV:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">
-  <ns:sqrt>
-   <a>0.0</a>
-  </ns:sqrt>
+  <ns:junks>
+   <a></a>
+  </ns:junks>
  </SOAP-ENV:Body>
 </SOAP-ENV:Envelope>

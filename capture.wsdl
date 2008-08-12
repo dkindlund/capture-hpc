@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<definitions name="calculator"
- targetNamespace="calculator"
- xmlns:tns="calculator"
+<definitions name="capture"
+ targetNamespace="capture"
+ xmlns:tns="capture"
  xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"
  xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/"
  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
- xmlns:ns="calculator"
+ xmlns:ns="capture"
  xmlns:SOAP="http://schemas.xmlsoap.org/wsdl/soap/"
  xmlns:MIME="http://schemas.xmlsoap.org/wsdl/mime/"
  xmlns:DIME="http://schemas.xmlsoap.org/ws/2002/04/dime/wsdl/"
@@ -15,16 +15,28 @@
 
 <types>
 
- <schema targetNamespace="calculator"
+ <schema targetNamespace="capture"
   xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"
   xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-  xmlns:ns="calculator"
+  xmlns:ns="capture"
   xmlns="http://www.w3.org/2001/XMLSchema"
   elementFormDefault="unqualified"
   attributeFormDefault="unqualified">
   <import namespace="http://schemas.xmlsoap.org/soap/encoding/"/>
+  <complexType name="myStruct2">
+   <complexContent>
+    <restriction base="ns:ms2">
+    </restriction>
+   </complexContent>
+  </complexType>
+  <complexType name="ms2">
+   <sequence>
+     <element name="first" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="last" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+   </sequence>
+  </complexType>
  </schema>
 
 </types>
@@ -38,11 +50,11 @@
  <part name="result" type="xsd:int"/>
 </message>
 
-<message name="testRequest">
+<message name="pingRequest">
  <part name="a" type="xsd:string"/>
 </message>
 
-<message name="testResponse">
+<message name="pingResponse">
  <part name="result" type="xsd:string"/>
 </message>
 
@@ -55,58 +67,81 @@
  <part name="result" type="xsd:double"/>
 </message>
 
-<portType name="calculatorPortType">
+<message name="junks">
+ <part name="a" type="xsd:string"/>
+</message>
+
+<message name="ms2">
+ <part name="first" type="xsd:string"/>
+ <part name="last" type="xsd:string"/>
+</message>
+
+<portType name="capturePortType">
  <operation name="add">
   <documentation>Service definition of function ns__add</documentation>
   <input message="tns:addRequest"/>
   <output message="tns:addResponse"/>
  </operation>
- <operation name="test">
-  <documentation>Service definition of function ns__test</documentation>
-  <input message="tns:testRequest"/>
-  <output message="tns:testResponse"/>
+ <operation name="ping">
+  <documentation>Service definition of function ns__ping</documentation>
+  <input message="tns:pingRequest"/>
+  <output message="tns:pingResponse"/>
  </operation>
  <operation name="sub">
   <documentation>Service definition of function ns__sub</documentation>
   <input message="tns:subRequest"/>
   <output message="tns:subResponse"/>
  </operation>
+ <operation name="junks">
+  <documentation>Service definition of function ns__junks</documentation>
+  <input message="tns:junks"/>
+  <output message="tns:ms2"/>
+ </operation>
 </portType>
 
-<binding name="calculator" type="tns:calculatorPortType">
+<binding name="capture" type="tns:capturePortType">
  <SOAP:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
  <operation name="add">
   <SOAP:operation style="rpc" soapAction=""/>
   <input>
-     <SOAP:body use="encoded" namespace="calculator" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+     <SOAP:body use="encoded" namespace="capture" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
   </input>
   <output>
-     <SOAP:body use="encoded" namespace="calculator" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+     <SOAP:body use="encoded" namespace="capture" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
   </output>
  </operation>
- <operation name="test">
+ <operation name="ping">
   <SOAP:operation style="rpc" soapAction=""/>
   <input>
-     <SOAP:body use="encoded" namespace="calculator" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+     <SOAP:body use="encoded" namespace="capture" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
   </input>
   <output>
-     <SOAP:body use="encoded" namespace="calculator" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+     <SOAP:body use="encoded" namespace="capture" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
   </output>
  </operation>
  <operation name="sub">
   <SOAP:operation style="rpc" soapAction=""/>
   <input>
-     <SOAP:body use="encoded" namespace="calculator" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+     <SOAP:body use="encoded" namespace="capture" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
   </input>
   <output>
-     <SOAP:body use="encoded" namespace="calculator" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+     <SOAP:body use="encoded" namespace="capture" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+  </output>
+ </operation>
+ <operation name="junks">
+  <SOAP:operation style="rpc" soapAction=""/>
+  <input>
+     <SOAP:body use="encoded" namespace="capture" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+  </input>
+  <output>
+     <SOAP:body use="encoded" namespace="capture" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
   </output>
  </operation>
 </binding>
 
-<service name="calculator">
+<service name="capture">
  <documentation>gSOAP 2.7.10 generated service definition</documentation>
- <port name="calculator" binding="tns:calculator">
+ <port name="capture" binding="tns:capture">
   <SOAP:address location="http://192.168.0.131:1234"/>
  </port>
 </service>
