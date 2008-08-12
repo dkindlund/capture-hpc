@@ -3,7 +3,7 @@
 */
 
 #pragma once
-#include "captureGSOAP.h"
+//#include "captureGSOAP.h"
 #include "Thread.h"
 
 #include "CaptureGlobal.h"

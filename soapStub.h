@@ -27,8 +27,29 @@
 
 #endif
 
+#ifndef SOAP_TYPE_s
+#define SOAP_TYPE_s (7)
+/* s */
+struct s
+{
+public:
+	char *first;	/* SOAP 1.2 RPC return element (when namespace qualified) */	/* optional element of type xsd:string */
+	char *last;	/* optional element of type xsd:string */
+};
+#endif
+
+#ifndef SOAP_TYPE_ns__junks
+#define SOAP_TYPE_ns__junks (11)
+/* ns:junks */
+struct ns__junks
+{
+public:
+	char *a;	/* optional element of type xsd:string */
+};
+#endif
+
 #ifndef SOAP_TYPE_ns__addResponse
-#define SOAP_TYPE_ns__addResponse (9)
+#define SOAP_TYPE_ns__addResponse (14)
 /* ns:addResponse */
 struct ns__addResponse
 {
@@ -38,7 +59,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ns__add
-#define SOAP_TYPE_ns__add (10)
+#define SOAP_TYPE_ns__add (15)
 /* ns:add */
 struct ns__add
 {
@@ -49,7 +70,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ns__pingResponse
-#define SOAP_TYPE_ns__pingResponse (13)
+#define SOAP_TYPE_ns__pingResponse (18)
 /* ns:pingResponse */
 struct ns__pingResponse
 {
@@ -59,7 +80,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ns__ping
-#define SOAP_TYPE_ns__ping (14)
+#define SOAP_TYPE_ns__ping (19)
 /* ns:ping */
 struct ns__ping
 {
@@ -69,7 +90,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ns__visitResponse
-#define SOAP_TYPE_ns__visitResponse (16)
+#define SOAP_TYPE_ns__visitResponse (21)
 /* ns:visitResponse */
 struct ns__visitResponse
 {
@@ -79,7 +100,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ns__visit
-#define SOAP_TYPE_ns__visit (17)
+#define SOAP_TYPE_ns__visit (22)
 /* ns:visit */
 struct ns__visit
 {
@@ -89,7 +110,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ns__subResponse
-#define SOAP_TYPE_ns__subResponse (21)
+#define SOAP_TYPE_ns__subResponse (26)
 /* ns:subResponse */
 struct ns__subResponse
 {
@@ -99,7 +120,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ns__sub
-#define SOAP_TYPE_ns__sub (22)
+#define SOAP_TYPE_ns__sub (27)
 /* ns:sub */
 struct ns__sub
 {
@@ -110,7 +131,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_SOAP_ENV__Header
-#define SOAP_TYPE_SOAP_ENV__Header (23)
+#define SOAP_TYPE_SOAP_ENV__Header (28)
 /* SOAP Header: */
 struct SOAP_ENV__Header
 {
@@ -122,7 +143,7 @@ private:
 #endif
 
 #ifndef SOAP_TYPE_SOAP_ENV__Code
-#define SOAP_TYPE_SOAP_ENV__Code (24)
+#define SOAP_TYPE_SOAP_ENV__Code (29)
 /* SOAP Fault Code: */
 struct SOAP_ENV__Code
 {
@@ -133,7 +154,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_SOAP_ENV__Detail
-#define SOAP_TYPE_SOAP_ENV__Detail (26)
+#define SOAP_TYPE_SOAP_ENV__Detail (31)
 /* SOAP-ENV:Detail */
 struct SOAP_ENV__Detail
 {
@@ -145,7 +166,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_SOAP_ENV__Reason
-#define SOAP_TYPE_SOAP_ENV__Reason (29)
+#define SOAP_TYPE_SOAP_ENV__Reason (34)
 /* SOAP-ENV:Reason */
 struct SOAP_ENV__Reason
 {
@@ -155,7 +176,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_SOAP_ENV__Fault
-#define SOAP_TYPE_SOAP_ENV__Fault (30)
+#define SOAP_TYPE_SOAP_ENV__Fault (35)
 /* SOAP Fault: */
 struct SOAP_ENV__Fault
 {
@@ -195,6 +216,11 @@ typedef char *_QName;
 typedef char *_XML;
 #endif
 
+#ifndef SOAP_TYPE_ns__myStruct
+#define SOAP_TYPE_ns__myStruct (8)
+typedef struct s ns__myStruct;
+#endif
+
 
 /******************************************************************************\
  *                                                                            *
@@ -217,6 +243,8 @@ typedef char *_XML;
 \******************************************************************************/
 
 
+SOAP_FMAC5 int SOAP_FMAC6 ns__junks(struct soap*, char *a, struct s &result);
+
 SOAP_FMAC5 int SOAP_FMAC6 ns__add(struct soap*, int a, int b, int &result);
 
 SOAP_FMAC5 int SOAP_FMAC6 ns__ping(struct soap*, char *a, char **result);
@@ -231,6 +259,8 @@ SOAP_FMAC5 int SOAP_FMAC6 ns__sub(struct soap*, double a, double b, double &resu
  *                                                                            *
 \******************************************************************************/
 
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_call_ns__junks(struct soap *soap, const char *soap_endpoint, const char *soap_action, char *a, struct s &result);
 
 SOAP_FMAC5 int SOAP_FMAC6 soap_call_ns__add(struct soap *soap, const char *soap_endpoint, const char *soap_action, int a, int b, int &result);
 
@@ -249,6 +279,8 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call_ns__sub(struct soap *soap, const char *soap_
 SOAP_FMAC5 int SOAP_FMAC6 soap_serve(struct soap*);
 
 SOAP_FMAC5 int SOAP_FMAC6 soap_serve_request(struct soap*);
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_serve_ns__junks(struct soap*);
 
 SOAP_FMAC5 int SOAP_FMAC6 soap_serve_ns__add(struct soap*);
 

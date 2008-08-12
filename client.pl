@@ -19,5 +19,27 @@ $res = SOAP::Lite
     -> ping($pingDataA)
     -> result;
 
+
+$res = SOAP::Lite
+    -> proxy('http://192.168.0.131:1234/')
+    -> ns('capture')
+    -> junks($structData)
+    -> result;
+
 print Dumper($res);
+
+
+$res = SOAP::Lite
+    -> proxy('http://192.168.0.131:1234/')
+    -> ns('capture');
+
+my $som = $res->junks($structData);
+
+my @hashRes = $som->paramsall;
+
+join(":", @hashRes);
+print @hashRes;
+
+
+
 

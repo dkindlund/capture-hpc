@@ -7,15 +7,13 @@
 //gsoap ns service port: http://192.168.0.131:1234
 //gsoap ns service namespace: capture
 
-/*
-typedef struct {
+
+typedef struct s{
 	char * first; 
 	char * last;
-} ns__myStruct2;
-*/
+} ns__myStruct;
 
-//int ns__junks(char * a, ns__myStruct2 &result);
-
+int ns__junks(char * a, ns__myStruct &result);
 
 int ns__add(int a, int b, int &result); 
 int ns__ping(char * a, char ** result);

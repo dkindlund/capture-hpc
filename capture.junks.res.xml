@@ -6,9 +6,9 @@
  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
  xmlns:ns="capture">
  <SOAP-ENV:Body SOAP-ENV:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">
-  <Struct-1>
+  <s>
    <first></first>
    <last></last>
-  </Struct-1>
+  </s>
  </SOAP-ENV:Body>
 </SOAP-ENV:Envelope>

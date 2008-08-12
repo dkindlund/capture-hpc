@@ -99,16 +99,16 @@ int ns__sub(struct soap *soap, double a, double b, double &result)
    return SOAP_OK; 
 }
 
-/*
-int ns__junks(char * a, ns__myStruct2 &result)
+
+int ns__junks(struct soap *soap, char * a, ns__myStruct &result)
 {
 	printf("in ns__struct\n");
-	ns__myStruct2 bob;
+	ns__myStruct bob;
 	bob.first = "bob";
 	bob.last = "dole";
-	result = &bob;
+	result = bob;
 
 	return SOAP_OK;
 }
-*/
+
 
