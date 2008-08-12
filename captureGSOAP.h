@@ -12,9 +12,10 @@ typedef struct {
 	char * first; 
 	char * last;
 } ns__myStruct2;
-
-int ns__junks(char * a, ns__myStruct2 &result);
 */
+
+//int ns__junks(char * a, ns__myStruct2 &result);
+
 
 int ns__add(int a, int b, int &result); 
 int ns__ping(char * a, char ** result);

@@ -10,14 +10,9 @@
 
 #include "Visitor.h"
 
-Visitor * globVisitor;
-
 CaptureSoapServer::CaptureSoapServer(Visitor* v){
-
-	globVisitor = v;
 	CaptureSoapServerThread = new Thread(this);
 	CaptureSoapServerThread->start("CaptureSoapServer");
-
 }
 
 CaptureSoapServer::~CaptureSoapServer(){}
@@ -30,7 +25,6 @@ CaptureSoapServer::run(){
    struct soap soap;
    SOCKET m, s; // master and slave sockets
 
-   ///loadClientPlugins();
 
    soap_init(&soap);
    //TODO: This needs to be configurable
@@ -70,12 +64,6 @@ int ns__add(struct soap *soap, int a, int b, int &result)
 
    return SOAP_OK;
 } 
-
-void CaptureSoapServer::test(){
-
-//	printf("myVisitor = %#x\n", CaptureSoapServer::myVisitor);
-
-}
 
 int ns__ping(struct soap *soap, char * a, char ** result) 
 { 
@@ -124,131 +112,3 @@ int ns__junks(char * a, ns__myStruct2 &result)
 }
 */
 
-void
-CaptureSoapServer::loadClientPlugins()
-{
-	WIN32_FIND_DATA FindFileData;
-	HANDLE hFind = INVALID_HANDLE_VALUE;
-	wchar_t pluginDirectoryPath[1024];
-
-	GetFullPathName(L"plugins\\Application_*.dll", 1024, pluginDirectoryPath, NULL);
-	DebugPrint(L"Capture-SOAP Server: Plugin directory - %ls\n", pluginDirectoryPath);
-	hFind = FindFirstFile(pluginDirectoryPath, &FindFileData);
-
-	if (hFind != INVALID_HANDLE_VALUE) 
-	{
-		typedef void (*AppPlugin)(void*);
-		do
-		{
-			wstring pluginDir = L"plugins\\";
-			pluginDir += FindFileData.cFileName;			
-			HMODULE hPlugin = LoadLibrary(pluginDir.c_str());
-
-			if(hPlugin != NULL)
-			{
-				list<ApplicationPlugin*>* apps = new std::list<ApplicationPlugin*>();
-				applicationPlugins.insert(PluginPair(hPlugin, apps));
-				ApplicationPlugin* applicationPlugin = createApplicationPluginObject(hPlugin);
-				if(applicationPlugin == NULL) {
-					FreeLibrary(hPlugin);
-				} else {
-					printf("Loaded plugin: %ls\n", FindFileData.cFileName);
-					unsigned int g = applicationPlugin->getPriority();
-					wchar_t** supportedApplications = applicationPlugin->getSupportedApplicationNames();
-					for(int i = 0; supportedApplications[i] != NULL; i++)
-					{
-						stdext::hash_map<wstring, ApplicationPlugin*>::iterator it;
-						it = applicationMap.find(supportedApplications[i]);
-						/* Check he application isn't already being handled by a plugin */
-						if(it != applicationMap.end())
-						{
-							/* Check the priority of the existing application plugin */
-							unsigned int p = it->second->getPriority();
-							if(applicationPlugin->getPriority() > p)
-							{
-								/* Over ride the exisiting plugin if the priority of the loaded one
-								   is greater */
-								applicationMap.erase(supportedApplications[i]);
-								printf("\toverride: added application: %ls\n", supportedApplications[i]);
-								applicationMap.insert(ApplicationPair(supportedApplications[i], applicationPlugin));
-							} else {
-								printf("\tplugin overridden: not adding application: %ls\n", supportedApplications[i]);
-							}
-						} else {
-							printf("\tinserted: added application: %ls\n", supportedApplications[i]);
-							applicationMap.insert(ApplicationPair(supportedApplications[i], applicationPlugin)); 
-						}
-					}
-				}
-			}
-		} while(FindNextFile(hFind, &FindFileData) != 0);
-		FindClose(hFind);
-	}
-	
-}
-
-ApplicationPlugin*
-CaptureSoapServer::createApplicationPluginObject(HMODULE hPlugin)
-{
-	typedef void (*PluginExportInterface)(void*);
-	PluginExportInterface pluginCreateInstance = NULL;
-	ApplicationPlugin* applicationPlugin = NULL;
-	/* Get the function address to create a plugin object */
-	pluginCreateInstance = (PluginExportInterface)GetProcAddress(hPlugin,"New");
-	/* Create a new plugin object in the context of the plugin */
-	pluginCreateInstance(&applicationPlugin);
-	/* If the object was created then add it to a list so we can track it */
-	if(applicationPlugin != NULL)
-	{
-		stdext::hash_map<HMODULE, std::list<ApplicationPlugin*>*>::iterator it;
-		it = applicationPlugins.find(hPlugin);
-		if(it != applicationPlugins.end())
-		{
-			list<ApplicationPlugin*>* apps = it->second;
-			apps->push_back(applicationPlugin);
-		}
-	}
-	return applicationPlugin;
-}
-
-void
-CaptureSoapServer::onServerEvent(Element* pElement)
-{
-	wstring applicationName = L"iexplore";
-	wstring url = L"";
-	int time = 30;
-	vector<Attribute>::iterator it;
-	for(it = pElement->attributes.begin(); it != pElement->attributes.end(); it++)
-	{
-		if(it->name == L"url") {
-			url = it->value;
-		} else if(it->name == L"program") {
-			applicationName = it->value;
-		} else if(it->name == L"time") {
-			time = boost::lexical_cast<int>(it->value);
-		}
-	}
-	if(url != L"")
-	{
-		url = CaptureGlobal::urlDecode(url);
-		stdext::hash_map<wstring, ApplicationPlugin*>::iterator vit;
-		vit = applicationMap.find(applicationName);
-		if(vit != applicationMap.end())
-		{
-			ApplicationPlugin* applicationPlugin = vit->second;
-			Url* visiturl = new Url(url, applicationName, time);
-			DWORD minorErrorCode = 0;
-			DWORD majorErrorCode = 0;
-			printf("Visiting: %ls -> %ls\n", visiturl->getApplicationName().c_str(), visiturl->getUrl().c_str());
-		
-			/* Pass the actual visitation process of to the application plugin */
-			majorErrorCode = applicationPlugin->visitUrl(visiturl, &minorErrorCode);
-			///toVisit.push(VisitPair(applicationPlugin, visiturl));
-			///SetEvent(hQueueNotEmpty);
-		} else {
-			printf("CaptureSoapServer-onServerEvent: ERROR could not find client %ls path, url not queued for visitation\n", applicationName.c_str());
-		}
-	} else {
-		printf("CaptureSoapServer-onServerEvent: ERROR no url specified for visit event\n");
-	}
-}

@@ -36,9 +36,9 @@ class CaptureSoapServer : public Runnable
 {
 public:
 	typedef boost::signal<void (DWORD, DWORD, wstring, wstring)> signal_visitEvent;
-	typedef pair <HMODULE, std::list<ApplicationPlugin*>*> PluginPair;
-	typedef pair <wstring, ApplicationPlugin*> ApplicationPair;
-	typedef pair <ApplicationPlugin*, Url*> VisitPair;
+///	typedef pair <HMODULE, std::list<ApplicationPlugin*>*> PluginPair;
+///	typedef pair <wstring, ApplicationPlugin*> ApplicationPair;
+///	typedef pair <ApplicationPlugin*, Url*> VisitPair;
 public:
 	CaptureSoapServer(Visitor *);
 	~CaptureSoapServer();
@@ -46,17 +46,20 @@ public:
 	void run();
 
 	//Stolen from Visitor
-	void loadClientPlugins();
-	ApplicationPlugin* createApplicationPluginObject(HMODULE hPlugin);
-	void onServerEvent(Element* pElement);
+	///void loadClientPlugins();
+	///ApplicationPlugin* createApplicationPluginObject(HMODULE hPlugin);
+	///void onServerEvent(Element* pElement);
+
 
 	Thread * CaptureSoapServerThread;
+
+	/*
 	signal_visitEvent signalVisitEvent;
 	stdext::hash_map<HMODULE, std::list<ApplicationPlugin*>*> applicationPlugins;
 	boost::signals::connection onServerVisitEventConnection;
 	stdext::hash_map<wstring, ApplicationPlugin*> applicationMap;
+	*/
 
-	static void test();
 	static Visitor * myVisitor;
 
 };
