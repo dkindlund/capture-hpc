@@ -32,7 +32,7 @@ using namespace boost;
 typedef split_iterator<string::iterator> sf_it;
 
 
-class MySoapServer : public Runnable
+class CaptureSoapServer : public Runnable
 {
 public:
 	typedef boost::signal<void (DWORD, DWORD, wstring, wstring)> signal_visitEvent;
@@ -40,8 +40,8 @@ public:
 	typedef pair <wstring, ApplicationPlugin*> ApplicationPair;
 	typedef pair <ApplicationPlugin*, Url*> VisitPair;
 public:
-	MySoapServer(Visitor *);
-	~MySoapServer();
+	CaptureSoapServer(Visitor *);
+	~CaptureSoapServer();
 
 	void run();
 
@@ -50,7 +50,7 @@ public:
 	ApplicationPlugin* createApplicationPluginObject(HMODULE hPlugin);
 	void onServerEvent(Element* pElement);
 
-	Thread * MySoapServerThread;
+	Thread * CaptureSoapServerThread;
 	signal_visitEvent signalVisitEvent;
 	stdext::hash_map<HMODULE, std::list<ApplicationPlugin*>*> applicationPlugins;
 	boost::signals::connection onServerVisitEventConnection;

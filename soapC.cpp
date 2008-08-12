@@ -7,7 +7,7 @@
 
 #include "soapH.h"
 
-SOAP_SOURCE_STAMP("@(#) soapC.cpp ver 2.7.10 2008-08-12 07:24:58 GMT")
+SOAP_SOURCE_STAMP("@(#) soapC.cpp ver 2.7.10 2008-08-12 07:50:20 GMT")
 
 
 #ifndef WITH_NOGLOBAL
@@ -161,8 +161,6 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_getelement(struct soap *soap, int *type)
 		return soap_in_int(soap, NULL, NULL, "xsd:int");
 	case SOAP_TYPE_double:
 		return soap_in_double(soap, NULL, NULL, "xsd:double");
-	case SOAP_TYPE_ns__junks:
-		return soap_in_ns__junks(soap, NULL, NULL, "ns:junks");
 	case SOAP_TYPE_ns__sub:
 		return soap_in_ns__sub(soap, NULL, NULL, "ns:sub");
 	case SOAP_TYPE_ns__subResponse:
@@ -175,10 +173,6 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_getelement(struct soap *soap, int *type)
 		return soap_in_ns__add(soap, NULL, NULL, "ns:add");
 	case SOAP_TYPE_ns__addResponse:
 		return soap_in_ns__addResponse(soap, NULL, NULL, "ns:addResponse");
-	case SOAP_TYPE_ns__myStruct2:
-		return soap_in_ns__myStruct2(soap, NULL, NULL, "ns:myStruct2");
-	case SOAP_TYPE_ms2:
-		return soap_in_ms2(soap, NULL, NULL, "ms2");
 	case SOAP_TYPE_PointerTostring:
 		return soap_in_PointerTostring(soap, NULL, NULL, "xsd:string");
 	case SOAP_TYPE_string:
@@ -201,10 +195,6 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_getelement(struct soap *soap, int *type)
 		if (!soap_match_tag(soap, t, "xsd:double"))
 		{	*type = SOAP_TYPE_double;
 			return soap_in_double(soap, NULL, NULL, NULL);
-		}
-		if (!soap_match_tag(soap, t, "ns:junks"))
-		{	*type = SOAP_TYPE_ns__junks;
-			return soap_in_ns__junks(soap, NULL, NULL, NULL);
 		}
 		if (!soap_match_tag(soap, t, "ns:sub"))
 		{	*type = SOAP_TYPE_ns__sub;
@@ -229,14 +219,6 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_getelement(struct soap *soap, int *type)
 		if (!soap_match_tag(soap, t, "ns:addResponse"))
 		{	*type = SOAP_TYPE_ns__addResponse;
 			return soap_in_ns__addResponse(soap, NULL, NULL, NULL);
-		}
-		if (!soap_match_tag(soap, t, "ns:myStruct2"))
-		{	*type = SOAP_TYPE_ns__myStruct2;
-			return soap_in_ns__myStruct2(soap, NULL, NULL, NULL);
-		}
-		if (!soap_match_tag(soap, t, "ms2"))
-		{	*type = SOAP_TYPE_ms2;
-			return soap_in_ms2(soap, NULL, NULL, NULL);
 		}
 		if (!soap_match_tag(soap, t, "xsd:string"))
 		{	char **s;
@@ -322,8 +304,6 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_putelement(struct soap *soap, const void *ptr, co
 		return soap_out_int(soap, tag, id, (const int *)ptr, "xsd:int");
 	case SOAP_TYPE_double:
 		return soap_out_double(soap, tag, id, (const double *)ptr, "xsd:double");
-	case SOAP_TYPE_ns__junks:
-		return soap_out_ns__junks(soap, tag, id, (const struct ns__junks *)ptr, "ns:junks");
 	case SOAP_TYPE_ns__sub:
 		return soap_out_ns__sub(soap, tag, id, (const struct ns__sub *)ptr, "ns:sub");
 	case SOAP_TYPE_ns__subResponse:
@@ -336,10 +316,6 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_putelement(struct soap *soap, const void *ptr, co
 		return soap_out_ns__add(soap, tag, id, (const struct ns__add *)ptr, "ns:add");
 	case SOAP_TYPE_ns__addResponse:
 		return soap_out_ns__addResponse(soap, tag, id, (const struct ns__addResponse *)ptr, "ns:addResponse");
-	case SOAP_TYPE_ns__myStruct2:
-		return soap_out_ns__myStruct2(soap, tag, id, (const struct ms2 *)ptr, "ns:myStruct2");
-	case SOAP_TYPE_ms2:
-		return soap_out_ms2(soap, tag, id, (const struct ms2 *)ptr, "ms2");
 	case SOAP_TYPE_PointerTostring:
 		return soap_out_PointerTostring(soap, tag, id, (char **const*)ptr, "xsd:string");
 	case SOAP_TYPE__QName:
@@ -365,9 +341,6 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_markelement(struct soap *soap, const void *ptr, 
 	(void)soap; (void)ptr; (void)type; /* appease -Wall -Werror */
 	switch (type)
 	{
-	case SOAP_TYPE_ns__junks:
-		soap_serialize_ns__junks(soap, (const struct ns__junks *)ptr);
-		break;
 	case SOAP_TYPE_ns__sub:
 		soap_serialize_ns__sub(soap, (const struct ns__sub *)ptr);
 		break;
@@ -385,12 +358,6 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_markelement(struct soap *soap, const void *ptr, 
 		break;
 	case SOAP_TYPE_ns__addResponse:
 		soap_serialize_ns__addResponse(soap, (const struct ns__addResponse *)ptr);
-		break;
-	case SOAP_TYPE_ns__myStruct2:
-		soap_serialize_ns__myStruct2(soap, (const struct ms2 *)ptr);
-		break;
-	case SOAP_TYPE_ms2:
-		soap_serialize_ms2(soap, (const struct ms2 *)ptr);
 		break;
 	case SOAP_TYPE_PointerTostring:
 		soap_serialize_PointerTostring(soap, (char **const*)ptr);
@@ -413,8 +380,6 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_instantiate(struct soap *soap, int t, const ch
 {
 	switch (t)
 	{
-	case SOAP_TYPE_ms2:
-		return (void*)soap_instantiate_ms2(soap, -1, type, arrayType, n);
 	case SOAP_TYPE_ns__addResponse:
 		return (void*)soap_instantiate_ns__addResponse(soap, -1, type, arrayType, n);
 	case SOAP_TYPE_ns__add:
@@ -427,8 +392,6 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_instantiate(struct soap *soap, int t, const ch
 		return (void*)soap_instantiate_ns__subResponse(soap, -1, type, arrayType, n);
 	case SOAP_TYPE_ns__sub:
 		return (void*)soap_instantiate_ns__sub(soap, -1, type, arrayType, n);
-	case SOAP_TYPE_ns__junks:
-		return (void*)soap_instantiate_ns__junks(soap, -1, type, arrayType, n);
 #ifndef WITH_NOGLOBAL
 	case SOAP_TYPE_SOAP_ENV__Header:
 		return (void*)soap_instantiate_SOAP_ENV__Header(soap, -1, type, arrayType, n);
@@ -449,8 +412,6 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_instantiate(struct soap *soap, int t, const ch
 	case SOAP_TYPE_SOAP_ENV__Fault:
 		return (void*)soap_instantiate_SOAP_ENV__Fault(soap, -1, type, arrayType, n);
 #endif
-	case SOAP_TYPE_ns__myStruct2:
-		return (void*)soap_instantiate_ns__myStruct2(soap, -1, type, arrayType, n);
 	}
 	return NULL;
 }
@@ -458,12 +419,6 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_instantiate(struct soap *soap, int t, const ch
 SOAP_FMAC3 int SOAP_FMAC4 soap_fdelete(struct soap_clist *p)
 {	switch (p->type)
 	{
-	case SOAP_TYPE_ms2:
-		if (p->size < 0)
-			delete (struct ms2*)p->ptr;
-		else
-			delete[] (struct ms2*)p->ptr;
-		break;
 	case SOAP_TYPE_ns__addResponse:
 		if (p->size < 0)
 			delete (struct ns__addResponse*)p->ptr;
@@ -500,12 +455,6 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_fdelete(struct soap_clist *p)
 		else
 			delete[] (struct ns__sub*)p->ptr;
 		break;
-	case SOAP_TYPE_ns__junks:
-		if (p->size < 0)
-			delete (struct ns__junks*)p->ptr;
-		else
-			delete[] (struct ns__junks*)p->ptr;
-		break;
 	case SOAP_TYPE_SOAP_ENV__Header:
 		if (p->size < 0)
 			delete (struct SOAP_ENV__Header*)p->ptr;
@@ -535,12 +484,6 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_fdelete(struct soap_clist *p)
 			delete (struct SOAP_ENV__Fault*)p->ptr;
 		else
 			delete[] (struct SOAP_ENV__Fault*)p->ptr;
-		break;
-	case SOAP_TYPE_ns__myStruct2:
-		if (p->size < 0)
-			delete (struct ms2*)p->ptr;
-		else
-			delete[] (struct ms2*)p->ptr;
 		break;
 	default:	return SOAP_ERR;
 	}
@@ -1307,116 +1250,6 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_copy_SOAP_ENV__Header(struct soap *soap, int st,
 
 #endif
 
-SOAP_FMAC3 void SOAP_FMAC4 soap_default_ns__junks(struct soap *soap, struct ns__junks *a)
-{
-	(void)soap; (void)a; /* appease -Wall -Werror */
-	soap_default_string(soap, &a->a);
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_ns__junks(struct soap *soap, const struct ns__junks *a)
-{
-	(void)soap; (void)a; /* appease -Wall -Werror */
-	soap_serialize_string(soap, &a->a);
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_put_ns__junks(struct soap *soap, const struct ns__junks *a, const char *tag, const char *type)
-{
-	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_ns__junks);
-	if (soap_out_ns__junks(soap, tag, id, a, type))
-		return soap->error;
-	return soap_putindependent(soap);
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns__junks(struct soap *soap, const char *tag, int id, const struct ns__junks *a, const char *type)
-{
-	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ns__junks), type))
-		return soap->error;
-	if (soap_out_string(soap, "a", -1, &a->a, ""))
-		return soap->error;
-	return soap_element_end_out(soap, tag);
-}
-
-SOAP_FMAC3 struct ns__junks * SOAP_FMAC4 soap_get_ns__junks(struct soap *soap, struct ns__junks *p, const char *tag, const char *type)
-{
-	if ((p = soap_in_ns__junks(soap, tag, p, type)))
-		if (soap_getindependent(soap))
-			return NULL;
-	return p;
-}
-
-SOAP_FMAC3 struct ns__junks * SOAP_FMAC4 soap_in_ns__junks(struct soap *soap, const char *tag, struct ns__junks *a, const char *type)
-{
-	short soap_flag_a = 1;
-	if (soap_element_begin_in(soap, tag, 0, type))
-		return NULL;
-	a = (struct ns__junks *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_ns__junks, sizeof(struct ns__junks), 0, NULL, NULL, NULL);
-	if (!a)
-		return NULL;
-	soap_default_ns__junks(soap, a);
-	if (soap->body && !*soap->href)
-	{
-		for (;;)
-		{	soap->error = SOAP_TAG_MISMATCH;
-			if (soap_flag_a && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
-				if (soap_in_string(soap, "a", &a->a, "xsd:string"))
-				{	soap_flag_a--;
-					continue;
-				}
-			if (soap->error == SOAP_TAG_MISMATCH)
-				soap->error = soap_ignore_element(soap);
-			if (soap->error == SOAP_NO_TAG)
-				break;
-			if (soap->error)
-				return NULL;
-		}
-		if (soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	else
-	{	a = (struct ns__junks *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_ns__junks, 0, sizeof(struct ns__junks), 0, NULL);
-		if (soap->body && soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	return a;
-}
-
-SOAP_FMAC5 struct ns__junks * SOAP_FMAC6 soap_new_ns__junks(struct soap *soap, int n)
-{	return soap_instantiate_ns__junks(soap, n, NULL, NULL, NULL);
-}
-
-SOAP_FMAC5 void SOAP_FMAC6 soap_delete_ns__junks(struct soap *soap, struct ns__junks *p)
-{	soap_delete(soap, p);
-}
-
-SOAP_FMAC3 struct ns__junks * SOAP_FMAC4 soap_instantiate_ns__junks(struct soap *soap, int n, const char *type, const char *arrayType, size_t *size)
-{
-	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "soap_instantiate_ns__junks(%d, %s, %s)\n", n, type?type:"", arrayType?arrayType:""));
-	struct soap_clist *cp = soap_link(soap, NULL, SOAP_TYPE_ns__junks, n, soap_fdelete);
-	if (!cp)
-		return NULL;
-	if (n < 0)
-	{	cp->ptr = (void*)new struct ns__junks;
-		if (size)
-			*size = sizeof(struct ns__junks);
-	}
-	else
-	{	cp->ptr = (void*)new struct ns__junks[n];
-		if (!cp->ptr)
-		{	soap->error = SOAP_EOM;
-			return NULL;
-		}
-		if (size)
-			*size = n * sizeof(struct ns__junks);
-	}
-		DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Instantiated location=%p\n", cp->ptr));
-	return (struct ns__junks*)cp->ptr;
-}
-SOAP_FMAC3 void SOAP_FMAC4 soap_copy_ns__junks(struct soap *soap, int st, int tt, void *p, size_t len, const void *q, size_t n)
-{
-	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Copying struct ns__junks %p -> %p\n", q, p));
-	*(struct ns__junks*)p = *(struct ns__junks*)q;
-}
-
 SOAP_FMAC3 void SOAP_FMAC4 soap_default_ns__sub(struct soap *soap, struct ns__sub *a)
 {
 	(void)soap; (void)a; /* appease -Wall -Werror */
@@ -2103,238 +1936,6 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_copy_ns__addResponse(struct soap *soap, int st, 
 {
 	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Copying struct ns__addResponse %p -> %p\n", q, p));
 	*(struct ns__addResponse*)p = *(struct ns__addResponse*)q;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_default_ns__myStruct2(struct soap *soap, struct ms2 *a)
-{	soap_default_ms2(soap, a);
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_ns__myStruct2(struct soap *soap, struct ms2 const*a)
-{	soap_serialize_ms2(soap, a);
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_put_ns__myStruct2(struct soap *soap, const struct ms2 *a, const char *tag, const char *type)
-{
-	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_ns__myStruct2);
-	if (soap_out_ns__myStruct2(soap, tag, id, a, type))
-		return soap->error;
-	return soap_putindependent(soap);
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns__myStruct2(struct soap *soap, const char *tag, int id, const struct ms2 *a, const char *type)
-{
-	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ns__myStruct2), type))
-		return soap->error;
-	if (soap_out_string(soap, "first", -1, &a->first, ""))
-		return soap->error;
-	if (soap_out_string(soap, "last", -1, &a->last, ""))
-		return soap->error;
-	return soap_element_end_out(soap, tag);
-}
-
-SOAP_FMAC3 struct ms2 * SOAP_FMAC4 soap_get_ns__myStruct2(struct soap *soap, struct ms2 *p, const char *tag, const char *type)
-{
-	if ((p = soap_in_ns__myStruct2(soap, tag, p, type)))
-		if (soap_getindependent(soap))
-			return NULL;
-	return p;
-}
-
-SOAP_FMAC3 struct ms2 * SOAP_FMAC4 soap_in_ns__myStruct2(struct soap *soap, const char *tag, struct ms2 *a, const char *type)
-{
-	short soap_flag_first = 1, soap_flag_last = 1;
-	if (soap_element_begin_in(soap, tag, 0, type))
-		return NULL;
-	a = (struct ms2 *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_ns__myStruct2, sizeof(struct ms2), 0, NULL, NULL, NULL);
-	if (!a)
-		return NULL;
-	soap_default_ns__myStruct2(soap, a);
-	if (soap->body && !*soap->href)
-	{
-		for (;;)
-		{	soap->error = SOAP_TAG_MISMATCH;
-			if (soap_flag_first && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
-				if (soap_in_string(soap, "first", &a->first, "xsd:string"))
-				{	soap_flag_first--;
-					continue;
-				}
-			if (soap_flag_last && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
-				if (soap_in_string(soap, "last", &a->last, "xsd:string"))
-				{	soap_flag_last--;
-					continue;
-				}
-			if (soap->error == SOAP_TAG_MISMATCH)
-				soap->error = soap_ignore_element(soap);
-			if (soap->error == SOAP_NO_TAG)
-				break;
-			if (soap->error)
-				return NULL;
-		}
-		if (soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	else
-	{	a = (struct ms2 *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_ns__myStruct2, 0, sizeof(struct ms2), 0, NULL);
-		if (soap->body && soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	return a;
-}
-
-SOAP_FMAC5 struct ms2 * SOAP_FMAC6 soap_new_ns__myStruct2(struct soap *soap, int n)
-{	return soap_instantiate_ns__myStruct2(soap, n, NULL, NULL, NULL);
-}
-
-SOAP_FMAC5 void SOAP_FMAC6 soap_delete_ns__myStruct2(struct soap *soap, struct ms2 *p)
-{	soap_delete(soap, p);
-}
-
-SOAP_FMAC3 struct ms2 * SOAP_FMAC4 soap_instantiate_ns__myStruct2(struct soap *soap, int n, const char *type, const char *arrayType, size_t *size)
-{
-	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "soap_instantiate_ns__myStruct2(%d, %s, %s)\n", n, type?type:"", arrayType?arrayType:""));
-	struct soap_clist *cp = soap_link(soap, NULL, SOAP_TYPE_ns__myStruct2, n, soap_fdelete);
-	if (!cp)
-		return NULL;
-	if (n < 0)
-	{	cp->ptr = (void*)new struct ms2;
-		if (size)
-			*size = sizeof(struct ms2);
-	}
-	else
-	{	cp->ptr = (void*)new struct ms2[n];
-		if (!cp->ptr)
-		{	soap->error = SOAP_EOM;
-			return NULL;
-		}
-		if (size)
-			*size = n * sizeof(struct ms2);
-	}
-		DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Instantiated location=%p\n", cp->ptr));
-	return (struct ms2*)cp->ptr;
-}
-SOAP_FMAC3 void SOAP_FMAC4 soap_copy_ns__myStruct2(struct soap *soap, int st, int tt, void *p, size_t len, const void *q, size_t n)
-{
-	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Copying struct ms2 %p -> %p\n", q, p));
-	*(struct ms2*)p = *(struct ms2*)q;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_default_ms2(struct soap *soap, struct ms2 *a)
-{
-	(void)soap; (void)a; /* appease -Wall -Werror */
-	soap_default_string(soap, &a->first);
-	soap_default_string(soap, &a->last);
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_ms2(struct soap *soap, const struct ms2 *a)
-{
-	(void)soap; (void)a; /* appease -Wall -Werror */
-	soap_serialize_string(soap, &a->first);
-	soap_serialize_string(soap, &a->last);
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_put_ms2(struct soap *soap, const struct ms2 *a, const char *tag, const char *type)
-{
-	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_ms2);
-	if (soap_out_ms2(soap, tag, id, a, type))
-		return soap->error;
-	return soap_putindependent(soap);
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_ms2(struct soap *soap, const char *tag, int id, const struct ms2 *a, const char *type)
-{
-	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ms2), type))
-		return soap->error;
-	if (soap_out_string(soap, "first", -1, &a->first, ""))
-		return soap->error;
-	if (soap_out_string(soap, "last", -1, &a->last, ""))
-		return soap->error;
-	return soap_element_end_out(soap, tag);
-}
-
-SOAP_FMAC3 struct ms2 * SOAP_FMAC4 soap_get_ms2(struct soap *soap, struct ms2 *p, const char *tag, const char *type)
-{
-	if ((p = soap_in_ms2(soap, tag, p, type)))
-		if (soap_getindependent(soap))
-			return NULL;
-	return p;
-}
-
-SOAP_FMAC3 struct ms2 * SOAP_FMAC4 soap_in_ms2(struct soap *soap, const char *tag, struct ms2 *a, const char *type)
-{
-	short soap_flag_first = 1, soap_flag_last = 1;
-	if (soap_element_begin_in(soap, tag, 0, type))
-		return NULL;
-	a = (struct ms2 *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_ms2, sizeof(struct ms2), 0, NULL, NULL, NULL);
-	if (!a)
-		return NULL;
-	soap_default_ms2(soap, a);
-	if (soap->body && !*soap->href)
-	{
-		for (;;)
-		{	soap->error = SOAP_TAG_MISMATCH;
-			if (soap_flag_first && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
-				if (soap_in_string(soap, "first", &a->first, "xsd:string"))
-				{	soap_flag_first--;
-					continue;
-				}
-			if (soap_flag_last && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
-				if (soap_in_string(soap, "last", &a->last, "xsd:string"))
-				{	soap_flag_last--;
-					continue;
-				}
-			if (soap->error == SOAP_TAG_MISMATCH)
-				soap->error = soap_ignore_element(soap);
-			if (soap->error == SOAP_NO_TAG)
-				break;
-			if (soap->error)
-				return NULL;
-		}
-		if (soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	else
-	{	a = (struct ms2 *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_ms2, 0, sizeof(struct ms2), 0, NULL);
-		if (soap->body && soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	return a;
-}
-
-SOAP_FMAC5 struct ms2 * SOAP_FMAC6 soap_new_ms2(struct soap *soap, int n)
-{	return soap_instantiate_ms2(soap, n, NULL, NULL, NULL);
-}
-
-SOAP_FMAC5 void SOAP_FMAC6 soap_delete_ms2(struct soap *soap, struct ms2 *p)
-{	soap_delete(soap, p);
-}
-
-SOAP_FMAC3 struct ms2 * SOAP_FMAC4 soap_instantiate_ms2(struct soap *soap, int n, const char *type, const char *arrayType, size_t *size)
-{
-	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "soap_instantiate_ms2(%d, %s, %s)\n", n, type?type:"", arrayType?arrayType:""));
-	struct soap_clist *cp = soap_link(soap, NULL, SOAP_TYPE_ms2, n, soap_fdelete);
-	if (!cp)
-		return NULL;
-	if (n < 0)
-	{	cp->ptr = (void*)new struct ms2;
-		if (size)
-			*size = sizeof(struct ms2);
-	}
-	else
-	{	cp->ptr = (void*)new struct ms2[n];
-		if (!cp->ptr)
-		{	soap->error = SOAP_EOM;
-			return NULL;
-		}
-		if (size)
-			*size = n * sizeof(struct ms2);
-	}
-		DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Instantiated location=%p\n", cp->ptr));
-	return (struct ms2*)cp->ptr;
-}
-SOAP_FMAC3 void SOAP_FMAC4 soap_copy_ms2(struct soap *soap, int st, int tt, void *p, size_t len, const void *q, size_t n)
-{
-	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Copying struct ms2 %p -> %p\n", q, p));
-	*(struct ms2*)p = *(struct ms2*)q;
 }
 
 #ifndef WITH_NOGLOBAL

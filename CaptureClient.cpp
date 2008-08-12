@@ -6,7 +6,7 @@
 #include "Analyzer.h"
 #include "ProcessManager.h"
 #include "shellapi.h"
-#include "MySoapServer.h"
+#include "CaptureSoapServer.h"
 using namespace std;
 
 /* Initialise static variables. These are all singletons */
@@ -61,7 +61,7 @@ public:
 		/* Start running the Capture Client */
 		visitor = new Visitor();
 		//Set up the standalone SOAP server
-		MySoapServer a = MySoapServer(visitor);
+		CaptureSoapServer a = CaptureSoapServer(visitor);
 		analyzer = new Analyzer(visitor, server);
 		Thread* captureClientThread = new Thread(this);
 		captureClientThread->start("CaptureClient");

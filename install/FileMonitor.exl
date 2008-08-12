@@ -8,8 +8,7 @@
 +	Write	C:\\program Files\\capture\\captureclient\.exe	C:\\program files\\capture\\logs\\.+
 +	Delete	C:\\program Files\\capture\\captureclient\.exe	C:\\program files\\capture\\.+\.zip
 #Prefetch
-+	Write	C:\\WINDOWS\\system32\\svchost\.exe	C:\\WINDOWS\\Prefetch.*
-+	Delete	C:\\WINDOWS\\system32\\svchost\.exe	C:\\WINDOWS\\Prefetch.*
++	Write	C:\\WINDOWS\\system32\\svchost\.exe	C:\\WINDOWS\\Prefetch\\.+
 +	Write	System	C:\\WINDOWS\\Prefetch\\.+
 #NTFS Metadata
 +	Write	.*	c:\\\$mft
@@ -50,7 +49,7 @@
 +	Write	C:\\WINDOWS\\system32\\services\.exe	C:\\WINDOWS\\system32\\config\\SysEvent\.Evt
 +	Write	C:\\WINDOWS\\system32\\services\.exe	C:\\WINDOWS\\system32\\config\\SecEvent\.Evt
 #Mapping
-+	Write	C:\\WINDOWS\\system32\\svchost\.exe	C:\\WINDOWS\\system32\\wbem.*
++	Write	C:\\WINDOWS\\system32\\svchost\.exe	C:\\WINDOWS\\system32\\wbem\\.+
 #Cataloging
 +	Write	C:\\WINDOWS\\system32\\svchost\.exe	C:\\WINDOWS\\system32\\CatRoot2\\.+
 +	Write	C:\\WINDOWS\\system32\\svchost\.exe	C:\\WINDOWS\\system32\\CatRoot\\.+
@@ -73,10 +72,8 @@
 +	Delete	C:\\Program Files\\Internet Explorer\\iexplore\.exe	C:\\Documents and Settings\\.+\\Local Settings\\Temporary Internet Files\\Content\.IE5\\.+
 +	Delete	C:\\Program Files\\Internet Explorer\\iexplore\.exe	C:\\Documents and Settings\\.+\\Local Settings\\Temp\\.+tmp
 # History
-+	Write	C:\\Program Files\\Internet Explorer\\iexplore\.exe	C:\\Documents and Settings\\.+\\Local Settings\\History\\History\.IE5\\.+
-+	Delete	C:\\Program Files\\Internet Explorer\\iexplore\.exe	C:\\Documents and Settings\\.+\\Local Settings\\History\\History\.IE5\\.+
-+	Write	C:\\WINDOWS\\explorer\.exe	C:\\Documents and Settings\\.+\\Local Settings\\History\\History\.IE5\\.+
-+	Delete	C:\\WINDOWS\\explorer\.exe	C:\\Documents and Settings\\.+\\Local Settings\\History\\History\.IE5\\.+
++	Write	C:\\Program Files\\Internet Explorer\\iexplore\.exe	C:\\Documents and Settings\\.+\\Local Settings\\History\\History.IE5\\.+
++	Delete	C:\\Program Files\\Internet Explorer\\iexplore\.exe	C:\\Documents and Settings\\.+\\Local Settings\\History\\History.IE5\\.+
 # IE Cookies
 +	Write	C:\\Program Files\\Internet Explorer\\iexplore\.exe	C:\\Documents and Settings\\.+\\Cookies\\.+
 +	Write	C:\\Program Files\\Internet Explorer\\iexplore\.exe	C:\\Documents and Settings\\.+\\Cookies\\index.dat
@@ -96,10 +93,10 @@
 # msg activeX
 +	Write	C:\\Program Files\\Messenger\\msmsgs\.exe	C:\\Documents and Settings\\.+\\NTUSER.DAT.LOG
 +	Delete	C:\\Program Files\\Messenger\\msmsgs\.exe	C:\\Documents and Settings\\.+\\NTUSER.DAT.LOG
-+	Write	C:\\WINDOWS\\system32\\wbem\\wmiprvse\.exe	E:\\\$LogFile
-+	Write	C:\\WINDOWS\\system32\\wbem\\wmiprvse\.exe	E:\\\$Directory
-+	Write	C:\\WINDOWS\\system32\\wbem\\wmiprvse\.exe	E:\\\$Mft
-+	Write	C:\\WINDOWS\\system32\\wbem\\wmiprvse\.exe	F:\\\$LogFile
++	Write	C:\\WINDOWS\\system32\\wbem\\wmiprvse\.exe	E:\$LogFile
++	Write	C:\\WINDOWS\\system32\\wbem\\wmiprvse\.exe	E:\$Directory
++	Write	C:\\WINDOWS\\system32\\wbem\\wmiprvse\.exe	E:\$Mft
++	Write	C:\\WINDOWS\\system32\\wbem\\wmiprvse\.exe	F:\$LogFile
 
 ###################################################
 ### Honeyclient added/specific?			###
@@ -127,35 +124,24 @@
 ### Minus List - General Malicious Activity	###
 ###################################################
 # Alert about executables or scripts that are written to disk
-#XENO: I recommend commenting out all blacklist entries until this has some way to
-#deal with the fact that these will always be written to the tmp file if you visit
-#a link to one of these directly...If we could add whitelist entries back in AFTER
-#these, pointing at the tmp file dir, signifying that we don't care as long as it
-#is in that dir, but care about everything else, then this would be usable...but until
-#then...not so much.
-#I tested adding a + entry for the temp downloads file after the - entry. It seemed
-#to work for .vb files, but not .exe files, which is what we care about much more.
-#-	Write	.*	.+\.bat
-#-	Write	.*	.+\.cmd
-#commented out for VMwareService.exe, since it writes .inf files.
-#-	Write	.*	.+\.inf
-#-	Write	.*	.+\.lnk
-#-	Write	.*	.+\.msi
-#-	Write	.*	.+\.msp
-#-	Write	.*	.+\.pif
-#-	Write	.*	.+\.reg
-#-	Write	.*	.+\.sct
-#-	Write	.*	.+\.shs
-#commented out for sites that download \.scr into the temp files folder.
-#-	Write	.*	.+\.scr
-#-	Write	.*	.+\.wsc
-#-	Write	.*	.+\.wsf
-#-	Write	.*	.+\.wsh
+-	Write	.*	.+\.bat
+-	Write	.*	.+\.cmd
+-	Write	.*	.+\.exe
+-	Write	.*	.+\.inf
+-	Write	.*	.+\.lnk
+-	Write	.*	.+\.msi
+-	Write	.*	.+\.msp
+-	Write	.*	.+\.pif
+-	Write	.*	.+\.reg
+-	Write	.*	.+\.sct
+-	Write	.*	.+\.shs
+-	Write	.*	.+\.scr
+-	Write	.*	.+\.wsc
+-	Write	.*	.+\.wsf
+-	Write	.*	.+\.wsh
 #commented out for IE because \.com cache files and \.vb script files are very common
 #-	Write	.*	.+\.vb
 #-	Write	.*	.+\.com
-#commented out for IE because .exe downloads to the cache dir are very common
-#-	Write	.*	.+\.exe
 # Alert about modifications to startup locations
 -	Write	.*	C:\\Documents and Settings\\.+\\Start Menu\\Programs\\Startup.+
 -	Write	.*	C:\\WINDOWS\\win.ini
@@ -167,11 +153,11 @@
 +	Delete	C:\\Program Files\\Internet Explorer\\iexplore\.exe	C:\\WINDOWS\\system32\\Macromed\\Flash\\testUpdate\.txt
 #### HONEYCLIENT AUTO EXCLUDE SCRIPT
 +	Delete	C:\\WINDOWS\\system32\\defrag\.exe	C:\\.*\.tmp
-+	Write	C:\\WINDOWS\\system32\\svchost\.exe	C:\\\$ReplaceAttribute
-+	Write	C:\\WINDOWS\\system32\\svchost\.exe	C:\\\$ReplaceAttribute
-+	Write	C:\\WINDOWS\\system32\\wbem\\wmiprvse\.exe	E:\\\$LogFile
-+	Write	C:\\WINDOWS\\system32\\wbem\\wmiprvse\.exe	E:\\\$Directory
-+	Write	C:\\WINDOWS\\system32\\wbem\\wmiprvse\.exe	E:\\\$Mft
++	Write	C:\\WINDOWS\\system32\\svchost\.exe	C:\\$ReplaceAttribute
++	Write	C:\\WINDOWS\\system32\\svchost\.exe	C:\\$ReplaceAttribute
++	Write	C:\\WINDOWS\\system32\\wbem\\wmiprvse\.exe	E:\\$LogFile
++	Write	C:\\WINDOWS\\system32\\wbem\\wmiprvse\.exe	E:\\$Directory
++	Write	C:\\WINDOWS\\system32\\wbem\\wmiprvse\.exe	E:\\$Mft
 #### HONEYCLIENT manual
 +	Write	C:\\WINDOWS\\system32\\dwwin\.exe	C:\\Documents and Settings\\Administrator\\Local Settings\\Temp\\.*
 
@@ -179,175 +165,3 @@
 +	Delete	C:\\WINDOWS\\system32\\wbem\\wmiadap\.exe	C:\\WINDOWS\\system32\\wbem\\Performance\\WmiApRpl\.ini
 +	Delete	C:\\WINDOWS\\system32\\wbem\\wmiadap\.exe	C:\\WINDOWS\\system32\\wbem\\Performance\\WmiApRpl\.h
 +	Delete	C:\\WINDOWS\\system32\\wbem\\wmiadap\.exe	C:\\WINDOWS\\system32\\PerfStringBackup\.TMP
-+	Write	C:\\WINDOWS\\system32\\wbem\\wmiprvse\.exe	C:\\WINDOWS
-+	Write	C:\\WINDOWS\\system32\\wbem\\wmiprvse\.exe	C:\\WINDOWS\\AppPatch
-+	Write	C:\\WINDOWS\\system32\\wbem\\wmiprvse\.exe	C:\\WINDOWS\\system32
-+	Write	C:\\WINDOWS\\system32\\wbem\\wmiprvse\.exe	C:\\WINDOWS\\system32\\config
-+	Write	C:\\WINDOWS\\system32\\wbem\\wmiprvse\.exe	C:\\WINDOWS\\system32\\config\\systemprofile
-+	Write	C:\\WINDOWS\\system32\\wbem\\wmiprvse\.exe	C:\\WINDOWS\\system32\\wbem
-+	Write	C:\\WINDOWS\\system32\\wbem\\wmiprvse\.exe	C:\\WINDOWS\\system32\\wbem\\Repository\\FS
-+	Write	C:\\WINDOWS\\system32\\wbem\\wmiprvse\.exe	C:\\WINDOWS\\system32\\Prefetch
-+	Write	C:\\WINDOWS\\system32\\wbem\\wmiprvse\.exe	C:\\WINDOWS\\PCHEALTH\\HELPCTR
-+	Write	C:\\WINDOWS\\system32\\wbem\\wmiprvse\.exe	C:\\WINDOWS\\PCHEALTH\\HELPCTR\\Config
-+	Write	C:\\WINDOWS\\system32\\wbem\\wmiprvse\.exe	C:\\WINDOWS\\PCHEALTH\\HELPCTR\\PackageStore
-+	Write	C:\\WINDOWS\\system32\\wbem\\wmiprvse\.exe	C:\\
-+	Write	C:\\WINDOWS\\system32\\wbem\\wmiprvse\.exe	C:\\WINDOWS\\Prefetch
-+	Write	C:\\WINDOWS\\system32\\wbem\\wmiprvse\.exe	C:\\WINDOWS\\PCHEALTH\\HELPCTR\\Binaries
-+	Write	C:\\WINDOWS\\system32\\wbem\\wmiprvse\.exe	C:\\WINDOWS\\PCHEALTH\\HELPCTR\\DataColl
-+	Write	C:\\WINDOWS\\system32\\wbem\\wmiprvse\.exe	E:\\
-+	Write	C:\\WINDOWS\\system32\\wbem\\wmiprvse\.exe	C:\\WINDOWS\\WinSxS
-+	Write	C:\\WINDOWS\\system32\\wbem\\wmiprvse\.exe	C:\\WINDOWS\\WinSxS\\MANIFESTS
-+	Write	C:\\WINDOWS\\system32\\wbem\\wmiprvse\.exe	C:\\WINDOWS\\WinSxS\\Policies
-+	Write	C:\\WINDOWS\\system32\\wbem\\wmiprvse\.exe	C:\\WINDOWS\\REGISTRATION
-+	Write	C:\\WINDOWS\\system32\\wbem\\wmiprvse\.exe	C:\\WINDOWS\\WinSxS\\Policies\\.*
-+	Write	C:\\WINDOWS\\system32\\wbem\\wmiprvse\.exe	C:\\Documents and Settings
-+	Write	C:\\WINDOWS\\system32\\wbem\\wmiprvse\.exe	C:\\Documents and Settings\\Default User
-+	Write	C:\\WINDOWS\\system32\\wbem\\wmiprvse\.exe	C:\\Documents and Settings\\ALL USERS
-+	Write	C:\\WINDOWS\\system32\\wbem\\wmiprvse\.exe	C:\\Documents and Settings\\Default User\\Start Menu\\Programs
-+	Write	C:\\WINDOWS\\system32\\wbem\\wmiprvse\.exe	C:\\Documents and Settings\\All Users\\START MENU
-
-#### Honeyclient manual add - helpsvc.exe
-+	Write	C:\\WINDOWS\\PCHEALTH\\HELPCTR\\Binaries\\helpsvc\.exe	C:\\WINDOWS\\PCHEALTH\\HELPCTR\\DataColl\\.*
-+	Delete	C:\\WINDOWS\\PCHEALTH\\HELPCTR\\Binaries\\helpsvc\.exe	C:\\WINDOWS\\PCHEALTH\\HELPCTR\\DataColl\\.*
-
-#### Honeyclient manual add - dfrgntfs.exe - ticket #143
-+	Write	C:\\WINDOWS\\system32\\dfrgntfs\.exe	.*
-
-#### Honeyclient manual add - iexplore.exe - ticket #142
-+	Write	C:\\Program Files\\Internet Explorer\\iexplore\.exe	C:\\WINDOWS\\Cab.*\.tmp
-+	Delete	C:\\Program Files\\Internet Explorer\\iexplore\.exe	C:\\WINDOWS\\Cab.*\.tmp
-+	Write	C:\\Program Files\\Internet Explorer\\iexplore\.exe	C:\\WINDOWS\\Tar.*\.tmp
-+	Delete	C:\\Program Files\\Internet Explorer\\iexplore\.exe	C:\\WINDOWS\\Tar.*\.tmp
-
-#### Honeyclient manual add - iexplore.exe - ticket #144 (windows update services)
-+	Write	C:\\Program Files\\Internet Explorer\\iexplore\.exe	C:\\WINDOWS\\WindowsUpdate.log
-+	Write	C:\\Program Files\\Internet Explorer\\iexplore\.exe	C:\\WINDOWS\\system32\\wuweb\.dll
-+	Delete	C:\\Program Files\\Internet Explorer\\iexplore\.exe	C:\\WINDOWS\\system32\\wuweb\.dll
-+	Delete	C:\\Program Files\\Internet Explorer\\iexplore\.exe	C:\\WINDOWS\\ICD.?.?\.tmp
-+	Write	C:\\Program Files\\Internet Explorer\\iexplore\.exe	C:\\WINDOWS\\ICD.?.?\.tmp\\wuweb\.dll
-+	Delete	C:\\Program Files\\Internet Explorer\\iexplore\.exe	C:\\WINDOWS\\ICD.?.?\.tmp\\wuweb\.dll
-+	Write	C:\\Program Files\\Internet Explorer\\iexplore\.exe	C:\\WINDOWS\\ICD.?.?\.tmp\\wuweb\.inf
-+	Delete	C:\\Program Files\\Internet Explorer\\iexplore\.exe	C:\\WINDOWS\\ICD.?.?\.tmp\\wuweb\.inf
-+	Write	C:\\Program Files\\Internet Explorer\\iexplore\.exe	C:\\WINDOWS\\ICD.?.?\.tmp\\wuweb\.cat
-+	Delete	C:\\Program Files\\Internet Explorer\\iexplore\.exe	C:\\WINDOWS\\ICD.?.?\.tmp\\wuweb\.cat
-+	Write	C:\\Program Files\\Internet Explorer\\iexplore\.exe	C:\\WINDOWS\\system32\\CatRoot2\\dberr\.txt
-+	Write	C:\\Program Files\\Internet Explorer\\iexplore\.exe	C:\\WINDOWS\\LastGood\\TMP.*\.tmp
-+	Write	C:\\Program Files\\Internet Explorer\\iexplore\.exe	C:\\WINDOWS\\system32\\SET.*\.tmp
-+	Delete	C:\\Program Files\\Internet Explorer\\iexplore\.exe	C:\\WINDOWS\\system32\\SET.*\.tmp
-+	Write	C:\\Program Files\\Internet Explorer\\iexplore\.exe	C:\\WINDOWS\\Downloaded Program Files\\SET.*\.tmp
-+	Delete	C:\\Program Files\\Internet Explorer\\iexplore\.exe	C:\\WINDOWS\\Downloaded Program Files\\SET.*\.tmp
-+	Write	C:\\Program Files\\Internet Explorer\\iexplore\.exe	C:\\WINDOWS\\SoftwareDistribution\\WuRedir\\9482F4B4-E343-43B6-B170-9A65BC822C77\\wuredir\.cab\.bak
-+	Delete	C:\\Program Files\\Internet Explorer\\iexplore\.exe	C:\\WINDOWS\\SoftwareDistribution\\WuRedir\\9482F4B4-E343-43B6-B170-9A65BC822C77\\wuredir\.cab\.bak
-+	Write	C:\\Program Files\\Internet Explorer\\iexplore\.exe	C:\\WINDOWS\\SoftwareDistribution\\WuRedir\\9482F4B4-E343-43B6-B170-9A65BC822C77\\wuredir\.xml
-+	Write	C:\\Program Files\\Internet Explorer\\iexplore\.exe	C:\\WINDOWS\\SoftwareDistribution\\WuRedir\\9482F4B4-E343-43B6-B170-9A65BC822C77\\wuredir\.cab
-+	Write	C:\\Program Files\\Internet Explorer\\iexplore\.exe	C:\\WINDOWS\\SoftwareDistribution\\WebSetup\\wuident\.txt
-+	Delete	C:\\Program Files\\Internet Explorer\\iexplore\.exe	C:\\WINDOWS\\SoftwareDistribution\\WebSetup\\wuident\.txt
-+	Write	C:\\Program Files\\Internet Explorer\\iexplore\.exe	C:\\WINDOWS\\SoftwareDistribution\\WebSetup\\wuident\.cab
-+	Delete	C:\\Program Files\\Internet Explorer\\iexplore\.exe	C:\\WINDOWS\\SoftwareDistribution\\WebSetup\\wuident\.cab
-+	Write	C:\\Program Files\\Internet Explorer\\iexplore\.exe	C:\\WINDOWS\\SoftwareDistribution\\WebSetup\\wsus3setup\.cab
-+	Delete	C:\\Program Files\\Internet Explorer\\iexplore\.exe	C:\\WINDOWS\\SoftwareDistribution\\WebSetup\\wsus3setup\.cab
-+	Write	C:\\Program Files\\Internet Explorer\\iexplore\.exe	C:\\WINDOWS\\SoftwareDistribution\\WebSetup\\wsus3setup\.inf
-+	Delete	C:\\Program Files\\Internet Explorer\\iexplore\.exe	C:\\WINDOWS\\SoftwareDistribution\\WebSetup\\wsus3setup\.inf
-+	Write	C:\\Program Files\\Internet Explorer\\iexplore\.exe	C:\\WINDOWS\\SoftwareDistribution\\WebSetup\\wsus3setup\.cat
-+	Delete	C:\\Program Files\\Internet Explorer\\iexplore\.exe	C:\\WINDOWS\\SoftwareDistribution\\WebSetup\\wsus3setup\.cat
-+	Delete	C:\\WINDOWS\\system32\\svchost\.exe	C:\\WINDOWS\\system32\\CatRoot2\\tmp\.edb
-+	Write	C:\\WINDOWS\\system32\\winlogon\.exe	C:\\WINDOWS\\system32\\dllcache\\wuweb\.dll\.new
-
-#### Honeyclient manual add - iexplore.exe - ticket #136 (flash)
-+	Write	C:\\Program Files\\Internet Explorer\\iexplore\.exe	C:\\WINDOWS\\fla.*\.tmp
-+	Delete	C:\\Program Files\\Internet Explorer\\iexplore\.exe	C:\\WINDOWS\\fla.*\.tmp
-+	Write	C:\\WINDOWS\\system32\\svchost\.exe	C:\\WINDOWS\\fla.*\.tmp
-+	Delete	C:\\WINDOWS\\system32\\svchost\.exe	C:\\WINDOWS\\fla.*\.tmp
-
-#### Honeyclient manual add - iexplore.exe - ticket #152
-+	Write	C:\\Program Files\\Internet Explorer\\iexplore\.exe	C:\\WINDOWS\\VGX.*\.tmp
-
-#### Honeyclient manual add - iexplore.exe
-+	Delete	C:\\Program Files\\Internet Explorer\\iexplore\.exe	C:\\WINDOWS\\wbk.*\.tmp
-
-#### HONEYCLIENT AUTO EXCLUDE SCRIPT - Internet Explorer 7 Updates
-+	Write	C:\\WINDOWS\\system32\\svchost\.exe	C:\\WINDOWS
-+	Write	C:\\WINDOWS\\system32\\svchost\.exe	C:\\WINDOWS\\SoftwareDistribution\\DataStore\\Logs
-+	Write	C:\\WINDOWS\\system32\\svchost\.exe	C:\\WINDOWS\\system32
-+	Write	C:\\WINDOWS\\system32\\svchost\.exe	C:\\WINDOWS\\repair
-+	Write	C:\\WINDOWS\\system32\\svchost\.exe	C:\\WINDOWS\\SoftwareDistribution
-+	Write	C:\\WINDOWS\\system32\\svchost\.exe	C:\\Documents and Settings\\Administrator\\Cookies
-+	Write	C:\\WINDOWS\\system32\\svchost\.exe	C:\\Documents and Settings\\Administrator\\Cookies\\index.dat
-+	Write	C:\\WINDOWS\\system32\\svchost\.exe	C:\\Documents and Settings\\.+\\Local Settings\\History\\History\.IE5.*
-+	Delete	C:\\WINDOWS\\system32\\svchost\.exe	C:\\Documents and Settings\\.+\\Local Settings\\History\\History\.IE5.*
-+	Write	C:\\WINDOWS\\system32\\WgaTray\.exe	C:\\Documents and Settings\\.+\\Local Settings\\History\\History\.IE5.*
-+	Delete	C:\\WINDOWS\\system32\\WgaTray\.exe	C:\\Documents and Settings\\.+\\Local Settings\\History\\History\.IE5.*
-+	Write	C:\\WINDOWS\\system32\\svchost\.exe	C:\\cygwin.*
-+	Write	C:\\WINDOWS\\system32\\svchost\.exe	C:\\Documents and Settings\\Administrator\\Desktop
-+	Write	C:\\WINDOWS\\system32\\svchost\.exe	C:\\Documents and Settings\\Administrator\\Desktop\\%USERPROFILE%\\Local Settings\\Application Data\\Microsoft\\Feeds Cache
-+	Write	C:\\WINDOWS\\system32\\svchost\.exe	C:\\Documents and Settings\\Administrator\\Local Settings\\Temporary Internet Files.*
-+	Write	C:\\WINDOWS\\system32\\svchost\.exe	C:\\Documents and Settings\\Administrator\\Local Settings\\Temporary Internet Files\\Content\.IE5\\.*
-+	Write	C:\\WINDOWS\\system32\\svchost\.exe	C:\\Documents and Settings\\Administrator
-+	Write	C:\\WINDOWS\\system32\\svchost\.exe	C:\\Documents and Settings\\Administrator\\Desktop\\%USERPROFILE%\\Local Settings\\Application Data\\Microsoft\\Feeds Cache\\index\.dat
-+	Write	C:\\WINDOWS\\system32\\svchost\.exe	C:\\Documents and Settings\\Administrator\\Local Settings\\Application Data\\Microsoft\\Internet Explorer\\MSIMGSIZ\.DAT
-+	Write	C:\\WINDOWS\\system32\\svchost\.exe	C:\\Documents and Settings\\Administrator\\Local Settings
-+	Write	C:\\WINDOWS\\system32\\svchost\.exe	C:\\Documents and Settings\\Administrator\\Local Settings\\Temporary Internet Files\\AntiPhishing\\.+
-+	Write	C:\\WINDOWS\\system32\\svchost\.exe	C:\\Program Files\\Internet Explorer
-+	Write	C:\\WINDOWS\\system32\\svchost\.exe	C:\\Documents and Settings\\Administrator\\Local Settings\\Temporary Internet Files\\Content\.IE5
-+	Write	C:\\WINDOWS\\system32\\svchost\.exe	C:\\WINDOWS\\system32\\Macromed\\Flash
-+	Write	C:\\WINDOWS\\system32\\svchost\.exe	C:\\Documents and Settings\\Administrator\\Local Settings\\Application Data\\Microsoft\\Feeds Cache
-+	Write	C:\\WINDOWS\\system32\\svchost\.exe	C:\\Program Files
-+	Write	C:\\WINDOWS\\system32\\svchost\.exe	C:\\Documents and Settings\\Administrator\\Favorites
-+	Write	C:\\WINDOWS\\system32\\svchost\.exe	C:\\Program Files\\Messenger
-+	Write	C:\\WINDOWS\\system32\\svchost\.exe	C:\\Documents and Settings\\Administrator\\Local Settings\\Application Data\\Microsoft\\Feeds Cache\\index\.dat
-+	Write	C:\\WINDOWS\\system32\\svchost\.exe	C:\\WINDOWS\\Microsoft\.NET\\Framework.*
-+	Write	C:\\WINDOWS\\system32\\WgaTray\.exe	C:\\Documents and Settings\\.+\\Local Settings\\Temporary Internet Files\\.*
-+	Write	C:\\WINDOWS\\system32\\svchost\.exe	C:\\Documents and Settings\\.+\\Cookies\\.+
-+	Write	C:\\WINDOWS\\system32\\svchost\.exe	C:\\Documents and Settings\\.+\\Cookies\\index.dat
-+	Delete	C:\\WINDOWS\\system32\\svchost\.exe	C:\\Documents and Settings\\.+\\Cookies\\.+
-+	Delete	C:\\WINDOWS\\system32\\svchost\.exe	C:\\Documents and Settings\\.+\\Cookies\\index.dat
-+	Write	C:\\WINDOWS\\system32\\svchost\.exe	C:\\WINDOWS\\WinSxS\\Policies\\.*
-+	Write	C:\\WINDOWS\\system32\\svchost\.exe	C:\\WINDOWS\\WinSxS
-+	Write	C:\\WINDOWS\\system32\\svchost\.exe	C:\\
-+	Write	C:\\WINDOWS\\system32\\svchost\.exe	C:\\WINDOWS\\Temp
-
-#### HONEYCLIENT AUTO EXCLUDE SCRIPT
-#No guarantees that the % will be interpreted literally by the regex processing...but this is what it spit out
-+	Write	C:\\WINDOWS\\system32\\svchost\.exe	C:\\Documents and Settings\\Administrator\\Desktop\\%USERPROFILE%\\UserData\\index\.dat
-
-#### HONEYCLIENT AUTO EXCLUDE SCRIPT
-+	Write	C:\\WINDOWS\\system32\\lsass\.exe	C:\\Documents and Settings\\Administrator\\Application Data\\Microsoft\\Protect\\.*
-
-
-###Stuff that got accidentally removed in r 1511
-
-+	Write	C:\\WINDOWS\\system32\\svchost\.exe	C:\\WINDOWS\\Temp\\WGANotify\.settings
-+	Write	C:\\WINDOWS\\system32\\svchost\.exe	C:\\WINDOWS\\system32\\config
-+	Write	C:\\WINDOWS\\system32\\svchost\.exe	C:\\Documents and Settings\\.+\\Application Data.*
-+	Delete	C:\\WINDOWS\\system32\\svchost\.exe	C:\\Documents and Settings\\.+\\Application Data.*
-+	Write	C:\\WINDOWS\\system32\\svchost\.exe	C:\\Documents and Settings\\.+\\Application Data\\Microsoft\\CryptnetUrlCache.*
-+	Write	C:\\WINDOWS\\system32\\svchost\.exe	C:\\Documents and Settings\\All Users
-+	Write	C:\\WINDOWS\\system32\\svchost\.exe	C:\\WINDOWS\\SoftwareDistribution\\Download
-+	Write	C:\\WINDOWS\\system32\\svchost\.exe	C:\\WINDOWS\\SoftwareDistribution\\Download.*
-+	Delete	C:\\WINDOWS\\system32\\svchost\.exe	C:\\WINDOWS\\SoftwareDistribution\\Download.*
-+	Write	C:\\WINDOWS\\system32\\svchost\.exe	C:\\WINDOWS\\system32\\wbem
-
-#### HONEYCLIENT AUTO EXCLUDE SCRIPT - IE7 accessing live.com
-+	Write	C:\\WINDOWS\\Microsoft\.NET\\Framework\\v3\.0\\Windows Communication Foundation\\infocard\.exe	C:\\WINDOWS\\system32\\config\\system\.LOG
-+	Write	C:\\WINDOWS\\Microsoft\.NET\\Framework\\v3\.0\\Windows Communication Foundation\\infocard\.exe	C:\\WINDOWS\\system32\\config\\system
-+	Write	C:\\WINDOWS\\Microsoft\.NET\\Framework\\v3\.0\\Windows Communication Foundation\\infocard\.exe	C:\\WINDOWS\\system32\\config
-
-# IE7 - Exclusion
-+	Write	C:\\WINDOWS\\system32\\svchost\.exe	C:\\Documents and Settings\\LocalService
-+	Write	C:\\WINDOWS\\system32\\svchost\.exe	C:\\WINDOWS\\system32\\config\\SysEvent\.Evt
-
-# VMware Tools
-+	Write	C:\\Program Files\\VMware\\VMware Tools\\VMwareUser\.exe	C:\\Documents and Settings\\Administrator\\Local Settings\\Temp.*
-+	Delete	C:\\Program Files\\VMware\\VMware Tools\\VMwareUser\.exe	C:\\Documents and Settings\\Administrator\\Local Settings\\Temp.*
-
-# IE - Active Scripting Printing
-+	Write	C:\\Program Files\\Internet Explorer\\iexplore\.exe	C:\\WINDOWS\\.+htm
-+	Write	C:\\Program Files\\Internet Explorer\\iexplore\.exe	C:\\WINDOWS\\.+html
-+	Delete	C:\\Program Files\\Internet Explorer\\iexplore\.exe	C:\\WINDOWS\\.+tmp
-+	Write	C:\\Program Files\\Internet Explorer\\iexplore\.exe	C:\\WINDOWS\\.+tmp
-
-# System Log Files - IE7
-+	Write	C:\\WINDOWS\\system32\\services\.exe	C:\\WINDOWS\\Debug\\UserMode\\userenv\.log
-
-# IE6 Crashing
-+	Write	C:\\WINDOWS\\system32\\drwtsn32\.exe	C:\\Documents and Settings\\All Users\\Application Data\\Microsoft\\Dr Watson\\.*

@@ -3,7 +3,7 @@
 **Created by Xeno Kovah of the MITRE HoneyClient Project 5/20/2008
 */
 
-#include "MySoapServer.h"
+#include "CaptureSoapServer.h"
 
 #include "soapH.h" 
 #include "capture.nsmap" 
@@ -12,18 +12,18 @@
 
 Visitor * globVisitor;
 
-MySoapServer::MySoapServer(Visitor* v){
+CaptureSoapServer::CaptureSoapServer(Visitor* v){
 
 	globVisitor = v;
-	MySoapServerThread = new Thread(this);
-	MySoapServerThread->start("MySoapServer");
+	CaptureSoapServerThread = new Thread(this);
+	CaptureSoapServerThread->start("CaptureSoapServer");
 
 }
 
-MySoapServer::~MySoapServer(){}
+CaptureSoapServer::~CaptureSoapServer(){}
 
 void
-MySoapServer::run(){
+CaptureSoapServer::run(){
 
 	char debug = 0;
 	//The below code is taken verbatim from the gsoap standalone server example page
@@ -71,9 +71,9 @@ int ns__add(struct soap *soap, int a, int b, int &result)
    return SOAP_OK;
 } 
 
-void MySoapServer::test(){
+void CaptureSoapServer::test(){
 
-//	printf("myVisitor = %#x\n", MySoapServer::myVisitor);
+//	printf("myVisitor = %#x\n", CaptureSoapServer::myVisitor);
 
 }
 
@@ -123,7 +123,7 @@ int ns__junks(char * a, ns__myStruct2 &result)
 */
 
 void
-MySoapServer::loadClientPlugins()
+CaptureSoapServer::loadClientPlugins()
 {
 	WIN32_FIND_DATA FindFileData;
 	HANDLE hFind = INVALID_HANDLE_VALUE;
@@ -186,7 +186,7 @@ MySoapServer::loadClientPlugins()
 }
 
 ApplicationPlugin*
-MySoapServer::createApplicationPluginObject(HMODULE hPlugin)
+CaptureSoapServer::createApplicationPluginObject(HMODULE hPlugin)
 {
 	typedef void (*PluginExportInterface)(void*);
 	PluginExportInterface pluginCreateInstance = NULL;
@@ -210,7 +210,7 @@ MySoapServer::createApplicationPluginObject(HMODULE hPlugin)
 }
 
 void
-MySoapServer::onServerEvent(Element* pElement)
+CaptureSoapServer::onServerEvent(Element* pElement)
 {
 	wstring applicationName = L"iexplore";
 	wstring url = L"";
@@ -244,9 +244,9 @@ MySoapServer::onServerEvent(Element* pElement)
 			///toVisit.push(VisitPair(applicationPlugin, visiturl));
 			///SetEvent(hQueueNotEmpty);
 		} else {
-			printf("MySoapServer-onServerEvent: ERROR could not find client %ls path, url not queued for visitation\n", applicationName.c_str());
+			printf("CaptureSoapServer-onServerEvent: ERROR could not find client %ls path, url not queued for visitation\n", applicationName.c_str());
 		}
 	} else {
-		printf("MySoapServer-onServerEvent: ERROR no url specified for visit event\n");
+		printf("CaptureSoapServer-onServerEvent: ERROR no url specified for visit event\n");
 	}
 }

@@ -25,18 +25,6 @@
   elementFormDefault="unqualified"
   attributeFormDefault="unqualified">
   <import namespace="http://schemas.xmlsoap.org/soap/encoding/"/>
-  <complexType name="myStruct2">
-   <complexContent>
-    <restriction base="ns:ms2">
-    </restriction>
-   </complexContent>
-  </complexType>
-  <complexType name="ms2">
-   <sequence>
-     <element name="first" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
-     <element name="last" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
-   </sequence>
-  </complexType>
  </schema>
 
 </types>
@@ -67,15 +55,6 @@
  <part name="result" type="xsd:double"/>
 </message>
 
-<message name="junks">
- <part name="a" type="xsd:string"/>
-</message>
-
-<message name="ms2">
- <part name="first" type="xsd:string"/>
- <part name="last" type="xsd:string"/>
-</message>
-
 <portType name="capturePortType">
  <operation name="add">
   <documentation>Service definition of function ns__add</documentation>
@@ -91,11 +70,6 @@
   <documentation>Service definition of function ns__sub</documentation>
   <input message="tns:subRequest"/>
   <output message="tns:subResponse"/>
- </operation>
- <operation name="junks">
-  <documentation>Service definition of function ns__junks</documentation>
-  <input message="tns:junks"/>
-  <output message="tns:ms2"/>
  </operation>
 </portType>
 
@@ -120,15 +94,6 @@
   </output>
  </operation>
  <operation name="sub">
-  <SOAP:operation style="rpc" soapAction=""/>
-  <input>
-     <SOAP:body use="encoded" namespace="capture" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
-  </input>
-  <output>
-     <SOAP:body use="encoded" namespace="capture" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
-  </output>
- </operation>
- <operation name="junks">
   <SOAP:operation style="rpc" soapAction=""/>
   <input>
      <SOAP:body use="encoded" namespace="capture" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
