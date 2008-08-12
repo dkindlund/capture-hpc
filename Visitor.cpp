@@ -7,7 +7,6 @@ Visitor::Visitor(void)
 	visiting = false;
 
 	hQueueNotEmpty = CreateEvent(NULL, FALSE, FALSE, NULL);
-	printf("Visitor: boost that sucka\n");
 	onServerVisitEventConnection=EventController::getInstance()->connect_onServerEvent(L"visit", boost::bind(&Visitor::onServerEvent, this, _1));
 
 	loadClientPlugins();

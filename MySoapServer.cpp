@@ -6,7 +6,7 @@
 #include "MySoapServer.h"
 
 #include "soapH.h" 
-#include "calculator.nsmap" 
+#include "capture.nsmap" 
 
 #include "Visitor.h"
 
@@ -82,11 +82,13 @@ int ns__ping(struct soap *soap, char * a, char ** result)
    printf("%s\n", a);
    *result = "pong";
 
+	wchar_t xURL[1024];
+	wsprintf(xURL, L"%hs", a);
 	//Build my own new-fangled Element to pass to Visitor:onServerEvent which I think will open 
     typedef boost::signal<void (Element*)> signal_serverEvent;
 	Attribute att;
 	att.name = L"url";
-	att.value = L"http://slashdot.org";
+	att.value = xURL; //Now expecting you to pass the URL
 	Element e;
 	e.name = L"visit";
 	e.attributes.push_back(att);
@@ -94,7 +96,7 @@ int ns__ping(struct soap *soap, char * a, char ** result)
 	e.dataLength = 0;
 	printf("trying with notifyListeners\n");
 	EventController::getInstance()->notifyListeners(&e);
-	printf("trying with globVisitor\n");
+//	printf("trying with globVisitor\n");
 //	globVisitor->onServerEvent(&e);
 
    return SOAP_OK; 
@@ -106,6 +108,19 @@ int ns__sub(struct soap *soap, double a, double b, double &result)
    result = a - b; 
    return SOAP_OK; 
 }
+
+/*
+int ns__junks(char * a, ns__myStruct2 &result)
+{
+	printf("in ns__struct\n");
+	ns__myStruct2 bob;
+	bob.first = "bob";
+	bob.last = "dole";
+	result = &bob;
+
+	return SOAP_OK;
+}
+*/
 
 void
 MySoapServer::loadClientPlugins()
