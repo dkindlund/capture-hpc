@@ -16,7 +16,7 @@
 #include <hash_map>
 #include <boost/signal.hpp>
 #include <boost/bind.hpp>
-#include <boost\regex.hpp>
+#include <boost/regex.hpp>
 #include <boost/algorithm/string/classification.hpp>
 #include <boost/algorithm/string/find_iterator.hpp>
 #include <boost/algorithm/string/finder.hpp> 

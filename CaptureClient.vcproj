@@ -198,6 +198,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\CaptureSoapServer.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\EventController.cpp"
 				>
 			</File>
@@ -215,10 +219,6 @@
 			</File>
 			<File
 				RelativePath=".\Monitor.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\MySoapServer.cpp"
 				>
 			</File>
 			<File
@@ -308,6 +308,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\CaptureSoapServer.h"
+				>
+			</File>
+			<File
 				RelativePath=".\ErrorCodes.h"
 				>
 			</File>
@@ -333,10 +337,6 @@
 			</File>
 			<File
 				RelativePath=".\Monitor.h"
-				>
-			</File>
-			<File
-				RelativePath=".\MySoapServer.h"
 				>
 			</File>
 			<File

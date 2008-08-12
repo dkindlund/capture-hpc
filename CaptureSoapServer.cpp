@@ -82,8 +82,12 @@ int ns__ping(struct soap *soap, char * a, char ** result)
    printf("%s\n", a);
    *result = "pong";
 
+   return SOAP_OK; 
+}
+
+int ns__visit(struct soap *soap, char * url, char ** result){
 	wchar_t xURL[1024];
-	wsprintf(xURL, L"%hs", a);
+	wsprintf(xURL, L"%hs", url);
 	//Build my own new-fangled Element to pass to Visitor:onServerEvent which I think will open 
     typedef boost::signal<void (Element*)> signal_serverEvent;
 	Attribute att;
@@ -94,12 +98,10 @@ int ns__ping(struct soap *soap, char * a, char ** result)
 	e.attributes.push_back(att);
 	e.data = NULL;
 	e.dataLength = 0;
-	printf("trying with notifyListeners\n");
+	printf("visiting %s\n", url);
 	EventController::getInstance()->notifyListeners(&e);
-//	printf("trying with globVisitor\n");
-//	globVisitor->onServerEvent(&e);
 
-   return SOAP_OK; 
+	return SOAP_OK;
 }
 
 // Implementation of the "sub" remote method: 

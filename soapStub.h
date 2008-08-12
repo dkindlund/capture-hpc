@@ -68,8 +68,28 @@ public:
 };
 #endif
 
+#ifndef SOAP_TYPE_ns__visitResponse
+#define SOAP_TYPE_ns__visitResponse (16)
+/* ns:visitResponse */
+struct ns__visitResponse
+{
+public:
+	char **result;	/* SOAP 1.2 RPC return element (when namespace qualified) */	/* optional element of type xsd:string */
+};
+#endif
+
+#ifndef SOAP_TYPE_ns__visit
+#define SOAP_TYPE_ns__visit (17)
+/* ns:visit */
+struct ns__visit
+{
+public:
+	char *a;	/* optional element of type xsd:string */
+};
+#endif
+
 #ifndef SOAP_TYPE_ns__subResponse
-#define SOAP_TYPE_ns__subResponse (18)
+#define SOAP_TYPE_ns__subResponse (21)
 /* ns:subResponse */
 struct ns__subResponse
 {
@@ -79,7 +99,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ns__sub
-#define SOAP_TYPE_ns__sub (19)
+#define SOAP_TYPE_ns__sub (22)
 /* ns:sub */
 struct ns__sub
 {
@@ -90,7 +110,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_SOAP_ENV__Header
-#define SOAP_TYPE_SOAP_ENV__Header (20)
+#define SOAP_TYPE_SOAP_ENV__Header (23)
 /* SOAP Header: */
 struct SOAP_ENV__Header
 {
@@ -102,7 +122,7 @@ private:
 #endif
 
 #ifndef SOAP_TYPE_SOAP_ENV__Code
-#define SOAP_TYPE_SOAP_ENV__Code (21)
+#define SOAP_TYPE_SOAP_ENV__Code (24)
 /* SOAP Fault Code: */
 struct SOAP_ENV__Code
 {
@@ -113,7 +133,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_SOAP_ENV__Detail
-#define SOAP_TYPE_SOAP_ENV__Detail (23)
+#define SOAP_TYPE_SOAP_ENV__Detail (26)
 /* SOAP-ENV:Detail */
 struct SOAP_ENV__Detail
 {
@@ -125,7 +145,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_SOAP_ENV__Reason
-#define SOAP_TYPE_SOAP_ENV__Reason (26)
+#define SOAP_TYPE_SOAP_ENV__Reason (29)
 /* SOAP-ENV:Reason */
 struct SOAP_ENV__Reason
 {
@@ -135,7 +155,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_SOAP_ENV__Fault
-#define SOAP_TYPE_SOAP_ENV__Fault (27)
+#define SOAP_TYPE_SOAP_ENV__Fault (30)
 /* SOAP Fault: */
 struct SOAP_ENV__Fault
 {
@@ -201,6 +221,8 @@ SOAP_FMAC5 int SOAP_FMAC6 ns__add(struct soap*, int a, int b, int &result);
 
 SOAP_FMAC5 int SOAP_FMAC6 ns__ping(struct soap*, char *a, char **result);
 
+SOAP_FMAC5 int SOAP_FMAC6 ns__visit(struct soap*, char *a, char **result);
+
 SOAP_FMAC5 int SOAP_FMAC6 ns__sub(struct soap*, double a, double b, double &result);
 
 /******************************************************************************\
@@ -213,6 +235,8 @@ SOAP_FMAC5 int SOAP_FMAC6 ns__sub(struct soap*, double a, double b, double &resu
 SOAP_FMAC5 int SOAP_FMAC6 soap_call_ns__add(struct soap *soap, const char *soap_endpoint, const char *soap_action, int a, int b, int &result);
 
 SOAP_FMAC5 int SOAP_FMAC6 soap_call_ns__ping(struct soap *soap, const char *soap_endpoint, const char *soap_action, char *a, char **result);
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_call_ns__visit(struct soap *soap, const char *soap_endpoint, const char *soap_action, char *a, char **result);
 
 SOAP_FMAC5 int SOAP_FMAC6 soap_call_ns__sub(struct soap *soap, const char *soap_endpoint, const char *soap_action, double a, double b, double &result);
 
@@ -229,6 +253,8 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_serve_request(struct soap*);
 SOAP_FMAC5 int SOAP_FMAC6 soap_serve_ns__add(struct soap*);
 
 SOAP_FMAC5 int SOAP_FMAC6 soap_serve_ns__ping(struct soap*);
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_serve_ns__visit(struct soap*);
 
 SOAP_FMAC5 int SOAP_FMAC6 soap_serve_ns__sub(struct soap*);
 

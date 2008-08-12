@@ -46,6 +46,14 @@
  <part name="result" type="xsd:string"/>
 </message>
 
+<message name="visitRequest">
+ <part name="a" type="xsd:string"/>
+</message>
+
+<message name="visitResponse">
+ <part name="result" type="xsd:string"/>
+</message>
+
 <message name="subRequest">
  <part name="a" type="xsd:double"/>
  <part name="b" type="xsd:double"/>
@@ -66,6 +74,11 @@
   <input message="tns:pingRequest"/>
   <output message="tns:pingResponse"/>
  </operation>
+ <operation name="visit">
+  <documentation>Service definition of function ns__visit</documentation>
+  <input message="tns:visitRequest"/>
+  <output message="tns:visitResponse"/>
+ </operation>
  <operation name="sub">
   <documentation>Service definition of function ns__sub</documentation>
   <input message="tns:subRequest"/>
@@ -85,6 +98,15 @@
   </output>
  </operation>
  <operation name="ping">
+  <SOAP:operation style="rpc" soapAction=""/>
+  <input>
+     <SOAP:body use="encoded" namespace="capture" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+  </input>
+  <output>
+     <SOAP:body use="encoded" namespace="capture" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+  </output>
+ </operation>
+ <operation name="visit">
   <SOAP:operation style="rpc" soapAction=""/>
   <input>
      <SOAP:body use="encoded" namespace="capture" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>

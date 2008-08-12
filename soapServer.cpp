@@ -6,7 +6,7 @@
 */
 #include "soapH.h"
 
-SOAP_SOURCE_STAMP("@(#) soapServer.cpp ver 2.7.10 2008-08-12 07:50:20 GMT")
+SOAP_SOURCE_STAMP("@(#) soapServer.cpp ver 2.7.10 2008-08-12 08:49:10 GMT")
 
 
 SOAP_FMAC5 int SOAP_FMAC6 soap_serve(struct soap *soap)
@@ -77,6 +77,8 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_serve_request(struct soap *soap)
 		return soap_serve_ns__add(soap);
 	if (!soap_match_tag(soap, soap->tag, "ns:ping"))
 		return soap_serve_ns__ping(soap);
+	if (!soap_match_tag(soap, soap->tag, "ns:visit"))
+		return soap_serve_ns__visit(soap);
 	if (!soap_match_tag(soap, soap->tag, "ns:sub"))
 		return soap_serve_ns__sub(soap);
 	return soap->error = SOAP_NO_METHOD;
@@ -161,6 +163,50 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_serve_ns__ping(struct soap *soap)
 	 || soap_putheader(soap)
 	 || soap_body_begin_out(soap)
 	 || soap_put_ns__pingResponse(soap, &soap_tmp_ns__pingResponse, "ns:pingResponse", "")
+	 || soap_body_end_out(soap)
+	 || soap_envelope_end_out(soap)
+	 || soap_end_send(soap))
+		return soap->error;
+	return soap_closesock(soap);
+}
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_serve_ns__visit(struct soap *soap)
+{	struct ns__visit soap_tmp_ns__visit;
+	struct ns__visitResponse soap_tmp_ns__visitResponse;
+	char * soap_tmp_string;
+	soap_default_ns__visitResponse(soap, &soap_tmp_ns__visitResponse);
+	soap_tmp_string = NULL;
+	soap_tmp_ns__visitResponse.result = &soap_tmp_string;
+	soap_default_ns__visit(soap, &soap_tmp_ns__visit);
+	soap->encodingStyle = "";
+	if (!soap_get_ns__visit(soap, &soap_tmp_ns__visit, "ns:visit", NULL))
+		return soap->error;
+	if (soap_body_end_in(soap)
+	 || soap_envelope_end_in(soap)
+	 || soap_end_recv(soap))
+		return soap->error;
+	soap->error = ns__visit(soap, soap_tmp_ns__visit.a, &soap_tmp_string);
+	if (soap->error)
+		return soap->error;
+	soap_serializeheader(soap);
+	soap_serialize_ns__visitResponse(soap, &soap_tmp_ns__visitResponse);
+	if (soap_begin_count(soap))
+		return soap->error;
+	if (soap->mode & SOAP_IO_LENGTH)
+	{	if (soap_envelope_begin_out(soap)
+		 || soap_putheader(soap)
+		 || soap_body_begin_out(soap)
+		 || soap_put_ns__visitResponse(soap, &soap_tmp_ns__visitResponse, "ns:visitResponse", "")
+		 || soap_body_end_out(soap)
+		 || soap_envelope_end_out(soap))
+			 return soap->error;
+	};
+	if (soap_end_count(soap)
+	 || soap_response(soap, SOAP_OK)
+	 || soap_envelope_begin_out(soap)
+	 || soap_putheader(soap)
+	 || soap_body_begin_out(soap)
+	 || soap_put_ns__visitResponse(soap, &soap_tmp_ns__visitResponse, "ns:visitResponse", "")
 	 || soap_body_end_out(soap)
 	 || soap_envelope_end_out(soap)
 	 || soap_end_send(soap))
