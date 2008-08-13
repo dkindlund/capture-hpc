@@ -3,8 +3,10 @@
 
 #use SOAP::Lite +trace => 'all';
 use SOAP::Lite;
-
+use Class::Struct;
 use Data::Dumper;
+
+struct( ns__myStruct => [f => '$', l => '$'] );
 
 $pingDataA = SOAP::Data->name(a => "http://www.cnn.com");
 
@@ -35,10 +37,21 @@ $res = SOAP::Lite
 
 my $som = $res->junks($structData);
 
-my @hashRes = $som->paramsall;
+print "ns__myStruct.first = " . $som->result . "\n";
+print "ns__myStruct.last = " . ($som->paramsout)[0] . "\n";
 
-join(":", @hashRes);
-print @hashRes;
+my @params = $som->paramsall;
+foreach $param (@params){
+    print "$param\n";
+
+}
+
+
+
+
+
+
+
 
 
 
