@@ -1,12 +1,12 @@
 #!perl
 
+use Data::Dumper;
 
 #use SOAP::Lite +trace => 'all';
 use SOAP::Lite;
-use Class::Struct;
-use Data::Dumper;
+use SOAP::MIME;
+use MIME::Entity;
 
-struct( ns__myStruct => [f => '$', l => '$'] );
 
 $pingDataA = SOAP::Data->name(a => "http://www.cnn.com");
 

@@ -15,6 +15,8 @@ typedef struct s{
 
 int ns__junks(char * a, ns__myStruct &result);
 
+int ns__writeFile();
+
 int ns__add(int a, int b, int &result); 
 int ns__ping(char * a, char ** result);
 int ns__visit(char * a, char ** result);
