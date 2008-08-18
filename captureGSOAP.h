@@ -14,10 +14,9 @@ typedef struct s{
 } ns__myStruct;
 
 int ns__junks(char * a, ns__myStruct &result);
-
-int ns__writeFile();
+int ns__sendBase64(char * data, int encodedLength, int decodedLength, ns__myStruct &result);
 
 int ns__add(int a, int b, int &result); 
 int ns__ping(char * a, char ** result);
 int ns__visit(char * a, char ** result);
-int ns__sub(double a, double b, double &result); 
+int ns__sub(double a, double b, double &result);

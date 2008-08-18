@@ -102,7 +102,7 @@ int ns__sub(struct soap *soap, double a, double b, double &result)
 
 int ns__junks(struct soap *soap, char * a, ns__myStruct &result)
 {
-	printf("in ns__struct\n");
+	printf("in ns__junks\n");
 	ns__myStruct bob;
 	bob.first = "bob";
 	bob.last = "dole";
@@ -111,4 +111,36 @@ int ns__junks(struct soap *soap, char * a, ns__myStruct &result)
 	return SOAP_OK;
 }
 
+int ns__sendBase64(struct soap *soap, char * data, int encodedLength, int decodedLength, ns__myStruct &result){
+	printf("in ns__sendBase64\n");
+
+	struct soap_multipart * attachment;
+	for(attachment = soap.mime.list; attachment; attachment = attachment->next){
+	   printf("MIME attachment:\n"); 
+	   printf("Memory=%p\n", (*attachment).ptr); 
+	   printf("Size=%ul\n", (*attachment).size); 
+	   printf("Encoding=%d\n", (int)(*attachment).encoding); 
+	   printf("Type=%s\n", (*attachment).type?(*attachment).type:"null"); 
+	   printf("ID=%s\n", (*attachment).id?(*attachment).id:"null"); 
+	   printf("Location=%s\n", (*attachment).location?(*attachment).location:"null"); 
+	   printf("Description=%s\n", (*attachment).description?(*attachment).description:"null
+	}
+	
+	printf("=================DATA==============\n");
+	printf("=================DATA==============\n");
+	printf("=================DATA==============\n");
+	printf("=================DATA==============\n");
+	printf("First 4 = %c%c%c%c\n", data[0], data[1], data[2], data[3]);
+	printf("encodedLength = %d, decodedLength = %d\n", encodedLength, decodedLength);
+	//	printf("Last 4 = %c%c%c%c\n", data[encodedLength-1], data[encodedLength-2], data[encodedLength-3], data[encodedLength-4]);
+
+
+	ns__myStruct bob;
+	bob.first = "bob";
+	bob.last = "dole";
+	result = bob;
+
+	return SOAP_OK;
+
+}
 

@@ -48,8 +48,20 @@ public:
 };
 #endif
 
+#ifndef SOAP_TYPE_ns__sendBase64
+#define SOAP_TYPE_ns__sendBase64 (13)
+/* ns:sendBase64 */
+struct ns__sendBase64
+{
+public:
+	char *data;	/* optional element of type xsd:string */
+	int encodedLength;	/* required element of type xsd:int */
+	int decodedLength;	/* required element of type xsd:int */
+};
+#endif
+
 #ifndef SOAP_TYPE_ns__addResponse
-#define SOAP_TYPE_ns__addResponse (14)
+#define SOAP_TYPE_ns__addResponse (16)
 /* ns:addResponse */
 struct ns__addResponse
 {
@@ -59,7 +71,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ns__add
-#define SOAP_TYPE_ns__add (15)
+#define SOAP_TYPE_ns__add (17)
 /* ns:add */
 struct ns__add
 {
@@ -70,7 +82,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ns__pingResponse
-#define SOAP_TYPE_ns__pingResponse (18)
+#define SOAP_TYPE_ns__pingResponse (20)
 /* ns:pingResponse */
 struct ns__pingResponse
 {
@@ -80,7 +92,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ns__ping
-#define SOAP_TYPE_ns__ping (19)
+#define SOAP_TYPE_ns__ping (21)
 /* ns:ping */
 struct ns__ping
 {
@@ -90,7 +102,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ns__visitResponse
-#define SOAP_TYPE_ns__visitResponse (21)
+#define SOAP_TYPE_ns__visitResponse (23)
 /* ns:visitResponse */
 struct ns__visitResponse
 {
@@ -100,7 +112,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ns__visit
-#define SOAP_TYPE_ns__visit (22)
+#define SOAP_TYPE_ns__visit (24)
 /* ns:visit */
 struct ns__visit
 {
@@ -110,7 +122,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ns__subResponse
-#define SOAP_TYPE_ns__subResponse (26)
+#define SOAP_TYPE_ns__subResponse (28)
 /* ns:subResponse */
 struct ns__subResponse
 {
@@ -120,7 +132,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ns__sub
-#define SOAP_TYPE_ns__sub (27)
+#define SOAP_TYPE_ns__sub (29)
 /* ns:sub */
 struct ns__sub
 {
@@ -131,7 +143,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_SOAP_ENV__Header
-#define SOAP_TYPE_SOAP_ENV__Header (28)
+#define SOAP_TYPE_SOAP_ENV__Header (30)
 /* SOAP Header: */
 struct SOAP_ENV__Header
 {
@@ -143,7 +155,7 @@ private:
 #endif
 
 #ifndef SOAP_TYPE_SOAP_ENV__Code
-#define SOAP_TYPE_SOAP_ENV__Code (29)
+#define SOAP_TYPE_SOAP_ENV__Code (31)
 /* SOAP Fault Code: */
 struct SOAP_ENV__Code
 {
@@ -154,7 +166,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_SOAP_ENV__Detail
-#define SOAP_TYPE_SOAP_ENV__Detail (31)
+#define SOAP_TYPE_SOAP_ENV__Detail (33)
 /* SOAP-ENV:Detail */
 struct SOAP_ENV__Detail
 {
@@ -166,7 +178,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_SOAP_ENV__Reason
-#define SOAP_TYPE_SOAP_ENV__Reason (34)
+#define SOAP_TYPE_SOAP_ENV__Reason (36)
 /* SOAP-ENV:Reason */
 struct SOAP_ENV__Reason
 {
@@ -176,7 +188,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_SOAP_ENV__Fault
-#define SOAP_TYPE_SOAP_ENV__Fault (35)
+#define SOAP_TYPE_SOAP_ENV__Fault (37)
 /* SOAP Fault: */
 struct SOAP_ENV__Fault
 {
@@ -245,6 +257,8 @@ typedef struct s ns__myStruct;
 
 SOAP_FMAC5 int SOAP_FMAC6 ns__junks(struct soap*, char *a, struct s &result);
 
+SOAP_FMAC5 int SOAP_FMAC6 ns__sendBase64(struct soap*, char *data, int encodedLength, int decodedLength, struct s &result);
+
 SOAP_FMAC5 int SOAP_FMAC6 ns__add(struct soap*, int a, int b, int &result);
 
 SOAP_FMAC5 int SOAP_FMAC6 ns__ping(struct soap*, char *a, char **result);
@@ -261,6 +275,8 @@ SOAP_FMAC5 int SOAP_FMAC6 ns__sub(struct soap*, double a, double b, double &resu
 
 
 SOAP_FMAC5 int SOAP_FMAC6 soap_call_ns__junks(struct soap *soap, const char *soap_endpoint, const char *soap_action, char *a, struct s &result);
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_call_ns__sendBase64(struct soap *soap, const char *soap_endpoint, const char *soap_action, char *data, int encodedLength, int decodedLength, struct s &result);
 
 SOAP_FMAC5 int SOAP_FMAC6 soap_call_ns__add(struct soap *soap, const char *soap_endpoint, const char *soap_action, int a, int b, int &result);
 
@@ -281,6 +297,8 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_serve(struct soap*);
 SOAP_FMAC5 int SOAP_FMAC6 soap_serve_request(struct soap*);
 
 SOAP_FMAC5 int SOAP_FMAC6 soap_serve_ns__junks(struct soap*);
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_serve_ns__sendBase64(struct soap*);
 
 SOAP_FMAC5 int SOAP_FMAC6 soap_serve_ns__add(struct soap*);
 

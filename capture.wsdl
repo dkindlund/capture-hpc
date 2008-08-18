@@ -50,6 +50,12 @@
  <part name="last" type="xsd:string"/>
 </message>
 
+<message name="sendBase64">
+ <part name="data" type="xsd:string"/>
+ <part name="encodedLength" type="xsd:int"/>
+ <part name="decodedLength" type="xsd:int"/>
+</message>
+
 <message name="addRequest">
  <part name="a" type="xsd:int"/>
  <part name="b" type="xsd:int"/>
@@ -90,6 +96,11 @@
   <input message="tns:junks"/>
   <output message="tns:s"/>
  </operation>
+ <operation name="sendBase64">
+  <documentation>Service definition of function ns__sendBase64</documentation>
+  <input message="tns:sendBase64"/>
+  <output message="tns:s"/>
+ </operation>
  <operation name="add">
   <documentation>Service definition of function ns__add</documentation>
   <input message="tns:addRequest"/>
@@ -115,6 +126,15 @@
 <binding name="capture" type="tns:capturePortType">
  <SOAP:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
  <operation name="junks">
+  <SOAP:operation style="rpc" soapAction=""/>
+  <input>
+     <SOAP:body use="encoded" namespace="capture" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+  </input>
+  <output>
+     <SOAP:body use="encoded" namespace="capture" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+  </output>
+ </operation>
+ <operation name="sendBase64">
   <SOAP:operation style="rpc" soapAction=""/>
   <input>
      <SOAP:body use="encoded" namespace="capture" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
