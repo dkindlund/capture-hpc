@@ -15,6 +15,7 @@ typedef struct s{
 
 int ns__junks(char * a, ns__myStruct &result);
 int ns__sendBase64(char * data, int encodedLength, int decodedLength, ns__myStruct &result);
+int ns__sendMIME(int magicNumber, int &result);
 
 int ns__add(int a, int b, int &result); 
 int ns__ping(char * a, char ** result);

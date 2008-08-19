@@ -56,6 +56,14 @@
  <part name="decodedLength" type="xsd:int"/>
 </message>
 
+<message name="sendMIMERequest">
+ <part name="magicNumber" type="xsd:int"/>
+</message>
+
+<message name="sendMIMEResponse">
+ <part name="result" type="xsd:int"/>
+</message>
+
 <message name="addRequest">
  <part name="a" type="xsd:int"/>
  <part name="b" type="xsd:int"/>
@@ -101,6 +109,11 @@
   <input message="tns:sendBase64"/>
   <output message="tns:s"/>
  </operation>
+ <operation name="sendMIME">
+  <documentation>Service definition of function ns__sendMIME</documentation>
+  <input message="tns:sendMIMERequest"/>
+  <output message="tns:sendMIMEResponse"/>
+ </operation>
  <operation name="add">
   <documentation>Service definition of function ns__add</documentation>
   <input message="tns:addRequest"/>
@@ -135,6 +148,15 @@
   </output>
  </operation>
  <operation name="sendBase64">
+  <SOAP:operation style="rpc" soapAction=""/>
+  <input>
+     <SOAP:body use="encoded" namespace="capture" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+  </input>
+  <output>
+     <SOAP:body use="encoded" namespace="capture" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+  </output>
+ </operation>
+ <operation name="sendMIME">
   <SOAP:operation style="rpc" soapAction=""/>
   <input>
      <SOAP:body use="encoded" namespace="capture" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>

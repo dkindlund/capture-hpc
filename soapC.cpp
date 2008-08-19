@@ -7,7 +7,7 @@
 
 #include "soapH.h"
 
-SOAP_SOURCE_STAMP("@(#) soapC.cpp ver 2.7.10 2008-08-18 03:32:54 GMT")
+SOAP_SOURCE_STAMP("@(#) soapC.cpp ver 2.7.10 2008-08-18 06:59:56 GMT")
 
 
 #ifndef WITH_NOGLOBAL
@@ -177,6 +177,10 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_getelement(struct soap *soap, int *type)
 		return soap_in_ns__add(soap, NULL, NULL, "ns:add");
 	case SOAP_TYPE_ns__addResponse:
 		return soap_in_ns__addResponse(soap, NULL, NULL, "ns:addResponse");
+	case SOAP_TYPE_ns__sendMIME:
+		return soap_in_ns__sendMIME(soap, NULL, NULL, "ns:sendMIME");
+	case SOAP_TYPE_ns__sendMIMEResponse:
+		return soap_in_ns__sendMIMEResponse(soap, NULL, NULL, "ns:sendMIMEResponse");
 	case SOAP_TYPE_ns__sendBase64:
 		return soap_in_ns__sendBase64(soap, NULL, NULL, "ns:sendBase64");
 	case SOAP_TYPE_ns__junks:
@@ -239,6 +243,14 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_getelement(struct soap *soap, int *type)
 		if (!soap_match_tag(soap, t, "ns:addResponse"))
 		{	*type = SOAP_TYPE_ns__addResponse;
 			return soap_in_ns__addResponse(soap, NULL, NULL, NULL);
+		}
+		if (!soap_match_tag(soap, t, "ns:sendMIME"))
+		{	*type = SOAP_TYPE_ns__sendMIME;
+			return soap_in_ns__sendMIME(soap, NULL, NULL, NULL);
+		}
+		if (!soap_match_tag(soap, t, "ns:sendMIMEResponse"))
+		{	*type = SOAP_TYPE_ns__sendMIMEResponse;
+			return soap_in_ns__sendMIMEResponse(soap, NULL, NULL, NULL);
 		}
 		if (!soap_match_tag(soap, t, "ns:sendBase64"))
 		{	*type = SOAP_TYPE_ns__sendBase64;
@@ -356,6 +368,10 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_putelement(struct soap *soap, const void *ptr, co
 		return soap_out_ns__add(soap, tag, id, (const struct ns__add *)ptr, "ns:add");
 	case SOAP_TYPE_ns__addResponse:
 		return soap_out_ns__addResponse(soap, tag, id, (const struct ns__addResponse *)ptr, "ns:addResponse");
+	case SOAP_TYPE_ns__sendMIME:
+		return soap_out_ns__sendMIME(soap, tag, id, (const struct ns__sendMIME *)ptr, "ns:sendMIME");
+	case SOAP_TYPE_ns__sendMIMEResponse:
+		return soap_out_ns__sendMIMEResponse(soap, tag, id, (const struct ns__sendMIMEResponse *)ptr, "ns:sendMIMEResponse");
 	case SOAP_TYPE_ns__sendBase64:
 		return soap_out_ns__sendBase64(soap, tag, id, (const struct ns__sendBase64 *)ptr, "ns:sendBase64");
 	case SOAP_TYPE_ns__junks:
@@ -413,6 +429,12 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_markelement(struct soap *soap, const void *ptr, 
 	case SOAP_TYPE_ns__addResponse:
 		soap_serialize_ns__addResponse(soap, (const struct ns__addResponse *)ptr);
 		break;
+	case SOAP_TYPE_ns__sendMIME:
+		soap_serialize_ns__sendMIME(soap, (const struct ns__sendMIME *)ptr);
+		break;
+	case SOAP_TYPE_ns__sendMIMEResponse:
+		soap_serialize_ns__sendMIMEResponse(soap, (const struct ns__sendMIMEResponse *)ptr);
+		break;
 	case SOAP_TYPE_ns__sendBase64:
 		soap_serialize_ns__sendBase64(soap, (const struct ns__sendBase64 *)ptr);
 		break;
@@ -452,6 +474,10 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_instantiate(struct soap *soap, int t, const ch
 		return (void*)soap_instantiate_ns__junks(soap, -1, type, arrayType, n);
 	case SOAP_TYPE_ns__sendBase64:
 		return (void*)soap_instantiate_ns__sendBase64(soap, -1, type, arrayType, n);
+	case SOAP_TYPE_ns__sendMIMEResponse:
+		return (void*)soap_instantiate_ns__sendMIMEResponse(soap, -1, type, arrayType, n);
+	case SOAP_TYPE_ns__sendMIME:
+		return (void*)soap_instantiate_ns__sendMIME(soap, -1, type, arrayType, n);
 	case SOAP_TYPE_ns__addResponse:
 		return (void*)soap_instantiate_ns__addResponse(soap, -1, type, arrayType, n);
 	case SOAP_TYPE_ns__add:
@@ -514,6 +540,18 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_fdelete(struct soap_clist *p)
 			delete (struct ns__sendBase64*)p->ptr;
 		else
 			delete[] (struct ns__sendBase64*)p->ptr;
+		break;
+	case SOAP_TYPE_ns__sendMIMEResponse:
+		if (p->size < 0)
+			delete (struct ns__sendMIMEResponse*)p->ptr;
+		else
+			delete[] (struct ns__sendMIMEResponse*)p->ptr;
+		break;
+	case SOAP_TYPE_ns__sendMIME:
+		if (p->size < 0)
+			delete (struct ns__sendMIME*)p->ptr;
+		else
+			delete[] (struct ns__sendMIME*)p->ptr;
 		break;
 	case SOAP_TYPE_ns__addResponse:
 		if (p->size < 0)
@@ -2270,6 +2308,232 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_copy_ns__addResponse(struct soap *soap, int st, 
 {
 	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Copying struct ns__addResponse %p -> %p\n", q, p));
 	*(struct ns__addResponse*)p = *(struct ns__addResponse*)q;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_ns__sendMIME(struct soap *soap, struct ns__sendMIME *a)
+{
+	(void)soap; (void)a; /* appease -Wall -Werror */
+	soap_default_int(soap, &a->magicNumber);
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_ns__sendMIME(struct soap *soap, const struct ns__sendMIME *a)
+{
+	(void)soap; (void)a; /* appease -Wall -Werror */
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_ns__sendMIME(struct soap *soap, const struct ns__sendMIME *a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_ns__sendMIME);
+	if (soap_out_ns__sendMIME(soap, tag, id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns__sendMIME(struct soap *soap, const char *tag, int id, const struct ns__sendMIME *a, const char *type)
+{
+	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ns__sendMIME), type))
+		return soap->error;
+	if (soap_out_int(soap, "magicNumber", -1, &a->magicNumber, ""))
+		return soap->error;
+	return soap_element_end_out(soap, tag);
+}
+
+SOAP_FMAC3 struct ns__sendMIME * SOAP_FMAC4 soap_get_ns__sendMIME(struct soap *soap, struct ns__sendMIME *p, const char *tag, const char *type)
+{
+	if ((p = soap_in_ns__sendMIME(soap, tag, p, type)))
+		if (soap_getindependent(soap))
+			return NULL;
+	return p;
+}
+
+SOAP_FMAC3 struct ns__sendMIME * SOAP_FMAC4 soap_in_ns__sendMIME(struct soap *soap, const char *tag, struct ns__sendMIME *a, const char *type)
+{
+	short soap_flag_magicNumber = 1;
+	if (soap_element_begin_in(soap, tag, 0, type))
+		return NULL;
+	a = (struct ns__sendMIME *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_ns__sendMIME, sizeof(struct ns__sendMIME), 0, NULL, NULL, NULL);
+	if (!a)
+		return NULL;
+	soap_default_ns__sendMIME(soap, a);
+	if (soap->body && !*soap->href)
+	{
+		for (;;)
+		{	soap->error = SOAP_TAG_MISMATCH;
+			if (soap_flag_magicNumber && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_int(soap, "magicNumber", &a->magicNumber, "xsd:int"))
+				{	soap_flag_magicNumber--;
+					continue;
+				}
+			if (soap->error == SOAP_TAG_MISMATCH)
+				soap->error = soap_ignore_element(soap);
+			if (soap->error == SOAP_NO_TAG)
+				break;
+			if (soap->error)
+				return NULL;
+		}
+		if (soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	else
+	{	a = (struct ns__sendMIME *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_ns__sendMIME, 0, sizeof(struct ns__sendMIME), 0, NULL);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	if ((soap->mode & SOAP_XML_STRICT) && (soap_flag_magicNumber > 0))
+	{	soap->error = SOAP_OCCURS;
+		return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC5 struct ns__sendMIME * SOAP_FMAC6 soap_new_ns__sendMIME(struct soap *soap, int n)
+{	return soap_instantiate_ns__sendMIME(soap, n, NULL, NULL, NULL);
+}
+
+SOAP_FMAC5 void SOAP_FMAC6 soap_delete_ns__sendMIME(struct soap *soap, struct ns__sendMIME *p)
+{	soap_delete(soap, p);
+}
+
+SOAP_FMAC3 struct ns__sendMIME * SOAP_FMAC4 soap_instantiate_ns__sendMIME(struct soap *soap, int n, const char *type, const char *arrayType, size_t *size)
+{
+	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "soap_instantiate_ns__sendMIME(%d, %s, %s)\n", n, type?type:"", arrayType?arrayType:""));
+	struct soap_clist *cp = soap_link(soap, NULL, SOAP_TYPE_ns__sendMIME, n, soap_fdelete);
+	if (!cp)
+		return NULL;
+	if (n < 0)
+	{	cp->ptr = (void*)new struct ns__sendMIME;
+		if (size)
+			*size = sizeof(struct ns__sendMIME);
+	}
+	else
+	{	cp->ptr = (void*)new struct ns__sendMIME[n];
+		if (!cp->ptr)
+		{	soap->error = SOAP_EOM;
+			return NULL;
+		}
+		if (size)
+			*size = n * sizeof(struct ns__sendMIME);
+	}
+		DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Instantiated location=%p\n", cp->ptr));
+	return (struct ns__sendMIME*)cp->ptr;
+}
+SOAP_FMAC3 void SOAP_FMAC4 soap_copy_ns__sendMIME(struct soap *soap, int st, int tt, void *p, size_t len, const void *q, size_t n)
+{
+	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Copying struct ns__sendMIME %p -> %p\n", q, p));
+	*(struct ns__sendMIME*)p = *(struct ns__sendMIME*)q;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_ns__sendMIMEResponse(struct soap *soap, struct ns__sendMIMEResponse *a)
+{
+	(void)soap; (void)a; /* appease -Wall -Werror */
+	soap_default_int(soap, &a->result);
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_ns__sendMIMEResponse(struct soap *soap, const struct ns__sendMIMEResponse *a)
+{
+	(void)soap; (void)a; /* appease -Wall -Werror */
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_ns__sendMIMEResponse(struct soap *soap, const struct ns__sendMIMEResponse *a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_ns__sendMIMEResponse);
+	if (soap_out_ns__sendMIMEResponse(soap, tag, id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns__sendMIMEResponse(struct soap *soap, const char *tag, int id, const struct ns__sendMIMEResponse *a, const char *type)
+{
+	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ns__sendMIMEResponse), type))
+		return soap->error;
+	if (soap_out_int(soap, "result", -1, &a->result, ""))
+		return soap->error;
+	return soap_element_end_out(soap, tag);
+}
+
+SOAP_FMAC3 struct ns__sendMIMEResponse * SOAP_FMAC4 soap_get_ns__sendMIMEResponse(struct soap *soap, struct ns__sendMIMEResponse *p, const char *tag, const char *type)
+{
+	if ((p = soap_in_ns__sendMIMEResponse(soap, tag, p, type)))
+		if (soap_getindependent(soap))
+			return NULL;
+	return p;
+}
+
+SOAP_FMAC3 struct ns__sendMIMEResponse * SOAP_FMAC4 soap_in_ns__sendMIMEResponse(struct soap *soap, const char *tag, struct ns__sendMIMEResponse *a, const char *type)
+{
+	short soap_flag_result = 1;
+	if (soap_element_begin_in(soap, tag, 0, type))
+		return NULL;
+	a = (struct ns__sendMIMEResponse *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_ns__sendMIMEResponse, sizeof(struct ns__sendMIMEResponse), 0, NULL, NULL, NULL);
+	if (!a)
+		return NULL;
+	soap_default_ns__sendMIMEResponse(soap, a);
+	if (soap->body && !*soap->href)
+	{
+		for (;;)
+		{	soap->error = SOAP_TAG_MISMATCH;
+			if (soap_flag_result && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_int(soap, "result", &a->result, "xsd:int"))
+				{	soap_flag_result--;
+					continue;
+				}
+			if (soap->error == SOAP_TAG_MISMATCH)
+				soap->error = soap_ignore_element(soap);
+			if (soap->error == SOAP_NO_TAG)
+				break;
+			if (soap->error)
+				return NULL;
+		}
+		if (soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	else
+	{	a = (struct ns__sendMIMEResponse *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_ns__sendMIMEResponse, 0, sizeof(struct ns__sendMIMEResponse), 0, NULL);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	if ((soap->mode & SOAP_XML_STRICT) && (soap_flag_result > 0))
+	{	soap->error = SOAP_OCCURS;
+		return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC5 struct ns__sendMIMEResponse * SOAP_FMAC6 soap_new_ns__sendMIMEResponse(struct soap *soap, int n)
+{	return soap_instantiate_ns__sendMIMEResponse(soap, n, NULL, NULL, NULL);
+}
+
+SOAP_FMAC5 void SOAP_FMAC6 soap_delete_ns__sendMIMEResponse(struct soap *soap, struct ns__sendMIMEResponse *p)
+{	soap_delete(soap, p);
+}
+
+SOAP_FMAC3 struct ns__sendMIMEResponse * SOAP_FMAC4 soap_instantiate_ns__sendMIMEResponse(struct soap *soap, int n, const char *type, const char *arrayType, size_t *size)
+{
+	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "soap_instantiate_ns__sendMIMEResponse(%d, %s, %s)\n", n, type?type:"", arrayType?arrayType:""));
+	struct soap_clist *cp = soap_link(soap, NULL, SOAP_TYPE_ns__sendMIMEResponse, n, soap_fdelete);
+	if (!cp)
+		return NULL;
+	if (n < 0)
+	{	cp->ptr = (void*)new struct ns__sendMIMEResponse;
+		if (size)
+			*size = sizeof(struct ns__sendMIMEResponse);
+	}
+	else
+	{	cp->ptr = (void*)new struct ns__sendMIMEResponse[n];
+		if (!cp->ptr)
+		{	soap->error = SOAP_EOM;
+			return NULL;
+		}
+		if (size)
+			*size = n * sizeof(struct ns__sendMIMEResponse);
+	}
+		DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Instantiated location=%p\n", cp->ptr));
+	return (struct ns__sendMIMEResponse*)cp->ptr;
+}
+SOAP_FMAC3 void SOAP_FMAC4 soap_copy_ns__sendMIMEResponse(struct soap *soap, int st, int tt, void *p, size_t len, const void *q, size_t n)
+{
+	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Copying struct ns__sendMIMEResponse %p -> %p\n", q, p));
+	*(struct ns__sendMIMEResponse*)p = *(struct ns__sendMIMEResponse*)q;
 }
 
 SOAP_FMAC3 void SOAP_FMAC4 soap_default_ns__sendBase64(struct soap *soap, struct ns__sendBase64 *a)

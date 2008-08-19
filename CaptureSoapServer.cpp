@@ -103,10 +103,10 @@ int ns__sub(struct soap *soap, double a, double b, double &result)
 int ns__junks(struct soap *soap, char * a, ns__myStruct &result)
 {
 	printf("in ns__junks\n");
-	ns__myStruct bob;
-	bob.first = "bob";
-	bob.last = "dole";
-	result = bob;
+	ns__myStruct x;
+	x.first = "a";
+	x.last = "b";
+	result = x;
 
 	return SOAP_OK;
 }
@@ -114,8 +114,33 @@ int ns__junks(struct soap *soap, char * a, ns__myStruct &result)
 int ns__sendBase64(struct soap *soap, char * data, int encodedLength, int decodedLength, ns__myStruct &result){
 	printf("in ns__sendBase64\n");
 
+	printf("encodedLength = %d, decodedLength = %d, data[0][1][2][3] = %c%c%c%c\n", encodedLength, decodedLength,
+		data[0], data[1], data[2], data[3]);
+
+	HANDLE myHandle = CreateFileA("F:\\tmp\\soapcpp2.exe", (GENERIC_READ | GENERIC_WRITE), 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+	if(myHandle == INVALID_HANDLE_VALUE){
+		printf("couldn't open the file. Exiting\n");
+		return SOAP_ERR;
+	}
+	DWORD numWrote;
+	BOOL b = WriteFile(myHandle, data, decodedLength, &numWrote, NULL);
+	if(b){
+		printf("Wrote %d bytes of data\n", numWrote);
+	}
+	CloseHandle(myHandle);
+
+	ns__myStruct x;
+	x.first = "a";
+	x.last = "b";
+	result = x;
+
+	return SOAP_OK;
+
+}
+
+int ns__sendMIME(struct soap *soap, int magicNumber, int &result){
 	struct soap_multipart * attachment;
-	for(attachment = soap.mime.list; attachment; attachment = attachment->next){
+	for(attachment = soap->mime.list; attachment; attachment = attachment->next){
 	   printf("MIME attachment:\n"); 
 	   printf("Memory=%p\n", (*attachment).ptr); 
 	   printf("Size=%ul\n", (*attachment).size); 
@@ -123,24 +148,16 @@ int ns__sendBase64(struct soap *soap, char * data, int encodedLength, int decode
 	   printf("Type=%s\n", (*attachment).type?(*attachment).type:"null"); 
 	   printf("ID=%s\n", (*attachment).id?(*attachment).id:"null"); 
 	   printf("Location=%s\n", (*attachment).location?(*attachment).location:"null"); 
-	   printf("Description=%s\n", (*attachment).description?(*attachment).description:"null
+	   printf("Description=%s\n", (*attachment).description?(*attachment).description:"null");
 	}
-	
-	printf("=================DATA==============\n");
-	printf("=================DATA==============\n");
-	printf("=================DATA==============\n");
-	printf("=================DATA==============\n");
-	printf("First 4 = %c%c%c%c\n", data[0], data[1], data[2], data[3]);
-	printf("encodedLength = %d, decodedLength = %d\n", encodedLength, decodedLength);
-	//	printf("Last 4 = %c%c%c%c\n", data[encodedLength-1], data[encodedLength-2], data[encodedLength-3], data[encodedLength-4]);
 
-
-	ns__myStruct bob;
-	bob.first = "bob";
-	bob.last = "dole";
-	result = bob;
+	printf("magicNumber = %#x\n", magicNumber);
+	if(magicNumber == 123){
+		result = 42;
+	}
+	else{
+		result = 0;
+	}
 
 	return SOAP_OK;
-
 }
-
