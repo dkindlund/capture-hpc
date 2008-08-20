@@ -31,10 +31,23 @@
     </restriction>
    </complexContent>
   </complexType>
+  <complexType name="receiveFileStruct">
+   <complexContent>
+    <restriction base="ns:rcvS">
+    </restriction>
+   </complexContent>
+  </complexType>
   <complexType name="s">
    <sequence>
      <element name="first" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
      <element name="last" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+   </sequence>
+  </complexType>
+  <complexType name="rcvS">
+   <sequence>
+     <element name="data" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="encodedLength" type="xsd:unsignedInt" minOccurs="1" maxOccurs="1"/>
+     <element name="decodedLength" type="xsd:unsignedInt" minOccurs="1" maxOccurs="1"/>
    </sequence>
   </complexType>
  </schema>
@@ -50,10 +63,21 @@
  <part name="last" type="xsd:string"/>
 </message>
 
-<message name="sendBase64">
+<message name="sendFileBase64">
+ <part name="fileName" type="xsd:string"/>
  <part name="data" type="xsd:string"/>
- <part name="encodedLength" type="xsd:int"/>
- <part name="decodedLength" type="xsd:int"/>
+ <part name="encodedLength" type="xsd:unsignedInt"/>
+ <part name="decodedLength" type="xsd:unsignedInt"/>
+</message>
+
+<message name="receiveFileBase64">
+ <part name="fileName" type="xsd:string"/>
+</message>
+
+<message name="rcvS">
+ <part name="data" type="xsd:string"/>
+ <part name="encodedLength" type="xsd:unsignedInt"/>
+ <part name="decodedLength" type="xsd:unsignedInt"/>
 </message>
 
 <message name="sendMIMERequest">
@@ -104,10 +128,15 @@
   <input message="tns:junks"/>
   <output message="tns:s"/>
  </operation>
- <operation name="sendBase64">
-  <documentation>Service definition of function ns__sendBase64</documentation>
-  <input message="tns:sendBase64"/>
+ <operation name="sendFileBase64">
+  <documentation>Service definition of function ns__sendFileBase64</documentation>
+  <input message="tns:sendFileBase64"/>
   <output message="tns:s"/>
+ </operation>
+ <operation name="receiveFileBase64">
+  <documentation>Service definition of function ns__receiveFileBase64</documentation>
+  <input message="tns:receiveFileBase64"/>
+  <output message="tns:rcvS"/>
  </operation>
  <operation name="sendMIME">
   <documentation>Service definition of function ns__sendMIME</documentation>
@@ -147,7 +176,16 @@
      <SOAP:body use="encoded" namespace="capture" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
   </output>
  </operation>
- <operation name="sendBase64">
+ <operation name="sendFileBase64">
+  <SOAP:operation style="rpc" soapAction=""/>
+  <input>
+     <SOAP:body use="encoded" namespace="capture" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+  </input>
+  <output>
+     <SOAP:body use="encoded" namespace="capture" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+  </output>
+ </operation>
+ <operation name="receiveFileBase64">
   <SOAP:operation style="rpc" soapAction=""/>
   <input>
      <SOAP:body use="encoded" namespace="capture" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>

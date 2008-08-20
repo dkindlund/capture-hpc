@@ -190,6 +190,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\b64.c"
+				>
+			</File>
+			<File
 				RelativePath=".\CaptureClient.cpp"
 				>
 			</File>
@@ -297,6 +301,10 @@
 			</File>
 			<File
 				RelativePath=".\ApplicationPlugin.h"
+				>
+			</File>
+			<File
+				RelativePath=".\b64.h"
 				>
 			</File>
 			<File

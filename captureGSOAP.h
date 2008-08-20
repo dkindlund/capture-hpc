@@ -13,8 +13,15 @@ typedef struct s{
 	char * last;
 } ns__myStruct;
 
+typedef struct rcvS{
+	char * data; 
+	unsigned int encodedLength;
+	unsigned int decodedLength;
+} ns__receiveFileStruct;
+
 int ns__junks(char * a, ns__myStruct &result);
-int ns__sendBase64(char * data, int encodedLength, int decodedLength, ns__myStruct &result);
+int ns__sendFileBase64(char * fileName, char * data, unsigned int encodedLength, unsigned int decodedLength, ns__myStruct &result);
+int ns__receiveFileBase64(char * fileName, ns__receiveFileStruct &result);
 int ns__sendMIME(int magicNumber, int &result);
 
 int ns__add(int a, int b, int &result); 

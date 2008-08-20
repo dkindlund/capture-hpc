@@ -20,9 +20,9 @@ $client = SOAP::Lite
 
 print "\nCalling sendMIME\n\n";
 $data = SOAP::Data->name(magicNumber => "123");
-$client->sendMIME($data);
-#$result = $client->sendMIME($data);
-#print "result = $result\n";
+#$client->sendMIME($data);
+$result = $client->sendMIME($data);
+print "result = $result\n";
 
 
 

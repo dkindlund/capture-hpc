@@ -3,12 +3,13 @@
 **Created by Xeno Kovah of the MITRE HoneyClient Project 5/20/2008
 */
 
+
 #include "CaptureSoapServer.h"
 
 #include "soapH.h" 
 #include "capture.nsmap" 
-
 #include "Visitor.h"
+#include "b64.h"
 
 CaptureSoapServer::CaptureSoapServer(Visitor* v){
 	CaptureSoapServerThread = new Thread(this);
@@ -111,23 +112,38 @@ int ns__junks(struct soap *soap, char * a, ns__myStruct &result)
 	return SOAP_OK;
 }
 
-int ns__sendBase64(struct soap *soap, char * data, int encodedLength, int decodedLength, ns__myStruct &result){
-	printf("in ns__sendBase64\n");
+int ns__sendFileBase64(struct soap *soap, char * fileName, char * data, unsigned int encodedLength, unsigned int decodedLength, ns__myStruct &result){
+	printf("in ns__sendFileBase64\n");
 
 	printf("encodedLength = %d, decodedLength = %d, data[0][1][2][3] = %c%c%c%c\n", encodedLength, decodedLength,
 		data[0], data[1], data[2], data[3]);
 
-	HANDLE myHandle = CreateFileA("F:\\tmp\\soapcpp2.exe", (GENERIC_READ | GENERIC_WRITE), 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+	//Sanity check
+	if(decodedLength != b64::b64_decode(data, encodedLength, NULL, NULL)){
+		printf("The decode will not be correct. Exiting\n");
+		return SOAP_ERR;
+	}
+	//Decode the data
+	char * decodedData = new char[decodedLength];
+	b64::b64_decode(data, encodedLength, decodedData, decodedLength);
+
+	printf("decodedData[0][1] = %c%c\n", decodedData[0], decodedData[1]);
+	//Open a file to write the decoded data to
+	HANDLE myHandle = CreateFileA(fileName, (GENERIC_READ | GENERIC_WRITE), 
+									NULL, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
 	if(myHandle == INVALID_HANDLE_VALUE){
 		printf("couldn't open the file. Exiting\n");
 		return SOAP_ERR;
 	}
+
+	//Write the data
 	DWORD numWrote;
-	BOOL b = WriteFile(myHandle, data, decodedLength, &numWrote, NULL);
+	BOOL b = WriteFile(myHandle, decodedData, decodedLength, &numWrote, NULL);
 	if(b){
-		printf("Wrote %d bytes of data\n", numWrote);
+		printf("Wrote %d bytes of data to %s\n", numWrote, fileName);
 	}
 	CloseHandle(myHandle);
+	delete[] decodedData;
 
 	ns__myStruct x;
 	x.first = "a";
@@ -138,7 +154,60 @@ int ns__sendBase64(struct soap *soap, char * data, int encodedLength, int decode
 
 }
 
+int ns__receiveFileBase64(struct soap *soap, char * fileName, ns__receiveFileStruct &result){
+	printf("in ns__receiveFileBase64, about to open %s\n", fileName);
+
+	//Open the file
+	HANDLE myHandle = CreateFileA(fileName, GENERIC_READ, NULL, NULL, 
+									OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+	if(myHandle == INVALID_HANDLE_VALUE){
+		printf("couldn't open the file %s. Exiting\n", fileName);
+		return SOAP_ERR;
+	}
+
+	//Get the size and then read it into a buffer
+	unsigned int fileSize = (unsigned int)GetFileSize(myHandle, NULL);
+	if(fileSize <= 0){
+		printf("Error, or zero-length file\n");
+		return SOAP_ERR;
+	}
+	char * buffer = new char[fileSize];
+
+	DWORD numRead = 0;
+	BOOL b = ReadFile(myHandle, buffer, fileSize, &numRead,NULL);
+	if(!b || numRead != fileSize){
+		printf("ReadFile error\n");
+		return SOAP_ERR;
+	}
+	else{
+		printf("Read the file successfully\n");
+	}
+
+	//base64 the file
+	unsigned int encodedLength = b64::b64_encode(buffer, fileSize, NULL, NULL);
+	char * encodedData = new char[encodedLength];
+	size_t ret = b64::b64_encode(buffer, fileSize, encodedData, encodedLength);
+	if(ret == 0){
+		printf("size of the buffer was insufficient, or the length of the * converted buffer was longer than destLen\n");
+		return SOAP_ERR;
+	}
+
+	//return the file
+	result.data = encodedData;
+	result.encodedLength = encodedLength;
+	result.decodedLength = fileSize;
+
+	printf("cleaning up\n");
+	CloseHandle(myHandle);
+	delete[] buffer;
+	delete[] encodedData;
+
+	return SOAP_OK;
+}
+
 int ns__sendMIME(struct soap *soap, int magicNumber, int &result){
+	printf("In ns__sendMIME\n");
+
 	struct soap_multipart * attachment;
 	for(attachment = soap->mime.list; attachment; attachment = attachment->next){
 	   printf("MIME attachment:\n"); 

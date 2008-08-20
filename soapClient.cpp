@@ -6,7 +6,7 @@
 */
 #include "soapH.h"
 
-SOAP_SOURCE_STAMP("@(#) soapClient.cpp ver 2.7.10 2008-08-18 06:59:56 GMT")
+SOAP_SOURCE_STAMP("@(#) soapClient.cpp ver 2.7.10 2008-08-20 08:51:52 GMT")
 
 
 SOAP_FMAC5 int SOAP_FMAC6 soap_call_ns__junks(struct soap *soap, const char *soap_endpoint, const char *soap_action, char *a, struct s &result)
@@ -59,24 +59,25 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call_ns__junks(struct soap *soap, const char *soa
 	return soap_closesock(soap);
 }
 
-SOAP_FMAC5 int SOAP_FMAC6 soap_call_ns__sendBase64(struct soap *soap, const char *soap_endpoint, const char *soap_action, char *data, int encodedLength, int decodedLength, struct s &result)
-{	struct ns__sendBase64 soap_tmp_ns__sendBase64;
+SOAP_FMAC5 int SOAP_FMAC6 soap_call_ns__sendFileBase64(struct soap *soap, const char *soap_endpoint, const char *soap_action, char *fileName, char *data, unsigned int encodedLength, unsigned int decodedLength, struct s &result)
+{	struct ns__sendFileBase64 soap_tmp_ns__sendFileBase64;
 	if (!soap_endpoint)
 		soap_endpoint = "http://192.168.0.131:1234";
 	soap->encodingStyle = "";
-	soap_tmp_ns__sendBase64.data = data;
-	soap_tmp_ns__sendBase64.encodedLength = encodedLength;
-	soap_tmp_ns__sendBase64.decodedLength = decodedLength;
+	soap_tmp_ns__sendFileBase64.fileName = fileName;
+	soap_tmp_ns__sendFileBase64.data = data;
+	soap_tmp_ns__sendFileBase64.encodedLength = encodedLength;
+	soap_tmp_ns__sendFileBase64.decodedLength = decodedLength;
 	soap_begin(soap);
 	soap_serializeheader(soap);
-	soap_serialize_ns__sendBase64(soap, &soap_tmp_ns__sendBase64);
+	soap_serialize_ns__sendFileBase64(soap, &soap_tmp_ns__sendFileBase64);
 	if (soap_begin_count(soap))
 		return soap->error;
 	if (soap->mode & SOAP_IO_LENGTH)
 	{	if (soap_envelope_begin_out(soap)
 		 || soap_putheader(soap)
 		 || soap_body_begin_out(soap)
-		 || soap_put_ns__sendBase64(soap, &soap_tmp_ns__sendBase64, "ns:sendBase64", "")
+		 || soap_put_ns__sendFileBase64(soap, &soap_tmp_ns__sendFileBase64, "ns:sendFileBase64", "")
 		 || soap_body_end_out(soap)
 		 || soap_envelope_end_out(soap))
 			 return soap->error;
@@ -87,7 +88,7 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call_ns__sendBase64(struct soap *soap, const char
 	 || soap_envelope_begin_out(soap)
 	 || soap_putheader(soap)
 	 || soap_body_begin_out(soap)
-	 || soap_put_ns__sendBase64(soap, &soap_tmp_ns__sendBase64, "ns:sendBase64", "")
+	 || soap_put_ns__sendFileBase64(soap, &soap_tmp_ns__sendFileBase64, "ns:sendFileBase64", "")
 	 || soap_body_end_out(soap)
 	 || soap_envelope_end_out(soap)
 	 || soap_end_send(soap))
@@ -99,6 +100,56 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call_ns__sendBase64(struct soap *soap, const char
 	 || soap_body_begin_in(soap))
 		return soap_closesock(soap);
 	soap_get_ns__myStruct(soap, &result, "ns:myStruct", "");
+	if (soap->error)
+	{	if (soap->error == SOAP_TAG_MISMATCH && soap->level == 2)
+			return soap_recv_fault(soap);
+		return soap_closesock(soap);
+	}
+	if (soap_body_end_in(soap)
+	 || soap_envelope_end_in(soap)
+	 || soap_end_recv(soap))
+		return soap_closesock(soap);
+	return soap_closesock(soap);
+}
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_call_ns__receiveFileBase64(struct soap *soap, const char *soap_endpoint, const char *soap_action, char *fileName, struct rcvS &result)
+{	struct ns__receiveFileBase64 soap_tmp_ns__receiveFileBase64;
+	if (!soap_endpoint)
+		soap_endpoint = "http://192.168.0.131:1234";
+	soap->encodingStyle = "";
+	soap_tmp_ns__receiveFileBase64.fileName = fileName;
+	soap_begin(soap);
+	soap_serializeheader(soap);
+	soap_serialize_ns__receiveFileBase64(soap, &soap_tmp_ns__receiveFileBase64);
+	if (soap_begin_count(soap))
+		return soap->error;
+	if (soap->mode & SOAP_IO_LENGTH)
+	{	if (soap_envelope_begin_out(soap)
+		 || soap_putheader(soap)
+		 || soap_body_begin_out(soap)
+		 || soap_put_ns__receiveFileBase64(soap, &soap_tmp_ns__receiveFileBase64, "ns:receiveFileBase64", "")
+		 || soap_body_end_out(soap)
+		 || soap_envelope_end_out(soap))
+			 return soap->error;
+	}
+	if (soap_end_count(soap))
+		return soap->error;
+	if (soap_connect(soap, soap_endpoint, soap_action)
+	 || soap_envelope_begin_out(soap)
+	 || soap_putheader(soap)
+	 || soap_body_begin_out(soap)
+	 || soap_put_ns__receiveFileBase64(soap, &soap_tmp_ns__receiveFileBase64, "ns:receiveFileBase64", "")
+	 || soap_body_end_out(soap)
+	 || soap_envelope_end_out(soap)
+	 || soap_end_send(soap))
+		return soap_closesock(soap);
+	soap_default_ns__receiveFileStruct(soap, &result);
+	if (soap_begin_recv(soap)
+	 || soap_envelope_begin_in(soap)
+	 || soap_recv_header(soap)
+	 || soap_body_begin_in(soap))
+		return soap_closesock(soap);
+	soap_get_ns__receiveFileStruct(soap, &result, "ns:receiveFileStruct", "");
 	if (soap->error)
 	{	if (soap->error == SOAP_TAG_MISMATCH && soap->level == 2)
 			return soap_recv_fault(soap);

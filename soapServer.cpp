@@ -6,7 +6,7 @@
 */
 #include "soapH.h"
 
-SOAP_SOURCE_STAMP("@(#) soapServer.cpp ver 2.7.10 2008-08-18 06:59:56 GMT")
+SOAP_SOURCE_STAMP("@(#) soapServer.cpp ver 2.7.10 2008-08-20 08:51:52 GMT")
 
 
 SOAP_FMAC5 int SOAP_FMAC6 soap_serve(struct soap *soap)
@@ -75,8 +75,10 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_serve_request(struct soap *soap)
 	soap_peek_element(soap);
 	if (!soap_match_tag(soap, soap->tag, "ns:junks"))
 		return soap_serve_ns__junks(soap);
-	if (!soap_match_tag(soap, soap->tag, "ns:sendBase64"))
-		return soap_serve_ns__sendBase64(soap);
+	if (!soap_match_tag(soap, soap->tag, "ns:sendFileBase64"))
+		return soap_serve_ns__sendFileBase64(soap);
+	if (!soap_match_tag(soap, soap->tag, "ns:receiveFileBase64"))
+		return soap_serve_ns__receiveFileBase64(soap);
 	if (!soap_match_tag(soap, soap->tag, "ns:sendMIME"))
 		return soap_serve_ns__sendMIME(soap);
 	if (!soap_match_tag(soap, soap->tag, "ns:add"))
@@ -132,19 +134,19 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_serve_ns__junks(struct soap *soap)
 	return soap_closesock(soap);
 }
 
-SOAP_FMAC5 int SOAP_FMAC6 soap_serve_ns__sendBase64(struct soap *soap)
-{	struct ns__sendBase64 soap_tmp_ns__sendBase64;
+SOAP_FMAC5 int SOAP_FMAC6 soap_serve_ns__sendFileBase64(struct soap *soap)
+{	struct ns__sendFileBase64 soap_tmp_ns__sendFileBase64;
 	struct s result;
 	soap_default_ns__myStruct(soap, &result);
-	soap_default_ns__sendBase64(soap, &soap_tmp_ns__sendBase64);
+	soap_default_ns__sendFileBase64(soap, &soap_tmp_ns__sendFileBase64);
 	soap->encodingStyle = "";
-	if (!soap_get_ns__sendBase64(soap, &soap_tmp_ns__sendBase64, "ns:sendBase64", NULL))
+	if (!soap_get_ns__sendFileBase64(soap, &soap_tmp_ns__sendFileBase64, "ns:sendFileBase64", NULL))
 		return soap->error;
 	if (soap_body_end_in(soap)
 	 || soap_envelope_end_in(soap)
 	 || soap_end_recv(soap))
 		return soap->error;
-	soap->error = ns__sendBase64(soap, soap_tmp_ns__sendBase64.data, soap_tmp_ns__sendBase64.encodedLength, soap_tmp_ns__sendBase64.decodedLength, result);
+	soap->error = ns__sendFileBase64(soap, soap_tmp_ns__sendFileBase64.fileName, soap_tmp_ns__sendFileBase64.data, soap_tmp_ns__sendFileBase64.encodedLength, soap_tmp_ns__sendFileBase64.decodedLength, result);
 	if (soap->error)
 		return soap->error;
 	soap_serializeheader(soap);
@@ -166,6 +168,47 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_serve_ns__sendBase64(struct soap *soap)
 	 || soap_putheader(soap)
 	 || soap_body_begin_out(soap)
 	 || soap_put_ns__myStruct(soap, &result, "ns:myStruct", "")
+	 || soap_body_end_out(soap)
+	 || soap_envelope_end_out(soap)
+	 || soap_end_send(soap))
+		return soap->error;
+	return soap_closesock(soap);
+}
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_serve_ns__receiveFileBase64(struct soap *soap)
+{	struct ns__receiveFileBase64 soap_tmp_ns__receiveFileBase64;
+	struct rcvS result;
+	soap_default_ns__receiveFileStruct(soap, &result);
+	soap_default_ns__receiveFileBase64(soap, &soap_tmp_ns__receiveFileBase64);
+	soap->encodingStyle = "";
+	if (!soap_get_ns__receiveFileBase64(soap, &soap_tmp_ns__receiveFileBase64, "ns:receiveFileBase64", NULL))
+		return soap->error;
+	if (soap_body_end_in(soap)
+	 || soap_envelope_end_in(soap)
+	 || soap_end_recv(soap))
+		return soap->error;
+	soap->error = ns__receiveFileBase64(soap, soap_tmp_ns__receiveFileBase64.fileName, result);
+	if (soap->error)
+		return soap->error;
+	soap_serializeheader(soap);
+	soap_serialize_ns__receiveFileStruct(soap, &result);
+	if (soap_begin_count(soap))
+		return soap->error;
+	if (soap->mode & SOAP_IO_LENGTH)
+	{	if (soap_envelope_begin_out(soap)
+		 || soap_putheader(soap)
+		 || soap_body_begin_out(soap)
+		 || soap_put_ns__receiveFileStruct(soap, &result, "ns:receiveFileStruct", "")
+		 || soap_body_end_out(soap)
+		 || soap_envelope_end_out(soap))
+			 return soap->error;
+	};
+	if (soap_end_count(soap)
+	 || soap_response(soap, SOAP_OK)
+	 || soap_envelope_begin_out(soap)
+	 || soap_putheader(soap)
+	 || soap_body_begin_out(soap)
+	 || soap_put_ns__receiveFileStruct(soap, &result, "ns:receiveFileStruct", "")
 	 || soap_body_end_out(soap)
 	 || soap_envelope_end_out(soap)
 	 || soap_end_send(soap))

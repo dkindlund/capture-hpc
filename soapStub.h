@@ -38,8 +38,20 @@ public:
 };
 #endif
 
+#ifndef SOAP_TYPE_rcvS
+#define SOAP_TYPE_rcvS (9)
+/* rcvS */
+struct rcvS
+{
+public:
+	char *data;	/* SOAP 1.2 RPC return element (when namespace qualified) */	/* optional element of type xsd:string */
+	unsigned int encodedLength;	/* required element of type xsd:unsignedInt */
+	unsigned int decodedLength;	/* required element of type xsd:unsignedInt */
+};
+#endif
+
 #ifndef SOAP_TYPE_ns__junks
-#define SOAP_TYPE_ns__junks (11)
+#define SOAP_TYPE_ns__junks (14)
 /* ns:junks */
 struct ns__junks
 {
@@ -48,20 +60,31 @@ public:
 };
 #endif
 
-#ifndef SOAP_TYPE_ns__sendBase64
-#define SOAP_TYPE_ns__sendBase64 (13)
-/* ns:sendBase64 */
-struct ns__sendBase64
+#ifndef SOAP_TYPE_ns__sendFileBase64
+#define SOAP_TYPE_ns__sendFileBase64 (16)
+/* ns:sendFileBase64 */
+struct ns__sendFileBase64
 {
 public:
+	char *fileName;	/* optional element of type xsd:string */
 	char *data;	/* optional element of type xsd:string */
-	int encodedLength;	/* required element of type xsd:int */
-	int decodedLength;	/* required element of type xsd:int */
+	unsigned int encodedLength;	/* required element of type xsd:unsignedInt */
+	unsigned int decodedLength;	/* required element of type xsd:unsignedInt */
+};
+#endif
+
+#ifndef SOAP_TYPE_ns__receiveFileBase64
+#define SOAP_TYPE_ns__receiveFileBase64 (19)
+/* ns:receiveFileBase64 */
+struct ns__receiveFileBase64
+{
+public:
+	char *fileName;	/* optional element of type xsd:string */
 };
 #endif
 
 #ifndef SOAP_TYPE_ns__sendMIMEResponse
-#define SOAP_TYPE_ns__sendMIMEResponse (16)
+#define SOAP_TYPE_ns__sendMIMEResponse (22)
 /* ns:sendMIMEResponse */
 struct ns__sendMIMEResponse
 {
@@ -71,7 +94,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ns__sendMIME
-#define SOAP_TYPE_ns__sendMIME (17)
+#define SOAP_TYPE_ns__sendMIME (23)
 /* ns:sendMIME */
 struct ns__sendMIME
 {
@@ -81,7 +104,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ns__addResponse
-#define SOAP_TYPE_ns__addResponse (19)
+#define SOAP_TYPE_ns__addResponse (25)
 /* ns:addResponse */
 struct ns__addResponse
 {
@@ -91,7 +114,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ns__add
-#define SOAP_TYPE_ns__add (20)
+#define SOAP_TYPE_ns__add (26)
 /* ns:add */
 struct ns__add
 {
@@ -102,7 +125,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ns__pingResponse
-#define SOAP_TYPE_ns__pingResponse (23)
+#define SOAP_TYPE_ns__pingResponse (29)
 /* ns:pingResponse */
 struct ns__pingResponse
 {
@@ -112,7 +135,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ns__ping
-#define SOAP_TYPE_ns__ping (24)
+#define SOAP_TYPE_ns__ping (30)
 /* ns:ping */
 struct ns__ping
 {
@@ -122,7 +145,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ns__visitResponse
-#define SOAP_TYPE_ns__visitResponse (26)
+#define SOAP_TYPE_ns__visitResponse (32)
 /* ns:visitResponse */
 struct ns__visitResponse
 {
@@ -132,7 +155,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ns__visit
-#define SOAP_TYPE_ns__visit (27)
+#define SOAP_TYPE_ns__visit (33)
 /* ns:visit */
 struct ns__visit
 {
@@ -142,7 +165,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ns__subResponse
-#define SOAP_TYPE_ns__subResponse (31)
+#define SOAP_TYPE_ns__subResponse (37)
 /* ns:subResponse */
 struct ns__subResponse
 {
@@ -152,7 +175,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ns__sub
-#define SOAP_TYPE_ns__sub (32)
+#define SOAP_TYPE_ns__sub (38)
 /* ns:sub */
 struct ns__sub
 {
@@ -163,7 +186,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_SOAP_ENV__Header
-#define SOAP_TYPE_SOAP_ENV__Header (33)
+#define SOAP_TYPE_SOAP_ENV__Header (39)
 /* SOAP Header: */
 struct SOAP_ENV__Header
 {
@@ -175,7 +198,7 @@ private:
 #endif
 
 #ifndef SOAP_TYPE_SOAP_ENV__Code
-#define SOAP_TYPE_SOAP_ENV__Code (34)
+#define SOAP_TYPE_SOAP_ENV__Code (40)
 /* SOAP Fault Code: */
 struct SOAP_ENV__Code
 {
@@ -186,7 +209,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_SOAP_ENV__Detail
-#define SOAP_TYPE_SOAP_ENV__Detail (36)
+#define SOAP_TYPE_SOAP_ENV__Detail (42)
 /* SOAP-ENV:Detail */
 struct SOAP_ENV__Detail
 {
@@ -198,7 +221,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_SOAP_ENV__Reason
-#define SOAP_TYPE_SOAP_ENV__Reason (39)
+#define SOAP_TYPE_SOAP_ENV__Reason (45)
 /* SOAP-ENV:Reason */
 struct SOAP_ENV__Reason
 {
@@ -208,7 +231,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_SOAP_ENV__Fault
-#define SOAP_TYPE_SOAP_ENV__Fault (40)
+#define SOAP_TYPE_SOAP_ENV__Fault (46)
 /* SOAP Fault: */
 struct SOAP_ENV__Fault
 {
@@ -253,6 +276,11 @@ typedef char *_XML;
 typedef struct s ns__myStruct;
 #endif
 
+#ifndef SOAP_TYPE_ns__receiveFileStruct
+#define SOAP_TYPE_ns__receiveFileStruct (11)
+typedef struct rcvS ns__receiveFileStruct;
+#endif
+
 
 /******************************************************************************\
  *                                                                            *
@@ -277,7 +305,9 @@ typedef struct s ns__myStruct;
 
 SOAP_FMAC5 int SOAP_FMAC6 ns__junks(struct soap*, char *a, struct s &result);
 
-SOAP_FMAC5 int SOAP_FMAC6 ns__sendBase64(struct soap*, char *data, int encodedLength, int decodedLength, struct s &result);
+SOAP_FMAC5 int SOAP_FMAC6 ns__sendFileBase64(struct soap*, char *fileName, char *data, unsigned int encodedLength, unsigned int decodedLength, struct s &result);
+
+SOAP_FMAC5 int SOAP_FMAC6 ns__receiveFileBase64(struct soap*, char *fileName, struct rcvS &result);
 
 SOAP_FMAC5 int SOAP_FMAC6 ns__sendMIME(struct soap*, int magicNumber, int &result);
 
@@ -298,7 +328,9 @@ SOAP_FMAC5 int SOAP_FMAC6 ns__sub(struct soap*, double a, double b, double &resu
 
 SOAP_FMAC5 int SOAP_FMAC6 soap_call_ns__junks(struct soap *soap, const char *soap_endpoint, const char *soap_action, char *a, struct s &result);
 
-SOAP_FMAC5 int SOAP_FMAC6 soap_call_ns__sendBase64(struct soap *soap, const char *soap_endpoint, const char *soap_action, char *data, int encodedLength, int decodedLength, struct s &result);
+SOAP_FMAC5 int SOAP_FMAC6 soap_call_ns__sendFileBase64(struct soap *soap, const char *soap_endpoint, const char *soap_action, char *fileName, char *data, unsigned int encodedLength, unsigned int decodedLength, struct s &result);
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_call_ns__receiveFileBase64(struct soap *soap, const char *soap_endpoint, const char *soap_action, char *fileName, struct rcvS &result);
 
 SOAP_FMAC5 int SOAP_FMAC6 soap_call_ns__sendMIME(struct soap *soap, const char *soap_endpoint, const char *soap_action, int magicNumber, int &result);
 
@@ -322,7 +354,9 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_serve_request(struct soap*);
 
 SOAP_FMAC5 int SOAP_FMAC6 soap_serve_ns__junks(struct soap*);
 
-SOAP_FMAC5 int SOAP_FMAC6 soap_serve_ns__sendBase64(struct soap*);
+SOAP_FMAC5 int SOAP_FMAC6 soap_serve_ns__sendFileBase64(struct soap*);
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_serve_ns__receiveFileBase64(struct soap*);
 
 SOAP_FMAC5 int SOAP_FMAC6 soap_serve_ns__sendMIME(struct soap*);
 
