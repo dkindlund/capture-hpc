@@ -86,14 +86,14 @@ open(BLA, ">serverfile.exe");
 print BLA $fileFromServer;
 close(BLA);
 
-print "ns__myStruct.first = " . $som->result . "\n";
-print "ns__myStruct.last = " . ($som->paramsout)[0] . "\n";
+#print "ns__myStruct.first = " . $som->result . "\n";
+#print "ns__myStruct.last = " . ($som->paramsout)[0] . "\n";
 
-my @params = $som->paramsall;
-foreach $param (@params){
-    print "$param\n";
-
-}
+#my @params = $som->paramsall;
+#foreach $param (@params){
+#    print "$param\n";
+#
+#}
 
 
 

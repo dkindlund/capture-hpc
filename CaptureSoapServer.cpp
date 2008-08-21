@@ -155,7 +155,9 @@ int ns__sendFileBase64(struct soap *soap, char * fileName, char * data, unsigned
 }
 
 int ns__receiveFileBase64(struct soap *soap, char * fileName, ns__receiveFileStruct &result){
-	printf("in ns__receiveFileBase64, about to open %s\n", fileName);
+	int debug = 0;
+	
+	if(debug) printf("in ns__receiveFileBase64, about to open %s\n", fileName);
 
 	//Open the file
 	HANDLE myHandle = CreateFileA(fileName, GENERIC_READ, NULL, NULL, 
@@ -172,6 +174,7 @@ int ns__receiveFileBase64(struct soap *soap, char * fileName, ns__receiveFileStr
 		return SOAP_ERR;
 	}
 	char * buffer = new char[fileSize];
+	memset(buffer, 0, fileSize);
 
 	DWORD numRead = 0;
 	BOOL b = ReadFile(myHandle, buffer, fileSize, &numRead,NULL);
@@ -180,12 +183,14 @@ int ns__receiveFileBase64(struct soap *soap, char * fileName, ns__receiveFileStr
 		return SOAP_ERR;
 	}
 	else{
-		printf("Read the file successfully\n");
+		if(debug) printf("Read the file successfully\n");
 	}
 
 	//base64 the file
-	unsigned int encodedLength = b64::b64_encode(buffer, fileSize, NULL, NULL);
+	unsigned int encodedLength = (unsigned int)b64::b64_encode(buffer, fileSize, NULL, NULL);
+	if(debug) printf("encodedLength = %d\n", encodedLength);
 	char * encodedData = new char[encodedLength];
+	memset(encodedData, 0, encodedLength);
 	size_t ret = b64::b64_encode(buffer, fileSize, encodedData, encodedLength);
 	if(ret == 0){
 		printf("size of the buffer was insufficient, or the length of the * converted buffer was longer than destLen\n");
@@ -197,10 +202,12 @@ int ns__receiveFileBase64(struct soap *soap, char * fileName, ns__receiveFileStr
 	result.encodedLength = encodedLength;
 	result.decodedLength = fileSize;
 
-	printf("cleaning up\n");
+	if(debug) printf("cleaning up\n");
 	CloseHandle(myHandle);
 	delete[] buffer;
-	delete[] encodedData;
+	//Don't delete[] encodedData because the SOAP stuff will need to grab the data from there for sending
+	//I'm just hoping that it deletes the memory and doesn't leak it
+	if(debug) printf("cleaned up successfully\n");
 
 	return SOAP_OK;
 }
