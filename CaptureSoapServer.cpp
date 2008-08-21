@@ -56,16 +56,6 @@ CaptureSoapServer::run(){
 
 }
 
-
-// Implementation of the "add" remote method: 
-int ns__add(struct soap *soap, int a, int b, int &result) 
-{ 
-   //printf("add got %d and %d\n", a, b);
-   result = a + b;
-
-   return SOAP_OK;
-} 
-
 int ns__ping(struct soap *soap, char * a, char ** result) 
 { 
    printf("%s\n", a);
@@ -93,26 +83,7 @@ int ns__visit(struct soap *soap, char * url, char ** result){
 	return SOAP_OK;
 }
 
-// Implementation of the "sub" remote method: 
-int ns__sub(struct soap *soap, double a, double b, double &result) 
-{ 
-   result = a - b; 
-   return SOAP_OK; 
-}
-
-
-int ns__junks(struct soap *soap, char * a, ns__myStruct &result)
-{
-	printf("in ns__junks\n");
-	ns__myStruct x;
-	x.first = "a";
-	x.last = "b";
-	result = x;
-
-	return SOAP_OK;
-}
-
-int ns__sendFileBase64(struct soap *soap, char * fileName, char * data, unsigned int encodedLength, unsigned int decodedLength, ns__myStruct &result){
+int ns__sendFileBase64(struct soap *soap, char * fileName, char * data, unsigned int encodedLength, unsigned int decodedLength, int &result){
 	printf("in ns__sendFileBase64\n");
 
 	printf("encodedLength = %d, decodedLength = %d, data[0][1][2][3] = %c%c%c%c\n", encodedLength, decodedLength,
@@ -145,15 +116,15 @@ int ns__sendFileBase64(struct soap *soap, char * fileName, char * data, unsigned
 	CloseHandle(myHandle);
 	delete[] decodedData;
 
-	ns__myStruct x;
-	x.first = "a";
-	x.last = "b";
-	result = x;
+	result = 1;
 
 	return SOAP_OK;
 
 }
 
+//Allows you to ask for a file and get it back in base64.
+//NOTE: While I know it will be mitigated by the network architecture, features like this
+//are why we should look into SOAP over SSL
 int ns__receiveFileBase64(struct soap *soap, char * fileName, ns__receiveFileStruct &result){
 	int debug = 0;
 	
@@ -212,9 +183,47 @@ int ns__receiveFileBase64(struct soap *soap, char * fileName, ns__receiveFileStr
 	return SOAP_OK;
 }
 
+//After we have sent a document into the VM, open it
+//We want to do this in a generic way, so rather than calling specific applications with the
+//document as the parameter, we instead exploit the fact that as long as default handlers are 
+//set for a given file type, it can be run from the command line by simply typing its name.
+//Thus we run cmd.exe with the /K option and the document name as a parameter.
+//From cmd.exe help: "/K      Carries out the command specified by string but remains"
+int ns__openDocument(struct soap *soap, char * fileName, int &result){
+	int debug = 1;
+	if(debug) printf("in ns__openDocument\n");
+
+	//Create the string for the parameters
+	wchar_t * docName = new wchar_t[1024];
+	wsprintf(docName, L"/D %hs", fileName);
+
+	//open with cmd.exe
+	STARTUPINFO myStart;
+	memset(&myStart, 0, sizeof(STARTUPINFO));
+	myStart.dwFlags = 0;
+	PROCESS_INFORMATION procInfo;
+	BOOL b = CreateProcess(L"C:\\WINDOWS\\system32\\cmd.exe", L"", NULL, NULL, FALSE, NORMAL_PRIORITY_CLASS, 
+							NULL, NULL, &myStart, &procInfo);
+	if(!b){
+		printf("CreateProcess failed with error %d\n", GetLastError());
+		return SOAP_ERR;
+	}
+
+	if(debug) printf("dwProcessId = %d, dwThreadId = %d\n", procInfo.dwProcessId, procInfo.dwThreadId);
+
+	CloseHandle(procInfo.hProcess);
+	CloseHandle(procInfo.hThread);
+
+	return SOAP_OK;
+}
+
+//Thus far, SOAP::Lite hasn't been sending the data correctly, so we never get into this function.
+//Removing the "This is a multipart message in MIME format..." from MIME::Entity's Entity.pm at least gets 
+//rid of the gSOAP "No XML element" error, but then it doesn't seem to ever exit the SOAP::Lite send.
 int ns__sendMIME(struct soap *soap, int magicNumber, int &result){
 	printf("In ns__sendMIME\n");
 
+	//From the gSOAP documentation example
 	struct soap_multipart * attachment;
 	for(attachment = soap->mime.list; attachment; attachment = attachment->next){
 	   printf("MIME attachment:\n"); 

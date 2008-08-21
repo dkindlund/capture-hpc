@@ -25,23 +25,11 @@
   elementFormDefault="unqualified"
   attributeFormDefault="unqualified">
   <import namespace="http://schemas.xmlsoap.org/soap/encoding/"/>
-  <complexType name="myStruct">
-   <complexContent>
-    <restriction base="ns:s">
-    </restriction>
-   </complexContent>
-  </complexType>
   <complexType name="receiveFileStruct">
    <complexContent>
     <restriction base="ns:rcvS">
     </restriction>
    </complexContent>
-  </complexType>
-  <complexType name="s">
-   <sequence>
-     <element name="first" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
-     <element name="last" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
-   </sequence>
   </complexType>
   <complexType name="rcvS">
    <sequence>
@@ -54,20 +42,15 @@
 
 </types>
 
-<message name="junks">
- <part name="a" type="xsd:string"/>
-</message>
-
-<message name="s">
- <part name="first" type="xsd:string"/>
- <part name="last" type="xsd:string"/>
-</message>
-
-<message name="sendFileBase64">
+<message name="sendFileBase64Request">
  <part name="fileName" type="xsd:string"/>
  <part name="data" type="xsd:string"/>
  <part name="encodedLength" type="xsd:unsignedInt"/>
  <part name="decodedLength" type="xsd:unsignedInt"/>
+</message>
+
+<message name="sendFileBase64Response">
+ <part name="result" type="xsd:int"/>
 </message>
 
 <message name="receiveFileBase64">
@@ -88,12 +71,11 @@
  <part name="result" type="xsd:int"/>
 </message>
 
-<message name="addRequest">
- <part name="a" type="xsd:int"/>
- <part name="b" type="xsd:int"/>
+<message name="openDocumentRequest">
+ <part name="fileName" type="xsd:string"/>
 </message>
 
-<message name="addResponse">
+<message name="openDocumentResponse">
  <part name="result" type="xsd:int"/>
 </message>
 
@@ -113,25 +95,11 @@
  <part name="result" type="xsd:string"/>
 </message>
 
-<message name="subRequest">
- <part name="a" type="xsd:double"/>
- <part name="b" type="xsd:double"/>
-</message>
-
-<message name="subResponse">
- <part name="result" type="xsd:double"/>
-</message>
-
 <portType name="capturePortType">
- <operation name="junks">
-  <documentation>Service definition of function ns__junks</documentation>
-  <input message="tns:junks"/>
-  <output message="tns:s"/>
- </operation>
  <operation name="sendFileBase64">
   <documentation>Service definition of function ns__sendFileBase64</documentation>
-  <input message="tns:sendFileBase64"/>
-  <output message="tns:s"/>
+  <input message="tns:sendFileBase64Request"/>
+  <output message="tns:sendFileBase64Response"/>
  </operation>
  <operation name="receiveFileBase64">
   <documentation>Service definition of function ns__receiveFileBase64</documentation>
@@ -143,10 +111,10 @@
   <input message="tns:sendMIMERequest"/>
   <output message="tns:sendMIMEResponse"/>
  </operation>
- <operation name="add">
-  <documentation>Service definition of function ns__add</documentation>
-  <input message="tns:addRequest"/>
-  <output message="tns:addResponse"/>
+ <operation name="openDocument">
+  <documentation>Service definition of function ns__openDocument</documentation>
+  <input message="tns:openDocumentRequest"/>
+  <output message="tns:openDocumentResponse"/>
  </operation>
  <operation name="ping">
   <documentation>Service definition of function ns__ping</documentation>
@@ -158,24 +126,10 @@
   <input message="tns:visitRequest"/>
   <output message="tns:visitResponse"/>
  </operation>
- <operation name="sub">
-  <documentation>Service definition of function ns__sub</documentation>
-  <input message="tns:subRequest"/>
-  <output message="tns:subResponse"/>
- </operation>
 </portType>
 
 <binding name="capture" type="tns:capturePortType">
  <SOAP:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
- <operation name="junks">
-  <SOAP:operation style="rpc" soapAction=""/>
-  <input>
-     <SOAP:body use="encoded" namespace="capture" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
-  </input>
-  <output>
-     <SOAP:body use="encoded" namespace="capture" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
-  </output>
- </operation>
  <operation name="sendFileBase64">
   <SOAP:operation style="rpc" soapAction=""/>
   <input>
@@ -203,7 +157,7 @@
      <SOAP:body use="encoded" namespace="capture" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
   </output>
  </operation>
- <operation name="add">
+ <operation name="openDocument">
   <SOAP:operation style="rpc" soapAction=""/>
   <input>
      <SOAP:body use="encoded" namespace="capture" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
@@ -222,15 +176,6 @@
   </output>
  </operation>
  <operation name="visit">
-  <SOAP:operation style="rpc" soapAction=""/>
-  <input>
-     <SOAP:body use="encoded" namespace="capture" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
-  </input>
-  <output>
-     <SOAP:body use="encoded" namespace="capture" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
-  </output>
- </operation>
- <operation name="sub">
   <SOAP:operation style="rpc" soapAction=""/>
   <input>
      <SOAP:body use="encoded" namespace="capture" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
