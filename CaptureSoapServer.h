@@ -3,10 +3,8 @@
 */
 
 #pragma once
-//#include "captureGSOAP.h"
-#include "Thread.h"
-
 #include "CaptureGlobal.h"
+#include "Thread.h"
 #include <string>
 #include <queue>
 #include <list>

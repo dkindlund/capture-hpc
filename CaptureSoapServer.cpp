@@ -10,6 +10,7 @@
 #include "capture.nsmap" 
 #include "Visitor.h"
 #include "b64.h"
+//#include <winbase.h> //Shouldn't need to include this
 
 CaptureSoapServer::CaptureSoapServer(Visitor* v){
 	CaptureSoapServerThread = new Thread(this);
@@ -195,25 +196,55 @@ int ns__openDocument(struct soap *soap, char * fileName, int &result){
 
 	//Create the string for the parameters
 	wchar_t * docName = new wchar_t[1024];
-	wsprintf(docName, L"/D %hs", fileName);
+	wsprintf(docName, L"/K %hs", fileName);
+
+	//Create a job object to bind the processes I launch to
+	HANDLE myJobObj = CreateJobObject(NULL, NULL);
+	if(myJobObj == NULL){
+		printf("CreateJobObject failed with error %d\n", GetLastError());
+	}
 
 	//open with cmd.exe
 	STARTUPINFO myStart;
 	memset(&myStart, 0, sizeof(STARTUPINFO));
-	myStart.dwFlags = 0;
 	PROCESS_INFORMATION procInfo;
-	BOOL b = CreateProcess(L"C:\\WINDOWS\\system32\\cmd.exe", L"", NULL, NULL, FALSE, NORMAL_PRIORITY_CLASS, 
+	BOOL b = CreateProcess(L"C:\\WINDOWS\\system32\\cmd.exe", docName, NULL, NULL, FALSE, NORMAL_PRIORITY_CLASS, 
 							NULL, NULL, &myStart, &procInfo);
 	if(!b){
 		printf("CreateProcess failed with error %d\n", GetLastError());
 		return SOAP_ERR;
 	}
+	
+	//Add the process to the job object
+	b = AssignProcessToJobObject(myJobObj, procInfo.hProcess);
+	if(!b){
+		printf("AssignProcessToJobObject failed with error %d\n", GetLastError());
+		return SOAP_ERR;
+	}
 
 	if(debug) printf("dwProcessId = %d, dwThreadId = %d\n", procInfo.dwProcessId, procInfo.dwThreadId);
+	if(debug) printf("Sleeping for 15 seconds\n");
+	Sleep(15000);
+	if(debug) printf("\n\nDone sleeping\n\n");
+	
+	//Nt/ZwQuerySystemInformation?
 
+	/*
+	b = TerminateProcess(procInfo.hProcess, 0);
+	if(!b){
+		printf("TerminateProcess failed with error %d\n", GetLastError());
+		return SOAP_ERR;
+	}
+	*/
+	b = TerminateJobObject(myJobObj, 0);
+	if(!b){
+		printf("TerminateProcess failed with error %d\n", GetLastError());
+		return SOAP_ERR;
+	}
 	CloseHandle(procInfo.hProcess);
 	CloseHandle(procInfo.hThread);
 
+	result = 1;
 	return SOAP_OK;
 }
 
