@@ -33,6 +33,7 @@ print "Base64 size = $encodedLength\n";
 #	Disposition => "attachment";
 
 $fileNameSOAP = SOAP::Data->name(fileName => $ARGV[0]);
+$waitFileSOAP = SOAP::Data->name(waitTime => 15);
 $dataSOAP = SOAP::Data->name(data => $encoded);
 $encodedLengthSOAP = SOAP::Data->name(encodedLength => $encodedLength);
 $decodedLengthSOAP = SOAP::Data->name(decodedLength => $decodedLength);

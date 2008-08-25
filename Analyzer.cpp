@@ -304,10 +304,8 @@ Analyzer::sendSystemEvent(wstring* type, wstring* time,
 					wstring* process, wstring* action, 
 					wstring* object, vector<wstring>* extra)
 {
-	/* FIXME: for now HC doesn't care about attributes...fix these if and when we use the C code 
-		for sending stuff to the server.
-	*/
-	Attribute att;
+
+ 	Attribute att;
 	queue<Attribute> vAttributes;
 	att.name = L"time";
 	att.value = *time;

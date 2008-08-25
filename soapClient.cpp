@@ -6,8 +6,114 @@
 */
 #include "soapH.h"
 
-SOAP_SOURCE_STAMP("@(#) soapClient.cpp ver 2.7.10 2008-08-21 03:00:06 GMT")
+SOAP_SOURCE_STAMP("@(#) soapClient.cpp ver 2.7.10 2008-08-22 06:31:12 GMT")
 
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_call_ns__ping(struct soap *soap, const char *soap_endpoint, const char *soap_action, char *a, char **result)
+{	struct ns__ping soap_tmp_ns__ping;
+	struct ns__pingResponse *soap_tmp_ns__pingResponse;
+	if (!soap_endpoint)
+		soap_endpoint = "http://192.168.0.131:1234";
+	soap->encodingStyle = "";
+	soap_tmp_ns__ping.a = a;
+	soap_begin(soap);
+	soap_serializeheader(soap);
+	soap_serialize_ns__ping(soap, &soap_tmp_ns__ping);
+	if (soap_begin_count(soap))
+		return soap->error;
+	if (soap->mode & SOAP_IO_LENGTH)
+	{	if (soap_envelope_begin_out(soap)
+		 || soap_putheader(soap)
+		 || soap_body_begin_out(soap)
+		 || soap_put_ns__ping(soap, &soap_tmp_ns__ping, "ns:ping", "")
+		 || soap_body_end_out(soap)
+		 || soap_envelope_end_out(soap))
+			 return soap->error;
+	}
+	if (soap_end_count(soap))
+		return soap->error;
+	if (soap_connect(soap, soap_endpoint, soap_action)
+	 || soap_envelope_begin_out(soap)
+	 || soap_putheader(soap)
+	 || soap_body_begin_out(soap)
+	 || soap_put_ns__ping(soap, &soap_tmp_ns__ping, "ns:ping", "")
+	 || soap_body_end_out(soap)
+	 || soap_envelope_end_out(soap)
+	 || soap_end_send(soap))
+		return soap_closesock(soap);
+	*result = NULL;
+	if (soap_begin_recv(soap)
+	 || soap_envelope_begin_in(soap)
+	 || soap_recv_header(soap)
+	 || soap_body_begin_in(soap))
+		return soap_closesock(soap);
+	soap_tmp_ns__pingResponse = soap_get_ns__pingResponse(soap, NULL, "ns:pingResponse", "");
+	if (soap->error)
+	{	if (soap->error == SOAP_TAG_MISMATCH && soap->level == 2)
+			return soap_recv_fault(soap);
+		return soap_closesock(soap);
+	}
+	if (soap_body_end_in(soap)
+	 || soap_envelope_end_in(soap)
+	 || soap_end_recv(soap))
+		return soap_closesock(soap);
+	if (result && soap_tmp_ns__pingResponse->result)
+		*result = *soap_tmp_ns__pingResponse->result;
+	return soap_closesock(soap);
+}
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_call_ns__visitURL(struct soap *soap, const char *soap_endpoint, const char *soap_action, char *a, char **result)
+{	struct ns__visitURL soap_tmp_ns__visitURL;
+	struct ns__visitURLResponse *soap_tmp_ns__visitURLResponse;
+	if (!soap_endpoint)
+		soap_endpoint = "http://192.168.0.131:1234";
+	soap->encodingStyle = "";
+	soap_tmp_ns__visitURL.a = a;
+	soap_begin(soap);
+	soap_serializeheader(soap);
+	soap_serialize_ns__visitURL(soap, &soap_tmp_ns__visitURL);
+	if (soap_begin_count(soap))
+		return soap->error;
+	if (soap->mode & SOAP_IO_LENGTH)
+	{	if (soap_envelope_begin_out(soap)
+		 || soap_putheader(soap)
+		 || soap_body_begin_out(soap)
+		 || soap_put_ns__visitURL(soap, &soap_tmp_ns__visitURL, "ns:visitURL", "")
+		 || soap_body_end_out(soap)
+		 || soap_envelope_end_out(soap))
+			 return soap->error;
+	}
+	if (soap_end_count(soap))
+		return soap->error;
+	if (soap_connect(soap, soap_endpoint, soap_action)
+	 || soap_envelope_begin_out(soap)
+	 || soap_putheader(soap)
+	 || soap_body_begin_out(soap)
+	 || soap_put_ns__visitURL(soap, &soap_tmp_ns__visitURL, "ns:visitURL", "")
+	 || soap_body_end_out(soap)
+	 || soap_envelope_end_out(soap)
+	 || soap_end_send(soap))
+		return soap_closesock(soap);
+	*result = NULL;
+	if (soap_begin_recv(soap)
+	 || soap_envelope_begin_in(soap)
+	 || soap_recv_header(soap)
+	 || soap_body_begin_in(soap))
+		return soap_closesock(soap);
+	soap_tmp_ns__visitURLResponse = soap_get_ns__visitURLResponse(soap, NULL, "ns:visitURLResponse", "");
+	if (soap->error)
+	{	if (soap->error == SOAP_TAG_MISMATCH && soap->level == 2)
+			return soap_recv_fault(soap);
+		return soap_closesock(soap);
+	}
+	if (soap_body_end_in(soap)
+	 || soap_envelope_end_in(soap)
+	 || soap_end_recv(soap))
+		return soap_closesock(soap);
+	if (result && soap_tmp_ns__visitURLResponse->result)
+		*result = *soap_tmp_ns__visitURLResponse->result;
+	return soap_closesock(soap);
+}
 
 SOAP_FMAC5 int SOAP_FMAC6 soap_call_ns__sendFileBase64(struct soap *soap, const char *soap_endpoint, const char *soap_action, char *fileName, char *data, unsigned int encodedLength, unsigned int decodedLength, int &result)
 {	struct ns__sendFileBase64 soap_tmp_ns__sendFileBase64;
@@ -64,7 +170,7 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call_ns__sendFileBase64(struct soap *soap, const 
 	return soap_closesock(soap);
 }
 
-SOAP_FMAC5 int SOAP_FMAC6 soap_call_ns__receiveFileBase64(struct soap *soap, const char *soap_endpoint, const char *soap_action, char *fileName, struct rcvS &result)
+SOAP_FMAC5 int SOAP_FMAC6 soap_call_ns__receiveFileBase64(struct soap *soap, const char *soap_endpoint, const char *soap_action, char *fileName, struct s1 &result)
 {	struct ns__receiveFileBase64 soap_tmp_ns__receiveFileBase64;
 	if (!soap_endpoint)
 		soap_endpoint = "http://192.168.0.131:1234";
@@ -166,13 +272,14 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call_ns__sendMIME(struct soap *soap, const char *
 	return soap_closesock(soap);
 }
 
-SOAP_FMAC5 int SOAP_FMAC6 soap_call_ns__openDocument(struct soap *soap, const char *soap_endpoint, const char *soap_action, char *fileName, int &result)
+SOAP_FMAC5 int SOAP_FMAC6 soap_call_ns__openDocument(struct soap *soap, const char *soap_endpoint, const char *soap_action, char *fileName, int waitTimeMillisec, int &result)
 {	struct ns__openDocument soap_tmp_ns__openDocument;
 	struct ns__openDocumentResponse *soap_tmp_ns__openDocumentResponse;
 	if (!soap_endpoint)
 		soap_endpoint = "http://192.168.0.131:1234";
 	soap->encodingStyle = "";
 	soap_tmp_ns__openDocument.fileName = fileName;
+	soap_tmp_ns__openDocument.waitTimeMillisec = waitTimeMillisec;
 	soap_begin(soap);
 	soap_serializeheader(soap);
 	soap_serialize_ns__openDocument(soap, &soap_tmp_ns__openDocument);
@@ -215,112 +322,6 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call_ns__openDocument(struct soap *soap, const ch
 	 || soap_end_recv(soap))
 		return soap_closesock(soap);
 	result = soap_tmp_ns__openDocumentResponse->result;
-	return soap_closesock(soap);
-}
-
-SOAP_FMAC5 int SOAP_FMAC6 soap_call_ns__ping(struct soap *soap, const char *soap_endpoint, const char *soap_action, char *a, char **result)
-{	struct ns__ping soap_tmp_ns__ping;
-	struct ns__pingResponse *soap_tmp_ns__pingResponse;
-	if (!soap_endpoint)
-		soap_endpoint = "http://192.168.0.131:1234";
-	soap->encodingStyle = "";
-	soap_tmp_ns__ping.a = a;
-	soap_begin(soap);
-	soap_serializeheader(soap);
-	soap_serialize_ns__ping(soap, &soap_tmp_ns__ping);
-	if (soap_begin_count(soap))
-		return soap->error;
-	if (soap->mode & SOAP_IO_LENGTH)
-	{	if (soap_envelope_begin_out(soap)
-		 || soap_putheader(soap)
-		 || soap_body_begin_out(soap)
-		 || soap_put_ns__ping(soap, &soap_tmp_ns__ping, "ns:ping", "")
-		 || soap_body_end_out(soap)
-		 || soap_envelope_end_out(soap))
-			 return soap->error;
-	}
-	if (soap_end_count(soap))
-		return soap->error;
-	if (soap_connect(soap, soap_endpoint, soap_action)
-	 || soap_envelope_begin_out(soap)
-	 || soap_putheader(soap)
-	 || soap_body_begin_out(soap)
-	 || soap_put_ns__ping(soap, &soap_tmp_ns__ping, "ns:ping", "")
-	 || soap_body_end_out(soap)
-	 || soap_envelope_end_out(soap)
-	 || soap_end_send(soap))
-		return soap_closesock(soap);
-	*result = NULL;
-	if (soap_begin_recv(soap)
-	 || soap_envelope_begin_in(soap)
-	 || soap_recv_header(soap)
-	 || soap_body_begin_in(soap))
-		return soap_closesock(soap);
-	soap_tmp_ns__pingResponse = soap_get_ns__pingResponse(soap, NULL, "ns:pingResponse", "");
-	if (soap->error)
-	{	if (soap->error == SOAP_TAG_MISMATCH && soap->level == 2)
-			return soap_recv_fault(soap);
-		return soap_closesock(soap);
-	}
-	if (soap_body_end_in(soap)
-	 || soap_envelope_end_in(soap)
-	 || soap_end_recv(soap))
-		return soap_closesock(soap);
-	if (result && soap_tmp_ns__pingResponse->result)
-		*result = *soap_tmp_ns__pingResponse->result;
-	return soap_closesock(soap);
-}
-
-SOAP_FMAC5 int SOAP_FMAC6 soap_call_ns__visit(struct soap *soap, const char *soap_endpoint, const char *soap_action, char *a, char **result)
-{	struct ns__visit soap_tmp_ns__visit;
-	struct ns__visitResponse *soap_tmp_ns__visitResponse;
-	if (!soap_endpoint)
-		soap_endpoint = "http://192.168.0.131:1234";
-	soap->encodingStyle = "";
-	soap_tmp_ns__visit.a = a;
-	soap_begin(soap);
-	soap_serializeheader(soap);
-	soap_serialize_ns__visit(soap, &soap_tmp_ns__visit);
-	if (soap_begin_count(soap))
-		return soap->error;
-	if (soap->mode & SOAP_IO_LENGTH)
-	{	if (soap_envelope_begin_out(soap)
-		 || soap_putheader(soap)
-		 || soap_body_begin_out(soap)
-		 || soap_put_ns__visit(soap, &soap_tmp_ns__visit, "ns:visit", "")
-		 || soap_body_end_out(soap)
-		 || soap_envelope_end_out(soap))
-			 return soap->error;
-	}
-	if (soap_end_count(soap))
-		return soap->error;
-	if (soap_connect(soap, soap_endpoint, soap_action)
-	 || soap_envelope_begin_out(soap)
-	 || soap_putheader(soap)
-	 || soap_body_begin_out(soap)
-	 || soap_put_ns__visit(soap, &soap_tmp_ns__visit, "ns:visit", "")
-	 || soap_body_end_out(soap)
-	 || soap_envelope_end_out(soap)
-	 || soap_end_send(soap))
-		return soap_closesock(soap);
-	*result = NULL;
-	if (soap_begin_recv(soap)
-	 || soap_envelope_begin_in(soap)
-	 || soap_recv_header(soap)
-	 || soap_body_begin_in(soap))
-		return soap_closesock(soap);
-	soap_tmp_ns__visitResponse = soap_get_ns__visitResponse(soap, NULL, "ns:visitResponse", "");
-	if (soap->error)
-	{	if (soap->error == SOAP_TAG_MISMATCH && soap->level == 2)
-			return soap_recv_fault(soap);
-		return soap_closesock(soap);
-	}
-	if (soap_body_end_in(soap)
-	 || soap_envelope_end_in(soap)
-	 || soap_end_recv(soap))
-		return soap_closesock(soap);
-	if (result && soap_tmp_ns__visitResponse->result)
-		*result = *soap_tmp_ns__visitResponse->result;
 	return soap_closesock(soap);
 }
 

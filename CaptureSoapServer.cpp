@@ -3,14 +3,11 @@
 **Created by Xeno Kovah of the MITRE HoneyClient Project 5/20/2008
 */
 
-
 #include "CaptureSoapServer.h"
-
 #include "soapH.h" 
 #include "capture.nsmap" 
 #include "Visitor.h"
-#include "b64.h"
-//#include <winbase.h> //Shouldn't need to include this
+#include "b64.h" //nice small 3rd party lib for base64 encode/decode
 
 CaptureSoapServer::CaptureSoapServer(Visitor* v){
 	CaptureSoapServerThread = new Thread(this);
@@ -26,7 +23,6 @@ CaptureSoapServer::run(){
 	//The below code is taken verbatim from the gsoap standalone server example page
    struct soap soap;
    SOCKET m, s; // master and slave sockets
-
 
    soap_init(&soap);
    //TODO: This needs to be configurable
@@ -54,7 +50,6 @@ CaptureSoapServer::run(){
       }
    }
    soap_done(&soap); // close master socket and detach environment
-
 }
 
 int ns__ping(struct soap *soap, char * a, char ** result) 
@@ -65,7 +60,7 @@ int ns__ping(struct soap *soap, char * a, char ** result)
    return SOAP_OK; 
 }
 
-int ns__visit(struct soap *soap, char * url, char ** result){
+int ns__visitURL(struct soap *soap, char * url, char ** result){
 	wchar_t xURL[1024];
 	wsprintf(xURL, L"%hs", url);
 	//Build my own new-fangled Element to pass to Visitor:onServerEvent which I think will open 
@@ -104,7 +99,7 @@ int ns__sendFileBase64(struct soap *soap, char * fileName, char * data, unsigned
 	HANDLE myHandle = CreateFileA(fileName, (GENERIC_READ | GENERIC_WRITE), 
 									NULL, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
 	if(myHandle == INVALID_HANDLE_VALUE){
-		printf("couldn't open the file. Exiting\n");
+		printf("CreateFile failed with %d\n", GetLastError());
 		return SOAP_ERR;
 	}
 
@@ -184,21 +179,28 @@ int ns__receiveFileBase64(struct soap *soap, char * fileName, ns__receiveFileStr
 	return SOAP_OK;
 }
 
-//After we have sent a document into the VM, open it
+//After we have sent a document into the VM, we need a way to open it.
 //We want to do this in a generic way, so rather than calling specific applications with the
 //document as the parameter, we instead exploit the fact that as long as default handlers are 
 //set for a given file type, it can be run from the command line by simply typing its name.
 //Thus we run cmd.exe with the /K option and the document name as a parameter.
 //From cmd.exe help: "/K      Carries out the command specified by string but remains"
-int ns__openDocument(struct soap *soap, char * fileName, int &result){
+
+//fileName = absolute or relative file name you want to open
+//waitTimeMillisec = milliseconds to Sleep() for. Should be unsigned int but SOAP::Lite doesn't
+// have an 'unsigned int' type by default, and I didn't want to make one. Make sure you cast it to DWORD.
+int ns__openDocument(struct soap *soap, char * fileName, int waitTimeMillisec, int &result){
 	int debug = 1;
-	if(debug) printf("in ns__openDocument\n");
+	if(debug) printf("in ns__openDocument, waitTimeMillisec = %d\n", waitTimeMillisec);
 
 	//Create the string for the parameters
 	wchar_t * docName = new wchar_t[1024];
 	wsprintf(docName, L"/K %hs", fileName);
 
 	//Create a job object to bind the processes I launch to
+	//This lets us get around the problem of Windows not having good ways of determining
+	//parent/child relationships, so that we don't have to care, and can for all intents
+	//and purposes, terminate the entire process tree starting with the cmd.exe we're launching
 	HANDLE myJobObj = CreateJobObject(NULL, NULL);
 	if(myJobObj == NULL){
 		printf("CreateJobObject failed with error %d\n", GetLastError());
@@ -223,28 +225,30 @@ int ns__openDocument(struct soap *soap, char * fileName, int &result){
 	}
 
 	if(debug) printf("dwProcessId = %d, dwThreadId = %d\n", procInfo.dwProcessId, procInfo.dwThreadId);
-	if(debug) printf("Sleeping for 15 seconds\n");
-	Sleep(15000);
+	if(debug) printf("Sleeping for %d seconds\n", (DWORD)waitTimeMillisec/1000);
+	Sleep((DWORD)waitTimeMillisec);
 	if(debug) printf("\n\nDone sleeping\n\n");
 	
-	//Nt/ZwQuerySystemInformation?
+	//TODO: Before we terminate the jobs, see if it created any events. If so, leave it run, and tell the
+	//HC Manager about it. The Manager should then request the information about events separately.
 
-	/*
-	b = TerminateProcess(procInfo.hProcess, 0);
-	if(!b){
-		printf("TerminateProcess failed with error %d\n", GetLastError());
-		return SOAP_ERR;
-	}
-	*/
 	b = TerminateJobObject(myJobObj, 0);
 	if(!b){
 		printf("TerminateProcess failed with error %d\n", GetLastError());
 		return SOAP_ERR;
 	}
+	//Just incase. I don't know if this is still needed
 	CloseHandle(procInfo.hProcess);
 	CloseHandle(procInfo.hThread);
 
 	result = 1;
+	return SOAP_OK;
+}
+
+//If maxEventsReturned == -1, then then send as many as possible.
+int ns__receiveEventsBase64(struct soap *soap, int maxEventsReturned, ns__receiveEventsStruct &result){
+
+
 	return SOAP_OK;
 }
 

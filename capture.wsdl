@@ -25,22 +25,101 @@
   elementFormDefault="unqualified"
   attributeFormDefault="unqualified">
   <import namespace="http://schemas.xmlsoap.org/soap/encoding/"/>
-  <complexType name="receiveFileStruct">
+  <complexType name="fileEvent-t">
    <complexContent>
-    <restriction base="ns:rcvS">
+    <restriction base="ns:fe">
     </restriction>
    </complexContent>
   </complexType>
-  <complexType name="rcvS">
+  <complexType name="regEvent-t">
+   <complexContent>
+    <restriction base="ns:re">
+    </restriction>
+   </complexContent>
+  </complexType>
+  <complexType name="procEvent-t">
+   <complexContent>
+    <restriction base="ns:pe">
+    </restriction>
+   </complexContent>
+  </complexType>
+  <complexType name="receiveFileStruct">
+   <complexContent>
+    <restriction base="ns:s1">
+    </restriction>
+   </complexContent>
+  </complexType>
+  <complexType name="receiveEventsStruct">
+   <complexContent>
+    <restriction base="ns:s2">
+    </restriction>
+   </complexContent>
+  </complexType>
+  <complexType name="fe">
+   <sequence>
+     <element name="time" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="eventType" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="procPID" type="xsd:int" minOccurs="1" maxOccurs="1"/>
+     <element name="procName" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="fileName" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+   </sequence>
+  </complexType>
+  <complexType name="re">
+   <sequence>
+     <element name="time" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="eventType" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="procPID" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="procName" type="xsd:int" minOccurs="1" maxOccurs="1"/>
+     <element name="keyName" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="valueName" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="valueType" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+   </sequence>
+  </complexType>
+  <complexType name="pe">
+   <sequence>
+     <element name="time" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="eventType" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="parentPID" type="xsd:int" minOccurs="1" maxOccurs="1"/>
+     <element name="parentName" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="procPID" type="xsd:int" minOccurs="1" maxOccurs="1"/>
+     <element name="procName" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+   </sequence>
+  </complexType>
+  <complexType name="s1">
    <sequence>
      <element name="data" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
      <element name="encodedLength" type="xsd:unsignedInt" minOccurs="1" maxOccurs="1"/>
      <element name="decodedLength" type="xsd:unsignedInt" minOccurs="1" maxOccurs="1"/>
    </sequence>
   </complexType>
+  <complexType name="s2">
+   <sequence>
+     <element name="data" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="interEventDelimiter" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="intraEventDelimiter" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="numEvents" type="xsd:unsignedInt" minOccurs="1" maxOccurs="1"/>
+     <element name="moreEvents" type="xsd:byte" minOccurs="1" maxOccurs="1"/>
+   </sequence>
+  </complexType>
  </schema>
 
 </types>
+
+<message name="pingRequest">
+ <part name="a" type="xsd:string"/>
+</message>
+
+<message name="pingResponse">
+ <part name="result" type="xsd:string"/>
+</message>
+
+<message name="visitURLRequest">
+ <part name="a" type="xsd:string"/>
+</message>
+
+<message name="visitURLResponse">
+ <part name="result" type="xsd:string"/>
+</message>
 
 <message name="sendFileBase64Request">
  <part name="fileName" type="xsd:string"/>
@@ -57,7 +136,7 @@
  <part name="fileName" type="xsd:string"/>
 </message>
 
-<message name="rcvS">
+<message name="s1">
  <part name="data" type="xsd:string"/>
  <part name="encodedLength" type="xsd:unsignedInt"/>
  <part name="decodedLength" type="xsd:unsignedInt"/>
@@ -73,29 +152,24 @@
 
 <message name="openDocumentRequest">
  <part name="fileName" type="xsd:string"/>
+ <part name="waitTimeMillisec" type="xsd:int"/>
 </message>
 
 <message name="openDocumentResponse">
  <part name="result" type="xsd:int"/>
 </message>
 
-<message name="pingRequest">
- <part name="a" type="xsd:string"/>
-</message>
-
-<message name="pingResponse">
- <part name="result" type="xsd:string"/>
-</message>
-
-<message name="visitRequest">
- <part name="a" type="xsd:string"/>
-</message>
-
-<message name="visitResponse">
- <part name="result" type="xsd:string"/>
-</message>
-
 <portType name="capturePortType">
+ <operation name="ping">
+  <documentation>Service definition of function ns__ping</documentation>
+  <input message="tns:pingRequest"/>
+  <output message="tns:pingResponse"/>
+ </operation>
+ <operation name="visitURL">
+  <documentation>Service definition of function ns__visitURL</documentation>
+  <input message="tns:visitURLRequest"/>
+  <output message="tns:visitURLResponse"/>
+ </operation>
  <operation name="sendFileBase64">
   <documentation>Service definition of function ns__sendFileBase64</documentation>
   <input message="tns:sendFileBase64Request"/>
@@ -104,7 +178,7 @@
  <operation name="receiveFileBase64">
   <documentation>Service definition of function ns__receiveFileBase64</documentation>
   <input message="tns:receiveFileBase64"/>
-  <output message="tns:rcvS"/>
+  <output message="tns:s1"/>
  </operation>
  <operation name="sendMIME">
   <documentation>Service definition of function ns__sendMIME</documentation>
@@ -116,20 +190,28 @@
   <input message="tns:openDocumentRequest"/>
   <output message="tns:openDocumentResponse"/>
  </operation>
- <operation name="ping">
-  <documentation>Service definition of function ns__ping</documentation>
-  <input message="tns:pingRequest"/>
-  <output message="tns:pingResponse"/>
- </operation>
- <operation name="visit">
-  <documentation>Service definition of function ns__visit</documentation>
-  <input message="tns:visitRequest"/>
-  <output message="tns:visitResponse"/>
- </operation>
 </portType>
 
 <binding name="capture" type="tns:capturePortType">
  <SOAP:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+ <operation name="ping">
+  <SOAP:operation style="rpc" soapAction=""/>
+  <input>
+     <SOAP:body use="encoded" namespace="capture" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+  </input>
+  <output>
+     <SOAP:body use="encoded" namespace="capture" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+  </output>
+ </operation>
+ <operation name="visitURL">
+  <SOAP:operation style="rpc" soapAction=""/>
+  <input>
+     <SOAP:body use="encoded" namespace="capture" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+  </input>
+  <output>
+     <SOAP:body use="encoded" namespace="capture" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+  </output>
+ </operation>
  <operation name="sendFileBase64">
   <SOAP:operation style="rpc" soapAction=""/>
   <input>
@@ -158,24 +240,6 @@
   </output>
  </operation>
  <operation name="openDocument">
-  <SOAP:operation style="rpc" soapAction=""/>
-  <input>
-     <SOAP:body use="encoded" namespace="capture" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
-  </input>
-  <output>
-     <SOAP:body use="encoded" namespace="capture" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
-  </output>
- </operation>
- <operation name="ping">
-  <SOAP:operation style="rpc" soapAction=""/>
-  <input>
-     <SOAP:body use="encoded" namespace="capture" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
-  </input>
-  <output>
-     <SOAP:body use="encoded" namespace="capture" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
-  </output>
- </operation>
- <operation name="visit">
   <SOAP:operation style="rpc" soapAction=""/>
   <input>
      <SOAP:body use="encoded" namespace="capture" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
