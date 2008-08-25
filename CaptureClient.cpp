@@ -65,8 +65,8 @@ public:
 		RegistryMonitor * r = new RegistryMonitor();
 		FileMonitor * f = new FileMonitor();
 		//Set up the standalone SOAP server
-		soapSrv = new CaptureSoapServer(visitor, r);
-		analyzer = new Analyzer(visitor, server, p, r, f);
+		soapSrv = new CaptureSoapServer(visitor, r, f, p);
+		analyzer = new Analyzer(visitor, server, r, f, p);
 		Thread* captureClientThread = new Thread(this);
 		captureClientThread->start("CaptureClient");
 	}

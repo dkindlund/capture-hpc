@@ -10,14 +10,17 @@
 
 struct soap soap;
 
-CaptureSoapServer::CaptureSoapServer(Visitor* v, RegistryMonitor *r){
+CaptureSoapServer::CaptureSoapServer(Visitor* v, RegistryMonitor * r, FileMonitor * f, ProcessMonitor * p){
 	registryMonitor = r;
+	fileMonitor = f;
+	processMonitor = p;
 	CaptureSoapServerThread = new Thread(this);
 	CaptureSoapServerThread->start("CaptureSoapServer");
 }
 
 CaptureSoapServer::~CaptureSoapServer(){
-	//FIXME: I have no idea if these are appropriate here
+	//FIXME: I have no idea if these are appropriate here. Also need to find the correct way to cleanly shut down
+	//so that it doesn't output a connection error at the end.
 	soap_destroy(&soap);
 	soap_end(&soap);
 	soap_done(&soap);
@@ -29,7 +32,9 @@ CaptureSoapServer::run(){
 	char debug = 0;
    SOCKET m, s; // master and slave sockets
 
-   onRegistryEventConnection = registryMonitor->connect_onRegistryEvent(boost::bind(&CaptureSoapServer::onRegistryEvent, this, _1, _2, _3, _4, _5));
+	onProcessEventConnection = processMonitor->connect_onProcessEvent(boost::bind(&CaptureSoapServer::onProcessEvent, this, _1, _2, _3, _4, _5, _6));
+	onRegistryEventConnection = registryMonitor->connect_onRegistryEvent(boost::bind(&CaptureSoapServer::onRegistryEvent, this, _1, _2, _3, _4, _5));
+	onFileEventConnection = fileMonitor->connect_onFileEvent(boost::bind(&CaptureSoapServer::onFileEvent, this, _1, _2, _3, _4, _5));
 
    //The below code is taken mostly from the gsoap standalone server example page
    soap_init(&soap);
@@ -60,13 +65,26 @@ CaptureSoapServer::run(){
    soap_done(&soap); // close master socket and detach environment
 }
 
+void CaptureSoapServer::onProcessEvent(BOOLEAN created, wstring time, 
+										DWORD parentProcessId, wstring parentProcess, 
+										DWORD processId, wstring process)
+{
+	printf("CaptureSoapServer::onProcessEvent got an event for time = %ls\n", time.c_str());
+}
+
 void CaptureSoapServer::onRegistryEvent (wstring registryEventType, wstring time, 
 										wstring processPath, wstring registryEventPath, 
 										vector<wstring> extra)
 {
-	wprintf(L"CaptureSoapServer::onRegistryEvent got an event for time = %hs\n", time);
+	printf("CaptureSoapServer::onRegistryEvent got an event for time = %ls\n", time.c_str());
 }
 
+void CaptureSoapServer::onFileEvent(wstring fileEventType, wstring time, 
+									wstring processPath, wstring fileEventPath, 
+									vector<wstring> extra)
+{
+	printf("CaptureSoapServer::onFileEvent got an event for time = %ls\n", time.c_str());
+}
 
 int ns__ping(struct soap *soap, char * a, char ** result) 
 { 

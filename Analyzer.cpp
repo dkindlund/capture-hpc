@@ -1,6 +1,6 @@
 #include "Analyzer.h"
 
-Analyzer::Analyzer(Visitor* v, Server* s, ProcessMonitor * p, RegistryMonitor * r, FileMonitor * f)
+Analyzer::Analyzer(Visitor* v, Server* s, RegistryMonitor * r, FileMonitor * f, ProcessMonitor * p)
 {
 	processMonitor = p;
 	registryMonitor = r;
