@@ -1,10 +1,10 @@
 #include "Analyzer.h"
 
-Analyzer::Analyzer(Visitor* v, Server* s)
+Analyzer::Analyzer(Visitor* v, Server* s, ProcessMonitor * p, RegistryMonitor * r, FileMonitor * f)
 {
-	processMonitor = new ProcessMonitor();
-	registryMonitor = new RegistryMonitor();
-	fileMonitor = new FileMonitor();
+	processMonitor = p;
+	registryMonitor = r;
+	fileMonitor = f;
 	collectModifiedFiles = false;
 	captureNetworkPackets = false;
 	networkPacketDumper = NULL;

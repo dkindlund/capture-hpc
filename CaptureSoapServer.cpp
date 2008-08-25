@@ -1,31 +1,39 @@
-/*This file can be renamed later, but just plain "soapserver.cpp"
-**is already created automatically by the soapcpp2 tool
+/*
 **Created by Xeno Kovah of the MITRE HoneyClient Project 5/20/2008
 */
 
 #include "CaptureSoapServer.h"
-#include "soapH.h" 
+#include "soapH.h"
 #include "capture.nsmap" 
 #include "Visitor.h"
 #include "b64.h" //nice small 3rd party lib for base64 encode/decode
 
-CaptureSoapServer::CaptureSoapServer(Visitor* v){
+struct soap soap;
+
+CaptureSoapServer::CaptureSoapServer(Visitor* v, RegistryMonitor *r){
+	registryMonitor = r;
 	CaptureSoapServerThread = new Thread(this);
 	CaptureSoapServerThread->start("CaptureSoapServer");
 }
 
-CaptureSoapServer::~CaptureSoapServer(){}
+CaptureSoapServer::~CaptureSoapServer(){
+	//FIXME: I have no idea if these are appropriate here
+	soap_destroy(&soap);
+	soap_end(&soap);
+	soap_done(&soap);
+}
 
 void
 CaptureSoapServer::run(){
 
 	char debug = 0;
-	//The below code is taken verbatim from the gsoap standalone server example page
-   struct soap soap;
    SOCKET m, s; // master and slave sockets
 
+   onRegistryEventConnection = registryMonitor->connect_onRegistryEvent(boost::bind(&CaptureSoapServer::onRegistryEvent, this, _1, _2, _3, _4, _5));
+
+   //The below code is taken mostly from the gsoap standalone server example page
    soap_init(&soap);
-   //TODO: This needs to be configurable
+   //FIXME TODO: This needs to be configurable
    m = soap_bind(&soap, "192.168.0.131", 1234, 100);
    if (m < 0)
       soap_print_fault(&soap, stderr);
@@ -52,6 +60,14 @@ CaptureSoapServer::run(){
    soap_done(&soap); // close master socket and detach environment
 }
 
+void CaptureSoapServer::onRegistryEvent (wstring registryEventType, wstring time, 
+										wstring processPath, wstring registryEventPath, 
+										vector<wstring> extra)
+{
+	wprintf(L"CaptureSoapServer::onRegistryEvent got an event for time = %hs\n", time);
+}
+
+
 int ns__ping(struct soap *soap, char * a, char ** result) 
 { 
    printf("%s\n", a);
@@ -60,14 +76,15 @@ int ns__ping(struct soap *soap, char * a, char ** result)
    return SOAP_OK; 
 }
 
+//Give it a url to browse to
 int ns__visitURL(struct soap *soap, char * url, char ** result){
 	wchar_t xURL[1024];
 	wsprintf(xURL, L"%hs", url);
-	//Build my own new-fangled Element to pass to Visitor:onServerEvent which I think will open 
+	//Build my own new-fangled Element to pass to Visitor:onServerEvent
     typedef boost::signal<void (Element*)> signal_serverEvent;
 	Attribute att;
 	att.name = L"url";
-	att.value = xURL; //Now expecting you to pass the URL
+	att.value = xURL;
 	Element e;
 	e.name = L"visit";
 	e.attributes.push_back(att);

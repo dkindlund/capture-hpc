@@ -55,7 +55,7 @@ using namespace std;
 class Analyzer
 {
 public:
-	Analyzer(Visitor* v, Server* s);
+	Analyzer(Visitor* v, Server* s, ProcessMonitor * p, RegistryMonitor * r, FileMonitor * f);
 	~Analyzer(void);
 
 	/*

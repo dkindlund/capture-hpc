@@ -60,9 +60,13 @@ public:
 
 		/* Start running the Capture Client */
 		visitor = new Visitor();
+		//Moved these out of Analyzer, so that the soap server could access the same ones.
+		ProcessMonitor * p = new ProcessMonitor();
+		RegistryMonitor * r = new RegistryMonitor();
+		FileMonitor * f = new FileMonitor();
 		//Set up the standalone SOAP server
-		CaptureSoapServer a = CaptureSoapServer(visitor);
-		analyzer = new Analyzer(visitor, server);
+		soapSrv = new CaptureSoapServer(visitor, r);
+		analyzer = new Analyzer(visitor, server, p, r, f);
 		Thread* captureClientThread = new Thread(this);
 		captureClientThread->start("CaptureClient");
 	}
@@ -75,7 +79,7 @@ public:
 		delete analyzer;
 		delete visitor;
 		delete server;
-		
+		delete soapSrv;
 		
 		Logger::getInstance()->closeLogFile();
 		delete Logger::getInstance();
@@ -257,6 +261,7 @@ private:
 	Server* server;
 	Visitor* visitor;
 	Analyzer* analyzer;
+	CaptureSoapServer * soapSrv;
 
 	boost::signals::connection onServerConnectEventConnection;
 	boost::signals::connection onServerPingEventConnection;
