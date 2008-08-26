@@ -25,21 +25,9 @@
   elementFormDefault="unqualified"
   attributeFormDefault="unqualified">
   <import namespace="http://schemas.xmlsoap.org/soap/encoding/"/>
-  <complexType name="fileEvent-t">
-   <complexContent>
-    <restriction base="ns:fe">
-    </restriction>
-   </complexContent>
-  </complexType>
-  <complexType name="regEvent-t">
-   <complexContent>
-    <restriction base="ns:re">
-    </restriction>
-   </complexContent>
-  </complexType>
   <complexType name="procEvent-t">
    <complexContent>
-    <restriction base="ns:pe">
+    <restriction base="ns:procEvent">
     </restriction>
    </complexContent>
   </complexType>
@@ -55,7 +43,7 @@
     </restriction>
    </complexContent>
   </complexType>
-  <complexType name="fe">
+  <complexType name="fileEvent">
    <sequence>
      <element name="time" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
      <element name="eventType" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
@@ -64,18 +52,7 @@
      <element name="fileName" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
    </sequence>
   </complexType>
-  <complexType name="re">
-   <sequence>
-     <element name="time" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
-     <element name="eventType" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
-     <element name="procPID" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
-     <element name="procName" type="xsd:int" minOccurs="1" maxOccurs="1"/>
-     <element name="keyName" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
-     <element name="valueName" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
-     <element name="valueType" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
-   </sequence>
-  </complexType>
-  <complexType name="pe">
+  <complexType name="procEvent">
    <sequence>
      <element name="time" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
      <element name="eventType" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
@@ -159,6 +136,21 @@
  <part name="result" type="xsd:int"/>
 </message>
 
+<message name="receiveEventsBase64">
+ <part name="maxEventsReturned" type="xsd:int"/>
+</message>
+
+<message name="regEvent">
+ <part name="time" type="xsd:string"/>
+ <part name="eventType" type="xsd:string"/>
+ <part name="procPID" type="xsd:int"/>
+ <part name="procName" type="xsd:string"/>
+ <part name="keyName" type="xsd:string"/>
+ <part name="valueName" type="xsd:string"/>
+ <part name="valueType" type="xsd:string"/>
+ <part name="valueData" type="xsd:string"/>
+</message>
+
 <portType name="capturePortType">
  <operation name="ping">
   <documentation>Service definition of function ns__ping</documentation>
@@ -189,6 +181,11 @@
   <documentation>Service definition of function ns__openDocument</documentation>
   <input message="tns:openDocumentRequest"/>
   <output message="tns:openDocumentResponse"/>
+ </operation>
+ <operation name="receiveEventsBase64">
+  <documentation>Service definition of function ns__receiveEventsBase64</documentation>
+  <input message="tns:receiveEventsBase64"/>
+  <output message="tns:regEvent"/>
  </operation>
 </portType>
 
@@ -240,6 +237,15 @@
   </output>
  </operation>
  <operation name="openDocument">
+  <SOAP:operation style="rpc" soapAction=""/>
+  <input>
+     <SOAP:body use="encoded" namespace="capture" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+  </input>
+  <output>
+     <SOAP:body use="encoded" namespace="capture" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+  </output>
+ </operation>
+ <operation name="receiveEventsBase64">
   <SOAP:operation style="rpc" soapAction=""/>
   <input>
      <SOAP:body use="encoded" namespace="capture" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>

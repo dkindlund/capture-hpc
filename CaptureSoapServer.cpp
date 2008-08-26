@@ -8,7 +8,15 @@
 #include "Visitor.h"
 #include "b64.h" //nice small 3rd party lib for base64 encode/decode
 
+//Only global so that the destructors can be used in ~CaptureSoapServer
+//Didn't go in the class definition because adding soapH.h to CaptureSoapServer.h caused compile issues
+//that I didn't want to deal with
 struct soap soap;
+
+	std::queue<struct ns__regEvent> regQ;
+	std::queue<struct ns__fileEvent> fileQ;
+	std::queue<struct ns__procEvent> procQ;
+
 
 CaptureSoapServer::CaptureSoapServer(Visitor* v, RegistryMonitor * r, FileMonitor * f, ProcessMonitor * p){
 	registryMonitor = r;
@@ -65,6 +73,61 @@ CaptureSoapServer::run(){
    soap_done(&soap); // close master socket and detach environment
 }
 
+//From RegistryMonitor.cpp
+//registry event extra.at(0) == PID
+//registry event extra.at(1) == name of registry value
+//registry event extra.at(2) == registry value type
+//registry event extra.at(3) == registry value data (if any)
+void CaptureSoapServer::onRegistryEvent (wstring registryEventType, wstring time, 
+										wstring processPath, wstring registryEventPath, 
+										vector<wstring> extra)
+{
+	printf("CaptureSoapServer::onRegistryEvent got an event for time = %ls, length = %d\n", time.c_str(), time.length());
+
+	//now begins the arduous process of converting the values into char *s
+	ns__regEvent_t r;
+	//TODO: trace through and verify that all mallocs are cleaned up by the soap code
+	r.time = (char *)malloc(time.length()+1);
+	sprintf(r.time, "%ls", time.c_str());
+	printf("r.time = %s\n", r.time);
+
+	r.eventType = (char *)malloc(registryEventType.length()+1);
+	sprintf(r.eventType, "%ls", registryEventType.c_str());
+
+	char * tmp = (char *)malloc(extra.at(0).length()+1);
+	sprintf(tmp, "%ls", extra.at(0).c_str());
+	r.procPID = atoi(tmp);
+	printf("r.procPID = %d\n", r.procPID);
+	free(tmp);
+
+	r.procName = (char *)malloc(processPath.length()+1);
+	sprintf(r.procName, "%ls", processPath.c_str());
+
+	r.keyName = (char *)malloc(registryEventPath.length()+1);
+	sprintf(r.keyName, "%ls", registryEventPath.c_str());
+
+	r.valueName = (char *)malloc(extra.at(1).length()+1);
+	sprintf(r.valueName, "%ls", extra.at(1).c_str());
+
+	r.valueType = (char *)malloc(extra.at(2).length()+1);
+	sprintf(r.valueType, "%ls", extra.at(2).c_str());
+
+	r.valueData = (char *)malloc(extra.at(3).length()+1);
+	sprintf(r.valueData, "%ls", extra.at(3).c_str());
+
+	regQ.push(r);
+	printf("added one event to regQ. Now there are %d elements in the queue\n", regQ.size());
+}
+
+//From FileMonitor.cpp
+//file event extra.at(0) == PID
+void CaptureSoapServer::onFileEvent(wstring fileEventType, wstring time, 
+									wstring processPath, wstring fileEventPath, 
+									vector<wstring> extra)
+{
+	printf("CaptureSoapServer::onFileEvent got an event for time = %ls\n", time.c_str());
+}
+
 void CaptureSoapServer::onProcessEvent(BOOLEAN created, wstring time, 
 										DWORD parentProcessId, wstring parentProcess, 
 										DWORD processId, wstring process)
@@ -72,19 +135,6 @@ void CaptureSoapServer::onProcessEvent(BOOLEAN created, wstring time,
 	printf("CaptureSoapServer::onProcessEvent got an event for time = %ls\n", time.c_str());
 }
 
-void CaptureSoapServer::onRegistryEvent (wstring registryEventType, wstring time, 
-										wstring processPath, wstring registryEventPath, 
-										vector<wstring> extra)
-{
-	printf("CaptureSoapServer::onRegistryEvent got an event for time = %ls\n", time.c_str());
-}
-
-void CaptureSoapServer::onFileEvent(wstring fileEventType, wstring time, 
-									wstring processPath, wstring fileEventPath, 
-									vector<wstring> extra)
-{
-	printf("CaptureSoapServer::onFileEvent got an event for time = %ls\n", time.c_str());
-}
 
 int ns__ping(struct soap *soap, char * a, char ** result) 
 { 
@@ -264,7 +314,7 @@ int ns__openDocument(struct soap *soap, char * fileName, int waitTimeMillisec, i
 	Sleep((DWORD)waitTimeMillisec);
 	if(debug) printf("\n\nDone sleeping\n\n");
 	
-	//TODO: Before we terminate the jobs, see if it created any events. If so, leave it run, and tell the
+	//TODO: Before we terminate the jobs, see if it created any events. If so, let it run, and tell the
 	//HC Manager about it. The Manager should then request the information about events separately.
 
 	b = TerminateJobObject(myJobObj, 0);
@@ -281,8 +331,24 @@ int ns__openDocument(struct soap *soap, char * fileName, int waitTimeMillisec, i
 }
 
 //If maxEventsReturned == -1, then then send as many as possible.
-int ns__receiveEventsBase64(struct soap *soap, int maxEventsReturned, ns__receiveEventsStruct &result){
-
+//If there are no events to send back, it will send back <eventType>No Events</eventType>
+int ns__receiveEventsBase64(struct soap *soap, int maxEventsReturned, struct ns__regEvent &result){
+	
+	if(regQ.empty()){
+		printf("No events to send back\n");
+		struct ns__regEvent t;
+		memset(&t, 0, sizeof(struct ns__regEvent));
+		//The soap will not try to serialize all the char * = 0 from the memset, but it will send back 
+		//<ns:regEvent><procPID>0</procPID></ns:regEvent>
+		//so parse that to mean there are no results
+		t.eventType = "No Events";
+		result = t;
+	}
+	else{
+		printf("Sending back the first event\n");
+		result = regQ.front();
+		regQ.pop();
+	}
 
 	return SOAP_OK;
 }

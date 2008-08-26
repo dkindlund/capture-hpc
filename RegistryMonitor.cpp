@@ -267,7 +267,9 @@ RegistryMonitor::run()
 					wstring other;
 					size_t tmp_len;
 					vector<wstring> extraData;
+					//registry event extra.at(0) == PID
 					extraData.push_back(processIdString);
+					//registry event extra.at(1) == name of registry value
 					if(e->valueNameLength > 0){
 						extraData.push_back(e->valueName);
 					}
@@ -275,6 +277,8 @@ RegistryMonitor::run()
 						extraData.push_back(L"");
 					}
 
+					//registry event extra.at(2) == registry value type
+					//registry event extra.at(3) == registry value data (if any)
 					//MS description of data types:
 					//http://support.microsoft.com/kb/256986
 					switch(e->dataType){

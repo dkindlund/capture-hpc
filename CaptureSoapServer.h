@@ -19,6 +19,10 @@ public:
 	boost::signals::connection onRegistryEventConnection;
 	boost::signals::connection onFileEventConnection;
 	boost::signals::connection onProcessEventConnection;
+	typedef struct ns__regEvent ns__regEvent_t;
+	typedef struct ns__fileEvent ns__fileEvent_t;
+	typedef struct ns__procEvent ns__procEvent_t;
+
 
 	CaptureSoapServer(Visitor *, RegistryMonitor * r, FileMonitor * f, ProcessMonitor * p);
 	~CaptureSoapServer();
@@ -35,4 +39,5 @@ public:
 	RegistryMonitor* registryMonitor;
 	FileMonitor * fileMonitor;
 	ProcessMonitor * processMonitor;
+
 };

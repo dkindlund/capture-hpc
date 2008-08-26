@@ -377,6 +377,7 @@ FileMonitor::run()
 				wstring processModuleName;
 				wstring processPath;
 				vector<wstring> extraData;
+				//file event extra.at(0) == PID
 				wchar_t processIdString[11];
 				swprintf(processIdString, 11, L"%ld", e->processId);
 				extraData.push_back(processIdString);

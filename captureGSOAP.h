@@ -13,25 +13,26 @@
 //Names of fields used in structs are what will show up in XML
 
 //Just using similar to previous perl names
-typedef struct fe{
+struct ns__regEvent{
+	char *	time;
+	char *	eventType;
+	int		procPID;
+	char *	procName;
+	char *	keyName;
+	char *	valueName;
+	char *	valueType;
+	char *	valueData;
+};
+
+struct ns__fileEvent{
 	char *	time;
 	char *	eventType;
 	int		procPID;
 	char *	procName;
 	char *	fileName;
-}ns__fileEvent_t;
+};
 
-typedef struct re{
-	char *	time;
-	char *	eventType;
-	char *	procPID;
-	int		procName;
-	char *	keyName;
-	char *	valueName;
-	char *	valueType;
-}ns__regEvent_t;
-
-typedef struct pe{
+typedef struct ns__procEvent{
 	char *	time;
 	char *	eventType;
 	int		parentPID;
@@ -47,6 +48,8 @@ typedef struct s1{
 	unsigned int decodedLength;
 } ns__receiveFileStruct;
 
+
+//TODO: restructure this
 typedef struct s2{
 	char * data;
 	char * interEventDelimiter;	//potentially multi-byte delimeter used to concatenate events
@@ -56,11 +59,13 @@ typedef struct s2{
 						//It is the Manager's responsibility to request the additional data.
 } ns__receiveEventsStruct;
 
+
 int ns__ping(char * a, char ** result);
 int ns__visitURL(char * a, char ** result);
 int ns__sendFileBase64(char * fileName, char * data, unsigned int encodedLength, unsigned int decodedLength, int &result);
 int ns__receiveFileBase64(char * fileName, ns__receiveFileStruct &result);
 int ns__sendMIME(int magicNumber, int &result);
 int ns__openDocument(char * fileName, int waitTimeMillisec, int &result);
-int ns__receiveEventsBase64(struct soap *soap, int maxEventsReturned, ns__receiveEventsStruct &result);
+//int ns__receiveEventsBase64(int maxEventsReturned, ns__receiveEventsStruct &result);
+int ns__receiveEventsBase64(int maxEventsReturned, struct ns__regEvent &result);
 
