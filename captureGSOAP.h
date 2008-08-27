@@ -44,9 +44,26 @@ struct ns__procEvent{
 
 struct ns__dynRegArray{
 	struct ns__regEvent * __ptr;
-	int	__size;	//number of elements
+	int	__size;	//number of elements, not total size
 };
 
+struct ns__dynFileArray{
+	struct ns__fileEvent * __ptr;
+	int	__size;	//number of elements, not total size
+};
+
+struct ns__dynProcArray{
+	struct ns__procEvent * __ptr;
+	int	__size;	//number of elements, not total size
+};
+
+struct ns__allEvents{
+	struct ns__dynRegArray * regEvents;
+	struct ns__dynFileArray * fileEvents;
+	struct ns__dynProcArray * procEvents;
+};
+
+//A poor substitute for MIME, but it works
 typedef struct s1{
 	char * data;
 	unsigned int encodedLength;
@@ -54,25 +71,12 @@ typedef struct s1{
 } ns__receiveFileStruct;
 
 
-/*
-//TODO: restructure this
-typedef struct s2{
-	char * data;
-	char * interEventDelimiter;	//potentially multi-byte delimeter used to concatenate events
-	char * intraEventDelimiter;	//potentially multi-byte delimeter used to concatenate fields of events
-	unsigned int numEvents;	//For sanity checking
-	char moreEvents;	//1 if there is more data which can be sent to the Manager after this, 0 otherwise
-						//It is the Manager's responsibility to request the additional data.
-} ns__receiveEventsStruct;
-*/
-
-
 int ns__ping(char * a, char ** result);
 int ns__visitURL(char * a, char ** result);
 int ns__sendFileBase64(char * fileName, char * data, unsigned int encodedLength, unsigned int decodedLength, int &result);
 int ns__receiveFileBase64(char * fileName, ns__receiveFileStruct &result);
-int ns__sendMIME(int magicNumber, int &result);
 int ns__openDocument(char * fileName, int waitTimeMillisec, int &result);
-//int ns__receiveEventsBase64(int maxEventsReturned, ns__receiveEventsStruct &result);
-int ns__receiveEventsBase64(int maxEventsReturned, struct ns__dynRegArray &result);
+int ns__returnEvents(int maxEventsToReturn, struct ns__allEvents &result);
 
+//Not working
+int ns__sendMIME(int magicNumber, int &result);

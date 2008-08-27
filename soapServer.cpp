@@ -6,7 +6,7 @@
 */
 #include "soapH.h"
 
-SOAP_SOURCE_STAMP("@(#) soapServer.cpp ver 2.7.10 2008-08-27 02:17:09 GMT")
+SOAP_SOURCE_STAMP("@(#) soapServer.cpp ver 2.7.10 2008-08-27 09:23:06 GMT")
 
 
 SOAP_FMAC5 int SOAP_FMAC6 soap_serve(struct soap *soap)
@@ -81,12 +81,12 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_serve_request(struct soap *soap)
 		return soap_serve_ns__sendFileBase64(soap);
 	if (!soap_match_tag(soap, soap->tag, "ns:receiveFileBase64"))
 		return soap_serve_ns__receiveFileBase64(soap);
-	if (!soap_match_tag(soap, soap->tag, "ns:sendMIME"))
-		return soap_serve_ns__sendMIME(soap);
 	if (!soap_match_tag(soap, soap->tag, "ns:openDocument"))
 		return soap_serve_ns__openDocument(soap);
-	if (!soap_match_tag(soap, soap->tag, "ns:receiveEventsBase64"))
-		return soap_serve_ns__receiveEventsBase64(soap);
+	if (!soap_match_tag(soap, soap->tag, "ns:returnEvents"))
+		return soap_serve_ns__returnEvents(soap);
+	if (!soap_match_tag(soap, soap->tag, "ns:sendMIME"))
+		return soap_serve_ns__sendMIME(soap);
 	return soap->error = SOAP_NO_METHOD;
 }
 #endif
@@ -261,47 +261,6 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_serve_ns__receiveFileBase64(struct soap *soap)
 	return soap_closesock(soap);
 }
 
-SOAP_FMAC5 int SOAP_FMAC6 soap_serve_ns__sendMIME(struct soap *soap)
-{	struct ns__sendMIME soap_tmp_ns__sendMIME;
-	struct ns__sendMIMEResponse soap_tmp_ns__sendMIMEResponse;
-	soap_default_ns__sendMIMEResponse(soap, &soap_tmp_ns__sendMIMEResponse);
-	soap_default_ns__sendMIME(soap, &soap_tmp_ns__sendMIME);
-	soap->encodingStyle = "";
-	if (!soap_get_ns__sendMIME(soap, &soap_tmp_ns__sendMIME, "ns:sendMIME", NULL))
-		return soap->error;
-	if (soap_body_end_in(soap)
-	 || soap_envelope_end_in(soap)
-	 || soap_end_recv(soap))
-		return soap->error;
-	soap->error = ns__sendMIME(soap, soap_tmp_ns__sendMIME.magicNumber, soap_tmp_ns__sendMIMEResponse.result);
-	if (soap->error)
-		return soap->error;
-	soap_serializeheader(soap);
-	soap_serialize_ns__sendMIMEResponse(soap, &soap_tmp_ns__sendMIMEResponse);
-	if (soap_begin_count(soap))
-		return soap->error;
-	if (soap->mode & SOAP_IO_LENGTH)
-	{	if (soap_envelope_begin_out(soap)
-		 || soap_putheader(soap)
-		 || soap_body_begin_out(soap)
-		 || soap_put_ns__sendMIMEResponse(soap, &soap_tmp_ns__sendMIMEResponse, "ns:sendMIMEResponse", "")
-		 || soap_body_end_out(soap)
-		 || soap_envelope_end_out(soap))
-			 return soap->error;
-	};
-	if (soap_end_count(soap)
-	 || soap_response(soap, SOAP_OK)
-	 || soap_envelope_begin_out(soap)
-	 || soap_putheader(soap)
-	 || soap_body_begin_out(soap)
-	 || soap_put_ns__sendMIMEResponse(soap, &soap_tmp_ns__sendMIMEResponse, "ns:sendMIMEResponse", "")
-	 || soap_body_end_out(soap)
-	 || soap_envelope_end_out(soap)
-	 || soap_end_send(soap))
-		return soap->error;
-	return soap_closesock(soap);
-}
-
 SOAP_FMAC5 int SOAP_FMAC6 soap_serve_ns__openDocument(struct soap *soap)
 {	struct ns__openDocument soap_tmp_ns__openDocument;
 	struct ns__openDocumentResponse soap_tmp_ns__openDocumentResponse;
@@ -343,30 +302,30 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_serve_ns__openDocument(struct soap *soap)
 	return soap_closesock(soap);
 }
 
-SOAP_FMAC5 int SOAP_FMAC6 soap_serve_ns__receiveEventsBase64(struct soap *soap)
-{	struct ns__receiveEventsBase64 soap_tmp_ns__receiveEventsBase64;
-	struct ns__receiveEventsBase64Response soap_tmp_ns__receiveEventsBase64Response;
-	soap_default_ns__receiveEventsBase64Response(soap, &soap_tmp_ns__receiveEventsBase64Response);
-	soap_default_ns__receiveEventsBase64(soap, &soap_tmp_ns__receiveEventsBase64);
+SOAP_FMAC5 int SOAP_FMAC6 soap_serve_ns__returnEvents(struct soap *soap)
+{	struct ns__returnEvents soap_tmp_ns__returnEvents;
+	struct ns__allEvents result;
+	soap_default_ns__allEvents(soap, &result);
+	soap_default_ns__returnEvents(soap, &soap_tmp_ns__returnEvents);
 	soap->encodingStyle = "";
-	if (!soap_get_ns__receiveEventsBase64(soap, &soap_tmp_ns__receiveEventsBase64, "ns:receiveEventsBase64", NULL))
+	if (!soap_get_ns__returnEvents(soap, &soap_tmp_ns__returnEvents, "ns:returnEvents", NULL))
 		return soap->error;
 	if (soap_body_end_in(soap)
 	 || soap_envelope_end_in(soap)
 	 || soap_end_recv(soap))
 		return soap->error;
-	soap->error = ns__receiveEventsBase64(soap, soap_tmp_ns__receiveEventsBase64.maxEventsReturned, soap_tmp_ns__receiveEventsBase64Response.result);
+	soap->error = ns__returnEvents(soap, soap_tmp_ns__returnEvents.maxEventsToReturn, result);
 	if (soap->error)
 		return soap->error;
 	soap_serializeheader(soap);
-	soap_serialize_ns__receiveEventsBase64Response(soap, &soap_tmp_ns__receiveEventsBase64Response);
+	soap_serialize_ns__allEvents(soap, &result);
 	if (soap_begin_count(soap))
 		return soap->error;
 	if (soap->mode & SOAP_IO_LENGTH)
 	{	if (soap_envelope_begin_out(soap)
 		 || soap_putheader(soap)
 		 || soap_body_begin_out(soap)
-		 || soap_put_ns__receiveEventsBase64Response(soap, &soap_tmp_ns__receiveEventsBase64Response, "ns:receiveEventsBase64Response", "")
+		 || soap_put_ns__allEvents(soap, &result, "ns:allEvents", "")
 		 || soap_body_end_out(soap)
 		 || soap_envelope_end_out(soap))
 			 return soap->error;
@@ -376,7 +335,48 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_serve_ns__receiveEventsBase64(struct soap *soap)
 	 || soap_envelope_begin_out(soap)
 	 || soap_putheader(soap)
 	 || soap_body_begin_out(soap)
-	 || soap_put_ns__receiveEventsBase64Response(soap, &soap_tmp_ns__receiveEventsBase64Response, "ns:receiveEventsBase64Response", "")
+	 || soap_put_ns__allEvents(soap, &result, "ns:allEvents", "")
+	 || soap_body_end_out(soap)
+	 || soap_envelope_end_out(soap)
+	 || soap_end_send(soap))
+		return soap->error;
+	return soap_closesock(soap);
+}
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_serve_ns__sendMIME(struct soap *soap)
+{	struct ns__sendMIME soap_tmp_ns__sendMIME;
+	struct ns__sendMIMEResponse soap_tmp_ns__sendMIMEResponse;
+	soap_default_ns__sendMIMEResponse(soap, &soap_tmp_ns__sendMIMEResponse);
+	soap_default_ns__sendMIME(soap, &soap_tmp_ns__sendMIME);
+	soap->encodingStyle = "";
+	if (!soap_get_ns__sendMIME(soap, &soap_tmp_ns__sendMIME, "ns:sendMIME", NULL))
+		return soap->error;
+	if (soap_body_end_in(soap)
+	 || soap_envelope_end_in(soap)
+	 || soap_end_recv(soap))
+		return soap->error;
+	soap->error = ns__sendMIME(soap, soap_tmp_ns__sendMIME.magicNumber, soap_tmp_ns__sendMIMEResponse.result);
+	if (soap->error)
+		return soap->error;
+	soap_serializeheader(soap);
+	soap_serialize_ns__sendMIMEResponse(soap, &soap_tmp_ns__sendMIMEResponse);
+	if (soap_begin_count(soap))
+		return soap->error;
+	if (soap->mode & SOAP_IO_LENGTH)
+	{	if (soap_envelope_begin_out(soap)
+		 || soap_putheader(soap)
+		 || soap_body_begin_out(soap)
+		 || soap_put_ns__sendMIMEResponse(soap, &soap_tmp_ns__sendMIMEResponse, "ns:sendMIMEResponse", "")
+		 || soap_body_end_out(soap)
+		 || soap_envelope_end_out(soap))
+			 return soap->error;
+	};
+	if (soap_end_count(soap)
+	 || soap_response(soap, SOAP_OK)
+	 || soap_envelope_begin_out(soap)
+	 || soap_putheader(soap)
+	 || soap_body_begin_out(soap)
+	 || soap_put_ns__sendMIMEResponse(soap, &soap_tmp_ns__sendMIMEResponse, "ns:sendMIMEResponse", "")
 	 || soap_body_end_out(soap)
 	 || soap_envelope_end_out(soap)
 	 || soap_end_send(soap))

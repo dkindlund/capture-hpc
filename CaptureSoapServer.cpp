@@ -13,7 +13,7 @@
 //that I didn't want to deal with
 struct soap soap;
 
-std::vector<struct ns__regEvent> regVec;
+std::list<struct ns__regEvent> regList;
 std::list<struct ns__fileEvent> fileList;
 std::list<struct ns__procEvent> procList;
 
@@ -115,8 +115,8 @@ void CaptureSoapServer::onRegistryEvent (wstring registryEventType, wstring time
 	r.valueData = (char *)malloc(extra.at(3).length()+1);
 	sprintf(r.valueData, "%ls", extra.at(3).c_str());
 
-	regVec.push_back(r);
-	printf("added one event to regVec. Now there are %d elements in the list\n", regVec.size());
+	regList.push_back(r);
+	printf("added one event to regList. Now there are %d elements in the list\n", regList.size());
 }
 
 //From FileMonitor.cpp
@@ -331,29 +331,119 @@ int ns__openDocument(struct soap *soap, char * fileName, int waitTimeMillisec, i
 }
 
 //If maxEventsReturned == -1, then then send as many as possible.
-//If there are no events to send back, it will send back <eventType>No Events</eventType>
-int ns__receiveEventsBase64(struct soap *soap, int maxEventsReturned, struct ns__dynRegArray &result){
-	struct ns__dynRegArray dynArray;
-	dynArray.__ptr = NULL;
-	dynArray.__size = 0;
+//TODO: Make SOAP::Lite understand unsigned int type, so that this (and other) ints can be set as such
+int ns__returnEvents(struct soap *soap, int maxEventsToReturn, struct ns__allEvents &result){
+	struct ns__allEvents all;
+	all.fileEvents = NULL;
+	all.procEvents = NULL;
+	all.regEvents = NULL;
 
-	if(regVec.empty()){
-		printf("No events to send back\n");
-		result = dynArray;
+	if(regList.empty() || maxEventsToReturn == 0){
+		printf("No registry events to send back\n");
 	}
 	else{
-		dynArray.__size = regVec.size(); //don't want to call the size function more times than we have to
-		printf("Sending back %d events\n", (maxEventsReturned < dynArray.__size) ? maxEventsReturned : dynArray.__size);
-		struct ns__regEvent * ptr = (struct ns__regEvent *)soap_malloc(soap, dynArray.__size*sizeof(struct ns__regEvent));
-		dynArray.__ptr = ptr;
-		for(unsigned int i = 0; i < dynArray.__size; i++){
-			ptr[i] = regVec.at(i);
+		//Set up a dynamic array for each of the event types
+		struct ns__dynRegArray dRegArray;
+		dRegArray.__ptr = NULL;
+		dRegArray.__size = regList.size();
+		all.regEvents = &dRegArray;
+
+		printf("dRegArray.__size = %d, maxEventsToReturn = %d\n", dRegArray.__size, maxEventsToReturn);
+
+		//Figure out how many entries we will send back
+		if(maxEventsToReturn == -1 || maxEventsToReturn > dRegArray.__size){
+			dRegArray.__size = regList.size();
 		}
-		result = dynArray;
+		else{
+			dRegArray.__size = maxEventsToReturn;
+		}
+
+		printf("Sending back %d registy events\n",dRegArray.__size);
+
+		//don't want to call the size function more times than we have to
+		struct ns__regEvent * ns__regEventArray = (struct ns__regEvent *)soap_malloc(soap, dRegArray.__size*sizeof(struct ns__regEvent));
+
+		dRegArray.__ptr = ns__regEventArray;
+
+		int * b = (int *) ns__regEventArray;
+		for(unsigned int i = 0; i < dRegArray.__size; i++){
+//			ns__regEventArray[i] = regList.pop_front();
+			printf("i = %d\n", i);
+			printf("regList.front().time %s, %#x\n", regList.front().time, regList.front().time);
+			printf("regList.front().eventType %s, %#x\n", regList.front().eventType, regList.front().eventType);
+			printf("regList.front().procPID %d, %#x\n", regList.front().procPID, regList.front().procPID);
+			printf("regList.front().procName %s, %#x\n", regList.front().procName, regList.front().procName);
+
+			memcpy(&ns__regEventArray[i],&regList.front(), sizeof(struct ns__regEvent));
+			regList.pop_front();
+			printf("%#x %#x %#x %#x\n", b[i*8+0], b[i*8+1], b[i*8+2], b[i*8+3]);
+		}
 	}
+
+	if(fileList.empty() || maxEventsToReturn == 0){
+		printf("No file events to send back\n");
+	}
+	else{
+		struct ns__dynFileArray dFileArray;
+		dFileArray.__ptr = NULL;
+		dFileArray.__size = fileList.size();
+		all.fileEvents = &dFileArray;
+
+		//Figure out how many entries we will send back
+		if(maxEventsToReturn == -1 || maxEventsToReturn > dFileArray.__size){
+			dFileArray.__size = fileList.size();
+		}
+		else{
+			dFileArray.__size = maxEventsToReturn;
+		}
+
+		printf("Sending back %d file events\n",dFileArray.__size);
+		struct ns__fileEvent * ns__fileEventArray = (struct ns__fileEvent *)soap_malloc(soap, dFileArray.__size*sizeof(struct ns__fileEvent));
+
+		dFileArray.__ptr = ns__fileEventArray;
+
+		for(unsigned int i = 0; i < dFileArray.__size; i++){
+//			ns__fileEventArray[i] = fileList.pop_front();
+			memcpy(&ns__fileEventArray[i],&fileList.front(), sizeof(struct ns__fileEvent));
+			regList.pop_front();
+		}
+	}
+
+	if(procList.empty() || maxEventsToReturn == 0){
+		printf("No process events to send back\n");
+	}
+	else{
+
+		struct ns__dynProcArray dProcArray;
+		dProcArray.__ptr = NULL;
+		dProcArray.__size = procList.size();
+		all.procEvents = &dProcArray;
+
+		if(maxEventsToReturn == -1 || maxEventsToReturn > dProcArray.__size){
+			dProcArray.__size = regList.size();
+		}
+		else{
+			dProcArray.__size = maxEventsToReturn;
+		}
+
+		printf("Sending back %d process events\n",dProcArray.__size);
+
+		struct ns__procEvent * ns__procEventArray = (struct ns__procEvent *)soap_malloc(soap, dProcArray.__size*sizeof(struct ns__procEvent));
+		dProcArray.__ptr = ns__procEventArray;
+
+		for(unsigned int i = 0; i < dProcArray.__size; i++){
+//			ns__procEventArray[i] = procList.pop_front();
+			memcpy(&ns__procEventArray[i],&procList.front(), sizeof(struct ns__procEvent));
+			regList.pop_front();
+		}
+	}
+
+	printf("all.regEvents = %#x, all.fileEvents = %#x, all.procEvents = %#x\n", all.regEvents, all.fileEvents, all.procEvents);
+	result = all;
 
 	return SOAP_OK;
 }
+
 
 //Thus far, SOAP::Lite hasn't been sending the data correctly, so we never get into this function.
 //Removing the "This is a multipart message in MIME format..." from MIME::Entity's Entity.pm at least gets 

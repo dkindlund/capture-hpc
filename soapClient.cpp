@@ -6,7 +6,7 @@
 */
 #include "soapH.h"
 
-SOAP_SOURCE_STAMP("@(#) soapClient.cpp ver 2.7.10 2008-08-27 02:17:09 GMT")
+SOAP_SOURCE_STAMP("@(#) soapClient.cpp ver 2.7.10 2008-08-27 09:23:06 GMT")
 
 
 SOAP_FMAC5 int SOAP_FMAC6 soap_call_ns__ping(struct soap *soap, const char *soap_endpoint, const char *soap_action, char *a, char **result)
@@ -220,58 +220,6 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call_ns__receiveFileBase64(struct soap *soap, con
 	return soap_closesock(soap);
 }
 
-SOAP_FMAC5 int SOAP_FMAC6 soap_call_ns__sendMIME(struct soap *soap, const char *soap_endpoint, const char *soap_action, int magicNumber, int &result)
-{	struct ns__sendMIME soap_tmp_ns__sendMIME;
-	struct ns__sendMIMEResponse *soap_tmp_ns__sendMIMEResponse;
-	if (!soap_endpoint)
-		soap_endpoint = "http://192.168.0.131:1234";
-	soap->encodingStyle = "";
-	soap_tmp_ns__sendMIME.magicNumber = magicNumber;
-	soap_begin(soap);
-	soap_serializeheader(soap);
-	soap_serialize_ns__sendMIME(soap, &soap_tmp_ns__sendMIME);
-	if (soap_begin_count(soap))
-		return soap->error;
-	if (soap->mode & SOAP_IO_LENGTH)
-	{	if (soap_envelope_begin_out(soap)
-		 || soap_putheader(soap)
-		 || soap_body_begin_out(soap)
-		 || soap_put_ns__sendMIME(soap, &soap_tmp_ns__sendMIME, "ns:sendMIME", "")
-		 || soap_body_end_out(soap)
-		 || soap_envelope_end_out(soap))
-			 return soap->error;
-	}
-	if (soap_end_count(soap))
-		return soap->error;
-	if (soap_connect(soap, soap_endpoint, soap_action)
-	 || soap_envelope_begin_out(soap)
-	 || soap_putheader(soap)
-	 || soap_body_begin_out(soap)
-	 || soap_put_ns__sendMIME(soap, &soap_tmp_ns__sendMIME, "ns:sendMIME", "")
-	 || soap_body_end_out(soap)
-	 || soap_envelope_end_out(soap)
-	 || soap_end_send(soap))
-		return soap_closesock(soap);
-	soap_default_int(soap, &result);
-	if (soap_begin_recv(soap)
-	 || soap_envelope_begin_in(soap)
-	 || soap_recv_header(soap)
-	 || soap_body_begin_in(soap))
-		return soap_closesock(soap);
-	soap_tmp_ns__sendMIMEResponse = soap_get_ns__sendMIMEResponse(soap, NULL, "ns:sendMIMEResponse", "");
-	if (soap->error)
-	{	if (soap->error == SOAP_TAG_MISMATCH && soap->level == 2)
-			return soap_recv_fault(soap);
-		return soap_closesock(soap);
-	}
-	if (soap_body_end_in(soap)
-	 || soap_envelope_end_in(soap)
-	 || soap_end_recv(soap))
-		return soap_closesock(soap);
-	result = soap_tmp_ns__sendMIMEResponse->result;
-	return soap_closesock(soap);
-}
-
 SOAP_FMAC5 int SOAP_FMAC6 soap_call_ns__openDocument(struct soap *soap, const char *soap_endpoint, const char *soap_action, char *fileName, int waitTimeMillisec, int &result)
 {	struct ns__openDocument soap_tmp_ns__openDocument;
 	struct ns__openDocumentResponse *soap_tmp_ns__openDocumentResponse;
@@ -325,23 +273,22 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call_ns__openDocument(struct soap *soap, const ch
 	return soap_closesock(soap);
 }
 
-SOAP_FMAC5 int SOAP_FMAC6 soap_call_ns__receiveEventsBase64(struct soap *soap, const char *soap_endpoint, const char *soap_action, int maxEventsReturned, struct ns__dynRegArray &result)
-{	struct ns__receiveEventsBase64 soap_tmp_ns__receiveEventsBase64;
-	struct ns__receiveEventsBase64Response *soap_tmp_ns__receiveEventsBase64Response;
+SOAP_FMAC5 int SOAP_FMAC6 soap_call_ns__returnEvents(struct soap *soap, const char *soap_endpoint, const char *soap_action, int maxEventsToReturn, struct ns__allEvents &result)
+{	struct ns__returnEvents soap_tmp_ns__returnEvents;
 	if (!soap_endpoint)
 		soap_endpoint = "http://192.168.0.131:1234";
 	soap->encodingStyle = "";
-	soap_tmp_ns__receiveEventsBase64.maxEventsReturned = maxEventsReturned;
+	soap_tmp_ns__returnEvents.maxEventsToReturn = maxEventsToReturn;
 	soap_begin(soap);
 	soap_serializeheader(soap);
-	soap_serialize_ns__receiveEventsBase64(soap, &soap_tmp_ns__receiveEventsBase64);
+	soap_serialize_ns__returnEvents(soap, &soap_tmp_ns__returnEvents);
 	if (soap_begin_count(soap))
 		return soap->error;
 	if (soap->mode & SOAP_IO_LENGTH)
 	{	if (soap_envelope_begin_out(soap)
 		 || soap_putheader(soap)
 		 || soap_body_begin_out(soap)
-		 || soap_put_ns__receiveEventsBase64(soap, &soap_tmp_ns__receiveEventsBase64, "ns:receiveEventsBase64", "")
+		 || soap_put_ns__returnEvents(soap, &soap_tmp_ns__returnEvents, "ns:returnEvents", "")
 		 || soap_body_end_out(soap)
 		 || soap_envelope_end_out(soap))
 			 return soap->error;
@@ -352,18 +299,18 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call_ns__receiveEventsBase64(struct soap *soap, c
 	 || soap_envelope_begin_out(soap)
 	 || soap_putheader(soap)
 	 || soap_body_begin_out(soap)
-	 || soap_put_ns__receiveEventsBase64(soap, &soap_tmp_ns__receiveEventsBase64, "ns:receiveEventsBase64", "")
+	 || soap_put_ns__returnEvents(soap, &soap_tmp_ns__returnEvents, "ns:returnEvents", "")
 	 || soap_body_end_out(soap)
 	 || soap_envelope_end_out(soap)
 	 || soap_end_send(soap))
 		return soap_closesock(soap);
-	soap_default_ns__dynRegArray(soap, &result);
+	soap_default_ns__allEvents(soap, &result);
 	if (soap_begin_recv(soap)
 	 || soap_envelope_begin_in(soap)
 	 || soap_recv_header(soap)
 	 || soap_body_begin_in(soap))
 		return soap_closesock(soap);
-	soap_tmp_ns__receiveEventsBase64Response = soap_get_ns__receiveEventsBase64Response(soap, NULL, "ns:receiveEventsBase64Response", "");
+	soap_get_ns__allEvents(soap, &result, "ns:allEvents", "");
 	if (soap->error)
 	{	if (soap->error == SOAP_TAG_MISMATCH && soap->level == 2)
 			return soap_recv_fault(soap);
@@ -373,7 +320,58 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call_ns__receiveEventsBase64(struct soap *soap, c
 	 || soap_envelope_end_in(soap)
 	 || soap_end_recv(soap))
 		return soap_closesock(soap);
-	result = soap_tmp_ns__receiveEventsBase64Response->result;
+	return soap_closesock(soap);
+}
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_call_ns__sendMIME(struct soap *soap, const char *soap_endpoint, const char *soap_action, int magicNumber, int &result)
+{	struct ns__sendMIME soap_tmp_ns__sendMIME;
+	struct ns__sendMIMEResponse *soap_tmp_ns__sendMIMEResponse;
+	if (!soap_endpoint)
+		soap_endpoint = "http://192.168.0.131:1234";
+	soap->encodingStyle = "";
+	soap_tmp_ns__sendMIME.magicNumber = magicNumber;
+	soap_begin(soap);
+	soap_serializeheader(soap);
+	soap_serialize_ns__sendMIME(soap, &soap_tmp_ns__sendMIME);
+	if (soap_begin_count(soap))
+		return soap->error;
+	if (soap->mode & SOAP_IO_LENGTH)
+	{	if (soap_envelope_begin_out(soap)
+		 || soap_putheader(soap)
+		 || soap_body_begin_out(soap)
+		 || soap_put_ns__sendMIME(soap, &soap_tmp_ns__sendMIME, "ns:sendMIME", "")
+		 || soap_body_end_out(soap)
+		 || soap_envelope_end_out(soap))
+			 return soap->error;
+	}
+	if (soap_end_count(soap))
+		return soap->error;
+	if (soap_connect(soap, soap_endpoint, soap_action)
+	 || soap_envelope_begin_out(soap)
+	 || soap_putheader(soap)
+	 || soap_body_begin_out(soap)
+	 || soap_put_ns__sendMIME(soap, &soap_tmp_ns__sendMIME, "ns:sendMIME", "")
+	 || soap_body_end_out(soap)
+	 || soap_envelope_end_out(soap)
+	 || soap_end_send(soap))
+		return soap_closesock(soap);
+	soap_default_int(soap, &result);
+	if (soap_begin_recv(soap)
+	 || soap_envelope_begin_in(soap)
+	 || soap_recv_header(soap)
+	 || soap_body_begin_in(soap))
+		return soap_closesock(soap);
+	soap_tmp_ns__sendMIMEResponse = soap_get_ns__sendMIMEResponse(soap, NULL, "ns:sendMIMEResponse", "");
+	if (soap->error)
+	{	if (soap->error == SOAP_TAG_MISMATCH && soap->level == 2)
+			return soap_recv_fault(soap);
+		return soap_closesock(soap);
+	}
+	if (soap_body_end_in(soap)
+	 || soap_envelope_end_in(soap)
+	 || soap_end_recv(soap))
+		return soap_closesock(soap);
+	result = soap_tmp_ns__sendMIMEResponse->result;
 	return soap_closesock(soap);
 }
 

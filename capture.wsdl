@@ -67,6 +67,16 @@
     <element name="item" type="ns:regEvent" minOccurs="0" maxOccurs="unbounded" nillable="true"/>
    </sequence>
   </complexType>
+  <complexType name="dynFileArray">
+   <sequence>
+    <element name="item" type="ns:fileEvent" minOccurs="0" maxOccurs="unbounded" nillable="true"/>
+   </sequence>
+  </complexType>
+  <complexType name="dynProcArray">
+   <sequence>
+    <element name="item" type="ns:procEvent" minOccurs="0" maxOccurs="unbounded" nillable="true"/>
+   </sequence>
+  </complexType>
   <complexType name="s1">
    <sequence>
      <element name="data" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
@@ -115,14 +125,6 @@
  <part name="decodedLength" type="xsd:unsignedInt"/>
 </message>
 
-<message name="sendMIMERequest">
- <part name="magicNumber" type="xsd:int"/>
-</message>
-
-<message name="sendMIMEResponse">
- <part name="result" type="xsd:int"/>
-</message>
-
 <message name="openDocumentRequest">
  <part name="fileName" type="xsd:string"/>
  <part name="waitTimeMillisec" type="xsd:int"/>
@@ -132,12 +134,22 @@
  <part name="result" type="xsd:int"/>
 </message>
 
-<message name="receiveEventsBase64Request">
- <part name="maxEventsReturned" type="xsd:int"/>
+<message name="returnEvents">
+ <part name="maxEventsToReturn" type="xsd:int"/>
 </message>
 
-<message name="receiveEventsBase64Response">
- <part name="result" type="ns:dynRegArray"/>
+<message name="allEvents">
+ <part name="regEvents" type="ns:dynRegArray"/>
+ <part name="fileEvents" type="ns:dynFileArray"/>
+ <part name="procEvents" type="ns:dynProcArray"/>
+</message>
+
+<message name="sendMIMERequest">
+ <part name="magicNumber" type="xsd:int"/>
+</message>
+
+<message name="sendMIMEResponse">
+ <part name="result" type="xsd:int"/>
 </message>
 
 <portType name="capturePortType">
@@ -161,20 +173,20 @@
   <input message="tns:receiveFileBase64"/>
   <output message="tns:s1"/>
  </operation>
- <operation name="sendMIME">
-  <documentation>Service definition of function ns__sendMIME</documentation>
-  <input message="tns:sendMIMERequest"/>
-  <output message="tns:sendMIMEResponse"/>
- </operation>
  <operation name="openDocument">
   <documentation>Service definition of function ns__openDocument</documentation>
   <input message="tns:openDocumentRequest"/>
   <output message="tns:openDocumentResponse"/>
  </operation>
- <operation name="receiveEventsBase64">
-  <documentation>Service definition of function ns__receiveEventsBase64</documentation>
-  <input message="tns:receiveEventsBase64Request"/>
-  <output message="tns:receiveEventsBase64Response"/>
+ <operation name="returnEvents">
+  <documentation>Service definition of function ns__returnEvents</documentation>
+  <input message="tns:returnEvents"/>
+  <output message="tns:allEvents"/>
+ </operation>
+ <operation name="sendMIME">
+  <documentation>Service definition of function ns__sendMIME</documentation>
+  <input message="tns:sendMIMERequest"/>
+  <output message="tns:sendMIMEResponse"/>
  </operation>
 </portType>
 
@@ -216,15 +228,6 @@
      <SOAP:body use="encoded" namespace="capture" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
   </output>
  </operation>
- <operation name="sendMIME">
-  <SOAP:operation style="rpc" soapAction=""/>
-  <input>
-     <SOAP:body use="encoded" namespace="capture" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
-  </input>
-  <output>
-     <SOAP:body use="encoded" namespace="capture" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
-  </output>
- </operation>
  <operation name="openDocument">
   <SOAP:operation style="rpc" soapAction=""/>
   <input>
@@ -234,7 +237,16 @@
      <SOAP:body use="encoded" namespace="capture" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
   </output>
  </operation>
- <operation name="receiveEventsBase64">
+ <operation name="returnEvents">
+  <SOAP:operation style="rpc" soapAction=""/>
+  <input>
+     <SOAP:body use="encoded" namespace="capture" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+  </input>
+  <output>
+     <SOAP:body use="encoded" namespace="capture" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+  </output>
+ </operation>
+ <operation name="sendMIME">
   <SOAP:operation style="rpc" soapAction=""/>
   <input>
      <SOAP:body use="encoded" namespace="capture" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
