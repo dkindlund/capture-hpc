@@ -13,9 +13,9 @@
 //that I didn't want to deal with
 struct soap soap;
 
-	std::queue<struct ns__regEvent> regQ;
-	std::queue<struct ns__fileEvent> fileQ;
-	std::queue<struct ns__procEvent> procQ;
+std::vector<struct ns__regEvent> regVec;
+std::list<struct ns__fileEvent> fileList;
+std::list<struct ns__procEvent> procList;
 
 
 CaptureSoapServer::CaptureSoapServer(Visitor* v, RegistryMonitor * r, FileMonitor * f, ProcessMonitor * p){
@@ -115,8 +115,8 @@ void CaptureSoapServer::onRegistryEvent (wstring registryEventType, wstring time
 	r.valueData = (char *)malloc(extra.at(3).length()+1);
 	sprintf(r.valueData, "%ls", extra.at(3).c_str());
 
-	regQ.push(r);
-	printf("added one event to regQ. Now there are %d elements in the queue\n", regQ.size());
+	regVec.push_back(r);
+	printf("added one event to regVec. Now there are %d elements in the list\n", regVec.size());
 }
 
 //From FileMonitor.cpp
@@ -332,22 +332,24 @@ int ns__openDocument(struct soap *soap, char * fileName, int waitTimeMillisec, i
 
 //If maxEventsReturned == -1, then then send as many as possible.
 //If there are no events to send back, it will send back <eventType>No Events</eventType>
-int ns__receiveEventsBase64(struct soap *soap, int maxEventsReturned, struct ns__regEvent &result){
-	
-	if(regQ.empty()){
+int ns__receiveEventsBase64(struct soap *soap, int maxEventsReturned, struct ns__dynRegArray &result){
+	struct ns__dynRegArray dynArray;
+	dynArray.__ptr = NULL;
+	dynArray.__size = 0;
+
+	if(regVec.empty()){
 		printf("No events to send back\n");
-		struct ns__regEvent t;
-		memset(&t, 0, sizeof(struct ns__regEvent));
-		//The soap will not try to serialize all the char * = 0 from the memset, but it will send back 
-		//<ns:regEvent><procPID>0</procPID></ns:regEvent>
-		//so parse that to mean there are no results
-		t.eventType = "No Events";
-		result = t;
+		result = dynArray;
 	}
 	else{
-		printf("Sending back the first event\n");
-		result = regQ.front();
-		regQ.pop();
+		dynArray.__size = regVec.size(); //don't want to call the size function more times than we have to
+		printf("Sending back %d events\n", (maxEventsReturned < dynArray.__size) ? maxEventsReturned : dynArray.__size);
+		struct ns__regEvent * ptr = (struct ns__regEvent *)soap_malloc(soap, dynArray.__size*sizeof(struct ns__regEvent));
+		dynArray.__ptr = ptr;
+		for(unsigned int i = 0; i < dynArray.__size; i++){
+			ptr[i] = regVec.at(i);
+		}
+		result = dynArray;
 	}
 
 	return SOAP_OK;

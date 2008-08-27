@@ -6,7 +6,7 @@
 */
 #include "soapH.h"
 
-SOAP_SOURCE_STAMP("@(#) soapServer.cpp ver 2.7.10 2008-08-26 03:24:29 GMT")
+SOAP_SOURCE_STAMP("@(#) soapServer.cpp ver 2.7.10 2008-08-27 02:17:09 GMT")
 
 
 SOAP_FMAC5 int SOAP_FMAC6 soap_serve(struct soap *soap)
@@ -345,8 +345,8 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_serve_ns__openDocument(struct soap *soap)
 
 SOAP_FMAC5 int SOAP_FMAC6 soap_serve_ns__receiveEventsBase64(struct soap *soap)
 {	struct ns__receiveEventsBase64 soap_tmp_ns__receiveEventsBase64;
-	struct ns__regEvent result;
-	soap_default_ns__regEvent(soap, &result);
+	struct ns__receiveEventsBase64Response soap_tmp_ns__receiveEventsBase64Response;
+	soap_default_ns__receiveEventsBase64Response(soap, &soap_tmp_ns__receiveEventsBase64Response);
 	soap_default_ns__receiveEventsBase64(soap, &soap_tmp_ns__receiveEventsBase64);
 	soap->encodingStyle = "";
 	if (!soap_get_ns__receiveEventsBase64(soap, &soap_tmp_ns__receiveEventsBase64, "ns:receiveEventsBase64", NULL))
@@ -355,18 +355,18 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_serve_ns__receiveEventsBase64(struct soap *soap)
 	 || soap_envelope_end_in(soap)
 	 || soap_end_recv(soap))
 		return soap->error;
-	soap->error = ns__receiveEventsBase64(soap, soap_tmp_ns__receiveEventsBase64.maxEventsReturned, result);
+	soap->error = ns__receiveEventsBase64(soap, soap_tmp_ns__receiveEventsBase64.maxEventsReturned, soap_tmp_ns__receiveEventsBase64Response.result);
 	if (soap->error)
 		return soap->error;
 	soap_serializeheader(soap);
-	soap_serialize_ns__regEvent(soap, &result);
+	soap_serialize_ns__receiveEventsBase64Response(soap, &soap_tmp_ns__receiveEventsBase64Response);
 	if (soap_begin_count(soap))
 		return soap->error;
 	if (soap->mode & SOAP_IO_LENGTH)
 	{	if (soap_envelope_begin_out(soap)
 		 || soap_putheader(soap)
 		 || soap_body_begin_out(soap)
-		 || soap_put_ns__regEvent(soap, &result, "ns:regEvent", "")
+		 || soap_put_ns__receiveEventsBase64Response(soap, &soap_tmp_ns__receiveEventsBase64Response, "ns:receiveEventsBase64Response", "")
 		 || soap_body_end_out(soap)
 		 || soap_envelope_end_out(soap))
 			 return soap->error;
@@ -376,7 +376,7 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_serve_ns__receiveEventsBase64(struct soap *soap)
 	 || soap_envelope_begin_out(soap)
 	 || soap_putheader(soap)
 	 || soap_body_begin_out(soap)
-	 || soap_put_ns__regEvent(soap, &result, "ns:regEvent", "")
+	 || soap_put_ns__receiveEventsBase64Response(soap, &soap_tmp_ns__receiveEventsBase64Response, "ns:receiveEventsBase64Response", "")
 	 || soap_body_end_out(soap)
 	 || soap_envelope_end_out(soap)
 	 || soap_end_send(soap))

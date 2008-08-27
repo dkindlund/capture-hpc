@@ -25,23 +25,23 @@
   elementFormDefault="unqualified"
   attributeFormDefault="unqualified">
   <import namespace="http://schemas.xmlsoap.org/soap/encoding/"/>
-  <complexType name="procEvent-t">
-   <complexContent>
-    <restriction base="ns:procEvent">
-    </restriction>
-   </complexContent>
-  </complexType>
   <complexType name="receiveFileStruct">
    <complexContent>
     <restriction base="ns:s1">
     </restriction>
    </complexContent>
   </complexType>
-  <complexType name="receiveEventsStruct">
-   <complexContent>
-    <restriction base="ns:s2">
-    </restriction>
-   </complexContent>
+  <complexType name="regEvent">
+   <sequence>
+     <element name="time" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="eventType" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="procPID" type="xsd:int" minOccurs="1" maxOccurs="1"/>
+     <element name="procName" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="keyName" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="valueName" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="valueType" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="valueData" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+   </sequence>
   </complexType>
   <complexType name="fileEvent">
    <sequence>
@@ -62,20 +62,16 @@
      <element name="procName" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
    </sequence>
   </complexType>
+  <complexType name="dynRegArray">
+   <sequence>
+    <element name="item" type="ns:regEvent" minOccurs="0" maxOccurs="unbounded" nillable="true"/>
+   </sequence>
+  </complexType>
   <complexType name="s1">
    <sequence>
      <element name="data" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
      <element name="encodedLength" type="xsd:unsignedInt" minOccurs="1" maxOccurs="1"/>
      <element name="decodedLength" type="xsd:unsignedInt" minOccurs="1" maxOccurs="1"/>
-   </sequence>
-  </complexType>
-  <complexType name="s2">
-   <sequence>
-     <element name="data" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
-     <element name="interEventDelimiter" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
-     <element name="intraEventDelimiter" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
-     <element name="numEvents" type="xsd:unsignedInt" minOccurs="1" maxOccurs="1"/>
-     <element name="moreEvents" type="xsd:byte" minOccurs="1" maxOccurs="1"/>
    </sequence>
   </complexType>
  </schema>
@@ -136,19 +132,12 @@
  <part name="result" type="xsd:int"/>
 </message>
 
-<message name="receiveEventsBase64">
+<message name="receiveEventsBase64Request">
  <part name="maxEventsReturned" type="xsd:int"/>
 </message>
 
-<message name="regEvent">
- <part name="time" type="xsd:string"/>
- <part name="eventType" type="xsd:string"/>
- <part name="procPID" type="xsd:int"/>
- <part name="procName" type="xsd:string"/>
- <part name="keyName" type="xsd:string"/>
- <part name="valueName" type="xsd:string"/>
- <part name="valueType" type="xsd:string"/>
- <part name="valueData" type="xsd:string"/>
+<message name="receiveEventsBase64Response">
+ <part name="result" type="ns:dynRegArray"/>
 </message>
 
 <portType name="capturePortType">
@@ -184,8 +173,8 @@
  </operation>
  <operation name="receiveEventsBase64">
   <documentation>Service definition of function ns__receiveEventsBase64</documentation>
-  <input message="tns:receiveEventsBase64"/>
-  <output message="tns:regEvent"/>
+  <input message="tns:receiveEventsBase64Request"/>
+  <output message="tns:receiveEventsBase64Response"/>
  </operation>
 </portType>
 

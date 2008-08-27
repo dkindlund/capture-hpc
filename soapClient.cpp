@@ -6,7 +6,7 @@
 */
 #include "soapH.h"
 
-SOAP_SOURCE_STAMP("@(#) soapClient.cpp ver 2.7.10 2008-08-26 03:24:29 GMT")
+SOAP_SOURCE_STAMP("@(#) soapClient.cpp ver 2.7.10 2008-08-27 02:17:09 GMT")
 
 
 SOAP_FMAC5 int SOAP_FMAC6 soap_call_ns__ping(struct soap *soap, const char *soap_endpoint, const char *soap_action, char *a, char **result)
@@ -325,8 +325,9 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call_ns__openDocument(struct soap *soap, const ch
 	return soap_closesock(soap);
 }
 
-SOAP_FMAC5 int SOAP_FMAC6 soap_call_ns__receiveEventsBase64(struct soap *soap, const char *soap_endpoint, const char *soap_action, int maxEventsReturned, struct ns__regEvent &result)
+SOAP_FMAC5 int SOAP_FMAC6 soap_call_ns__receiveEventsBase64(struct soap *soap, const char *soap_endpoint, const char *soap_action, int maxEventsReturned, struct ns__dynRegArray &result)
 {	struct ns__receiveEventsBase64 soap_tmp_ns__receiveEventsBase64;
+	struct ns__receiveEventsBase64Response *soap_tmp_ns__receiveEventsBase64Response;
 	if (!soap_endpoint)
 		soap_endpoint = "http://192.168.0.131:1234";
 	soap->encodingStyle = "";
@@ -356,13 +357,13 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call_ns__receiveEventsBase64(struct soap *soap, c
 	 || soap_envelope_end_out(soap)
 	 || soap_end_send(soap))
 		return soap_closesock(soap);
-	soap_default_ns__regEvent(soap, &result);
+	soap_default_ns__dynRegArray(soap, &result);
 	if (soap_begin_recv(soap)
 	 || soap_envelope_begin_in(soap)
 	 || soap_recv_header(soap)
 	 || soap_body_begin_in(soap))
 		return soap_closesock(soap);
-	soap_get_ns__regEvent(soap, &result, "ns:regEvent", "");
+	soap_tmp_ns__receiveEventsBase64Response = soap_get_ns__receiveEventsBase64Response(soap, NULL, "ns:receiveEventsBase64Response", "");
 	if (soap->error)
 	{	if (soap->error == SOAP_TAG_MISMATCH && soap->level == 2)
 			return soap_recv_fault(soap);
@@ -372,6 +373,7 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call_ns__receiveEventsBase64(struct soap *soap, c
 	 || soap_envelope_end_in(soap)
 	 || soap_end_recv(soap))
 		return soap_closesock(soap);
+	result = soap_tmp_ns__receiveEventsBase64Response->result;
 	return soap_closesock(soap);
 }
 

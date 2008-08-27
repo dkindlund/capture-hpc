@@ -32,15 +32,20 @@ struct ns__fileEvent{
 	char *	fileName;
 };
 
-typedef struct ns__procEvent{
+struct ns__procEvent{
 	char *	time;
 	char *	eventType;
 	int		parentPID;
 	char *	parentName;
 	int		procPID;
 	char *	procName;
-}ns__procEvent_t;
+};
 
+
+struct ns__dynRegArray{
+	struct ns__regEvent * __ptr;
+	int	__size;	//number of elements
+};
 
 typedef struct s1{
 	char * data;
@@ -49,6 +54,7 @@ typedef struct s1{
 } ns__receiveFileStruct;
 
 
+/*
 //TODO: restructure this
 typedef struct s2{
 	char * data;
@@ -58,6 +64,7 @@ typedef struct s2{
 	char moreEvents;	//1 if there is more data which can be sent to the Manager after this, 0 otherwise
 						//It is the Manager's responsibility to request the additional data.
 } ns__receiveEventsStruct;
+*/
 
 
 int ns__ping(char * a, char ** result);
@@ -67,5 +74,5 @@ int ns__receiveFileBase64(char * fileName, ns__receiveFileStruct &result);
 int ns__sendMIME(int magicNumber, int &result);
 int ns__openDocument(char * fileName, int waitTimeMillisec, int &result);
 //int ns__receiveEventsBase64(int maxEventsReturned, ns__receiveEventsStruct &result);
-int ns__receiveEventsBase64(int maxEventsReturned, struct ns__regEvent &result);
+int ns__receiveEventsBase64(int maxEventsReturned, struct ns__dynRegArray &result);
 
