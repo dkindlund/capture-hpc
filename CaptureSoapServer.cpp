@@ -333,41 +333,41 @@ int ns__openDocument(struct soap *soap, char * fileName, int waitTimeMillisec, i
 //If maxEventsReturned == -1, then then send as many as possible.
 //TODO: Make SOAP::Lite understand unsigned int type, so that this (and other) ints can be set as such
 int ns__returnEvents(struct soap *soap, int maxEventsToReturn, struct ns__allEvents &result){
-	struct ns__allEvents all;
-	all.fileEvents = NULL;
-	all.procEvents = NULL;
-	all.regEvents = NULL;
+	struct ns__allEvents * all = soap_new_ns__allEvents(soap, 1);
+	all->regEvents = NULL;
+	all->fileEvents = NULL;
+	all->procEvents = NULL;
 
+	struct ns__dynRegArray * dRegArray;
 	if(regList.empty() || maxEventsToReturn == 0){
 		printf("No registry events to send back\n");
 	}
 	else{
 		//Set up a dynamic array for each of the event types
-		struct ns__dynRegArray dRegArray;
-		dRegArray.__ptr = NULL;
-		dRegArray.__size = regList.size();
-		all.regEvents = &dRegArray;
+		dRegArray = soap_new_ns__dynRegArray(soap,1);
+		dRegArray->__ptr = NULL;
+		dRegArray->__size = regList.size();
+		all->regEvents = dRegArray;
 
-		printf("dRegArray.__size = %d, maxEventsToReturn = %d\n", dRegArray.__size, maxEventsToReturn);
+		printf("dRegArray->__size = %d, maxEventsToReturn = %d\n", dRegArray->__size, maxEventsToReturn);
 
 		//Figure out how many entries we will send back
-		if(maxEventsToReturn == -1 || maxEventsToReturn > dRegArray.__size){
-			dRegArray.__size = regList.size();
+		if(maxEventsToReturn == -1 || maxEventsToReturn > dRegArray->__size){
+			dRegArray->__size = regList.size();
 		}
 		else{
-			dRegArray.__size = maxEventsToReturn;
+			dRegArray->__size = maxEventsToReturn;
 		}
 
-		printf("Sending back %d registy events\n",dRegArray.__size);
+		printf("Sending back %d registy events\n",dRegArray->__size);
 
 		//don't want to call the size function more times than we have to
-		struct ns__regEvent * ns__regEventArray = (struct ns__regEvent *)soap_malloc(soap, dRegArray.__size*sizeof(struct ns__regEvent));
+		struct ns__regEvent * ns__regEventArray = (struct ns__regEvent *)soap_malloc(soap, dRegArray->__size*sizeof(struct ns__regEvent));
 
-		dRegArray.__ptr = ns__regEventArray;
+		dRegArray->__ptr = ns__regEventArray;
 
 		int * b = (int *) ns__regEventArray;
-		for(unsigned int i = 0; i < dRegArray.__size; i++){
-//			ns__regEventArray[i] = regList.pop_front();
+		for(unsigned int i = 0; i < dRegArray->__size; i++){
 			printf("i = %d\n", i);
 			printf("regList.front().time %s, %#x\n", regList.front().time, regList.front().time);
 			printf("regList.front().eventType %s, %#x\n", regList.front().eventType, regList.front().eventType);
@@ -380,66 +380,70 @@ int ns__returnEvents(struct soap *soap, int maxEventsToReturn, struct ns__allEve
 		}
 	}
 
+	struct ns__dynFileArray * dFileArray;
 	if(fileList.empty() || maxEventsToReturn == 0){
 		printf("No file events to send back\n");
 	}
 	else{
-		struct ns__dynFileArray dFileArray;
-		dFileArray.__ptr = NULL;
-		dFileArray.__size = fileList.size();
-		all.fileEvents = &dFileArray;
+		dFileArray = soap_new_ns__dynFileArray(soap,1);
+		dFileArray->__ptr = NULL;
+		dFileArray->__size = fileList.size();
+		all->fileEvents = dFileArray;
 
 		//Figure out how many entries we will send back
-		if(maxEventsToReturn == -1 || maxEventsToReturn > dFileArray.__size){
-			dFileArray.__size = fileList.size();
+		if(maxEventsToReturn == -1 || maxEventsToReturn > dFileArray->__size){
+			dFileArray->__size = fileList.size();
 		}
 		else{
-			dFileArray.__size = maxEventsToReturn;
+			dFileArray->__size = maxEventsToReturn;
 		}
 
-		printf("Sending back %d file events\n",dFileArray.__size);
-		struct ns__fileEvent * ns__fileEventArray = (struct ns__fileEvent *)soap_malloc(soap, dFileArray.__size*sizeof(struct ns__fileEvent));
+		printf("Sending back %d file events\n",dFileArray->__size);
+		struct ns__fileEvent * ns__fileEventArray = (struct ns__fileEvent *)soap_malloc(soap, dFileArray->__size*sizeof(struct ns__fileEvent));
 
-		dFileArray.__ptr = ns__fileEventArray;
+		dFileArray->__ptr = ns__fileEventArray;
 
-		for(unsigned int i = 0; i < dFileArray.__size; i++){
-//			ns__fileEventArray[i] = fileList.pop_front();
+		for(unsigned int i = 0; i < dFileArray->__size; i++){
 			memcpy(&ns__fileEventArray[i],&fileList.front(), sizeof(struct ns__fileEvent));
 			regList.pop_front();
 		}
 	}
 
+	struct ns__dynProcArray * dProcArray;
 	if(procList.empty() || maxEventsToReturn == 0){
 		printf("No process events to send back\n");
 	}
 	else{
+		dProcArray = soap_new_ns__dynProcArray(soap,1);
+		dProcArray->__ptr = NULL;
+		dProcArray->__size = procList.size();
+		all->procEvents = dProcArray;
 
-		struct ns__dynProcArray dProcArray;
-		dProcArray.__ptr = NULL;
-		dProcArray.__size = procList.size();
-		all.procEvents = &dProcArray;
-
-		if(maxEventsToReturn == -1 || maxEventsToReturn > dProcArray.__size){
-			dProcArray.__size = regList.size();
+		if(maxEventsToReturn == -1 || maxEventsToReturn > dProcArray->__size){
+			dProcArray->__size = regList.size();
 		}
 		else{
-			dProcArray.__size = maxEventsToReturn;
+			dProcArray->__size = maxEventsToReturn;
 		}
 
-		printf("Sending back %d process events\n",dProcArray.__size);
+		printf("Sending back %d process events\n",dProcArray->__size);
 
-		struct ns__procEvent * ns__procEventArray = (struct ns__procEvent *)soap_malloc(soap, dProcArray.__size*sizeof(struct ns__procEvent));
-		dProcArray.__ptr = ns__procEventArray;
+		struct ns__procEvent * ns__procEventArray = (struct ns__procEvent *)soap_malloc(soap, dProcArray->__size*sizeof(struct ns__procEvent));
+		dProcArray->__ptr = ns__procEventArray;
 
-		for(unsigned int i = 0; i < dProcArray.__size; i++){
-//			ns__procEventArray[i] = procList.pop_front();
+		for(unsigned int i = 0; i < dProcArray->__size; i++){
 			memcpy(&ns__procEventArray[i],&procList.front(), sizeof(struct ns__procEvent));
 			regList.pop_front();
 		}
 	}
 
-	printf("all.regEvents = %#x, all.fileEvents = %#x, all.procEvents = %#x\n", all.regEvents, all.fileEvents, all.procEvents);
-	result = all;
+	result = *all;
+	printf("result = %#x, *all = %#x\n", result, *all);
+	printf("all = %#x, result.regEvents = %#x\n", all, result.regEvents);
+	printf("all->regEvents = %#x, all->fileEvents = %#x, all->procEvents = %#x\n", all->regEvents, all->fileEvents, all->procEvents);
+	printf("&dRegArray = %#x, dRegArray->__ptr = %#x\n",&dRegArray, dRegArray->__ptr);
+	printf("dRegArray->__ptr[0][1][2][3] = %#x %#x %#x %#x\n", dRegArray->__ptr[0], dRegArray->__ptr[1], dRegArray->__ptr[2], dRegArray->__ptr[3]);
+
 
 	return SOAP_OK;
 }
