@@ -12,6 +12,12 @@
 using namespace std;
 using namespace boost;
 
+//While we could put typedefs in the definition, they don't follow through to the auto-generated
+//soap files. Therefore you would have to include captureGSOAP.h, but that would cause double definitions
+typedef struct ns__regEvent ns__regEvent_t;
+typedef struct ns__fileEvent ns__fileEvent_t;
+typedef struct ns__procEvent ns__procEvent_t;
+
 class CaptureSoapServer : public Runnable
 {
 public:
@@ -19,10 +25,6 @@ public:
 	boost::signals::connection onRegistryEventConnection;
 	boost::signals::connection onFileEventConnection;
 	boost::signals::connection onProcessEventConnection;
-	typedef struct ns__regEvent ns__regEvent_t;
-	typedef struct ns__fileEvent ns__fileEvent_t;
-	typedef struct ns__procEvent ns__procEvent_t;
-
 
 	CaptureSoapServer(Visitor *, RegistryMonitor * r, FileMonitor * f, ProcessMonitor * p);
 	~CaptureSoapServer();
