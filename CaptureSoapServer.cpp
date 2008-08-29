@@ -206,7 +206,7 @@ int ns__ping(struct soap *soap, char * a, char ** result)
 }
 
 //Give it a url to browse to
-int ns__visitURL(struct soap *soap, char * url, struct ns__allEvents &result){
+int ns__visitURL(struct soap *soap, char * url, int &result){
 	char debug = 1;
 	wchar_t xURL[1024];
 	wsprintf(xURL, L"%hs", url);
@@ -231,33 +231,9 @@ int ns__visitURL(struct soap *soap, char * url, struct ns__allEvents &result){
 	//was a blocking way, and might need to be brought back, both for the blocking, and for
 	//being able to get richer information back
 
-	//hack, becase of the above
-	Sleep(5000);
-	if(!regList.empty() || !fileList.empty() || !procList.empty()){
-		goto done;
-	}
-	Sleep(5000);
-	if(!regList.empty() || !fileList.empty() || !procList.empty()){
-		goto done;
-	}
-	Sleep(5000);
-	if(!regList.empty() || !fileList.empty() || !procList.empty()){
-		goto done;
-	}
-	Sleep(5000);
+	result = 1; //No meaning. Define some meaningful return values if desired
 
-done:
-	struct ns__allEvents * all = soap_new_ns__allEvents(soap, 1);
-	memset(all, 0, sizeof(struct ns__allEvents));
-
-	if(!regList.empty() || !fileList.empty() || !procList.empty()){
-		int ret = ns__returnEvents(soap, -1, *all);
-		if(debug) printf("all->regEvents = %#x, all->fileEvents = %#x, all->procEvents = %#x\n", all->regEvents, all->fileEvents, all->procEvents);
-		return ret;
-	}
-	else{
-		return SOAP_OK;
-	}
+	return SOAP_OK;
 }
 
 int ns__sendFileBase64(struct soap *soap, char * fileName, char * data, unsigned int encodedLength, unsigned int decodedLength, int &result){
@@ -430,7 +406,7 @@ int ns__openDocument(struct soap *soap, char * fileName, int waitTimeMillisec, i
 
 //If maxEventsReturned == -1, then then send as many as possible.
 int ns__returnEvents(struct soap *soap, int maxEventsToReturn, struct ns__allEvents &result){
-	char debug = 0;
+	char debug = 1;
 
 	struct ns__allEvents * all = soap_new_ns__allEvents(soap, 1);
 	all->regEvents = NULL;
@@ -468,7 +444,7 @@ int ns__returnEvents(struct soap *soap, int maxEventsToReturn, struct ns__allEve
 //				printf("regList.front().procName %s, %#x\n", regList.front().procName, regList.front().procName);
 				int * b = (int *)&regList.front();
 				for(int i = 0; i < 8; i++){
-					printf("b[%d] = %#x\n", i, b[i]);
+					printf("regEvent[%d] = %#x\n", i, b[i]);
 				}
 			}
 			memcpy(&ns__regEventArray[i],&regList.front(), sizeof(struct ns__regEvent));

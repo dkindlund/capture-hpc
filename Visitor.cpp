@@ -38,9 +38,7 @@ Visitor::run()
 {
 	while(true)
 	{
-		printf("Visitor::run, waiting\n");
 		WaitForSingleObject(hQueueNotEmpty, INFINITE);
-		printf("Visitor::run, runing\n");
 		VisitPair visit = toVisit.front();
 		toVisit.pop();
 		DWORD minorErrorCode = 0;

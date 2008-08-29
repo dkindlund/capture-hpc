@@ -96,14 +96,12 @@
  <part name="result" type="xsd:string"/>
 </message>
 
-<message name="visitURL">
+<message name="visitURLRequest">
  <part name="URL" type="xsd:string"/>
 </message>
 
-<message name="allEvents">
- <part name="regEvents" type="ns:dynRegArray"/>
- <part name="fileEvents" type="ns:dynFileArray"/>
- <part name="procEvents" type="ns:dynProcArray"/>
+<message name="visitURLResponse">
+ <part name="result" type="xsd:int"/>
 </message>
 
 <message name="sendFileBase64Request">
@@ -140,6 +138,12 @@
  <part name="maxEventsToReturn" type="xsd:int"/>
 </message>
 
+<message name="allEvents">
+ <part name="regEvents" type="ns:dynRegArray"/>
+ <part name="fileEvents" type="ns:dynFileArray"/>
+ <part name="procEvents" type="ns:dynProcArray"/>
+</message>
+
 <message name="sendMIMERequest">
  <part name="magicNumber" type="xsd:int"/>
 </message>
@@ -156,8 +160,8 @@
  </operation>
  <operation name="visitURL">
   <documentation>Service definition of function ns__visitURL</documentation>
-  <input message="tns:visitURL"/>
-  <output message="tns:allEvents"/>
+  <input message="tns:visitURLRequest"/>
+  <output message="tns:visitURLResponse"/>
  </operation>
  <operation name="sendFileBase64">
   <documentation>Service definition of function ns__sendFileBase64</documentation>

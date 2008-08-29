@@ -68,7 +68,6 @@ public:
 	DWORD start(char* name) {
 		DWORD threadID;
 		hThread = CreateThread(0, 0, threadProc, _threadObj, 0, &threadID);
-		printf("created threadID = %#x, giving it name %s\n", threadID, name);
 		setThreadName( threadID, name);
 		return threadID;
 	}

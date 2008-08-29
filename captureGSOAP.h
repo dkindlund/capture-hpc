@@ -71,7 +71,7 @@ typedef struct s1{
 } ns__receiveFileStruct;
 
 int ns__ping(char * a, char ** result);
-int ns__visitURL(char * URL, struct ns__allEvents &result);
+int ns__visitURL(char * URL, int &result);
 int ns__sendFileBase64(char * fileName, char * data, unsigned int encodedLength, unsigned int decodedLength, int &result);
 int ns__receiveFileBase64(char * fileName, ns__receiveFileStruct &result);
 int ns__openDocument(char * fileName, int waitTimeMillisec, int &result);
