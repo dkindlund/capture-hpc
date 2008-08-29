@@ -311,3 +311,8 @@
 +	DeleteValueKey	C:\\WINDOWS\\system32\\spoolsv\.exe	HKU\\.+\\Software\\Microsoft\\Windows NT\\CurrentVersion\\Windows
 +	SetValueKey	C:\\WINDOWS\\system32\\spoolsv\.exe	HKLM\\SYSTEM\\ControlSet001\\Control\\Print\\Printers
 +	SetValueKey	C:\\WINDOWS\\system32\\spoolsv\.exe	HKLM\\SYSTEM\\ControlSet001\\Control\\Print\\Providers
+
+#### HONEYCLIENT AUTO EXCLUDE SCRIPT
++	SetValueKey	C:\\Program Files\\Internet Explorer\\iexplore\.exe	HKCU\\Software\\Microsoft\\Internet Explorer\\Security\\AntiPhishing\\.+
++	SetValueKey	C:\\Program Files\\Internet Explorer\\iexplore\.exe	HKCU\\Software\\Microsoft\\CTF\\TIP\\.*\\LanguageProfile\\.+
++	SetValueKey	C:\\Program Files\\Internet Explorer\\iexplore\.exe	HKCU\\Software\\Microsoft\\Internet Explorer\\Zoom
