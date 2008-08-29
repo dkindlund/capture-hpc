@@ -14,9 +14,12 @@
 struct soap soap;
 
 std::list<struct ns__regEvent> regList;
+std::list<struct ns__regEvent> regDeallocList;
 std::list<struct ns__fileEvent> fileList;
+std::list<struct ns__fileEvent> fileDeallocList;
 std::list<struct ns__procEvent> procList;
-
+std::list<struct ns__procEvent> procDeallocList;
+void dealloc_events(); //For cleaning up when we're done with them
 
 CaptureSoapServer::CaptureSoapServer(Visitor* v, RegistryMonitor * r, FileMonitor * f, ProcessMonitor * p){
 	registryMonitor = r;
@@ -68,6 +71,7 @@ CaptureSoapServer::run(){
          if(debug) fprintf(stderr, "you got served!\n");
          soap_destroy(&soap); // clean up class instances
          soap_end(&soap); // clean up everything and close socket
+		 dealloc_events(); //Need to clean up any memory we malloced for events
       }
    }
    soap_done(&soap); // close master socket and detach environment
@@ -82,36 +86,42 @@ void CaptureSoapServer::onRegistryEvent (wstring registryEventType, wstring time
 										wstring processPath, wstring registryEventPath, 
 										vector<wstring> extra)
 {
+	char debug = 0;
 	printf("CaptureSoapServer::onRegistryEvent got an event for time = %ls, length = %d\n", time.c_str(), time.length());
 
 	//now begins the arduous process of converting the values into char *s
 	//TODO: use a soap function to make r
 	ns__regEvent_t r;
-	r.time = (char *)soap_malloc(&soap,time.length()+1);
+	r.time = (char *)malloc(time.length()+1);
 	sprintf(r.time, "%ls", time.c_str());
 
-	r.eventType = (char *)soap_malloc(&soap,registryEventType.length()+1);
+	r.eventType = (char *)malloc(registryEventType.length()+1);
 	sprintf(r.eventType, "%ls", registryEventType.c_str());
 
-	char * tmp = (char *)soap_malloc(&soap,extra.at(0).length()+1);
+	char * tmp = (char *)malloc(extra.at(0).length()+1);
 	sprintf(tmp, "%ls", extra.at(0).c_str());
 	r.procPID = atoi(tmp);
 	free(tmp);
 
-	r.procName = (char *)soap_malloc(&soap,processPath.length()+1);
+	r.procName = (char *)malloc(processPath.length()+1);
 	sprintf(r.procName, "%ls", processPath.c_str());
 
-	r.keyName = (char *)soap_malloc(&soap,registryEventPath.length()+1);
+	r.keyName = (char *)malloc(registryEventPath.length()+1);
 	sprintf(r.keyName, "%ls", registryEventPath.c_str());
 
-	r.valueName = (char *)soap_malloc(&soap,extra.at(1).length()+1);
+	r.valueName = (char *)malloc(extra.at(1).length()+1);
 	sprintf(r.valueName, "%ls", extra.at(1).c_str());
 
-	r.valueType = (char *)soap_malloc(&soap,extra.at(2).length()+1);
+	r.valueType = (char *)malloc(extra.at(2).length()+1);
 	sprintf(r.valueType, "%ls", extra.at(2).c_str());
 
-	r.valueData = (char *)soap_malloc(&soap,extra.at(3).length()+1);
+	r.valueData = (char *)malloc(extra.at(3).length()+1);
 	sprintf(r.valueData, "%ls", extra.at(3).c_str());
+	
+	int * b = (int *)&r;
+	for(int i = 0; i < 8; i++){
+		printf("r[%d] = %#x\n", i, b[i]);
+	}
 
 	regList.push_back(r);
 	printf("added one event to regList. Now there are %d elements in the list\n", regList.size());
@@ -123,12 +133,13 @@ void CaptureSoapServer::onFileEvent(wstring fileEventType, wstring time,
 									wstring processPath, wstring fileEventPath, 
 									vector<wstring> extra)
 {
+	char debug = 0;
 	printf("CaptureSoapServer::onFileEvent got an event for time = %ls\n", time.c_str());
 	ns__fileEvent_t f;
-	f.time = (char *)soap_malloc(&soap,time.length()+1);
+	f.time = (char *)malloc(time.length()+1);
 	sprintf(f.time, "%ls", time.c_str());
 
-	f.eventType = (char *)soap_malloc(&soap,fileEventType.length()+1);
+	f.eventType = (char *)malloc(fileEventType.length()+1);
 	sprintf(f.eventType, "%ls", fileEventType.c_str());
 
 	char * tmp = (char *)malloc(extra.at(0).length()+1);
@@ -136,15 +147,20 @@ void CaptureSoapServer::onFileEvent(wstring fileEventType, wstring time,
 	f.procPID = atoi(tmp);
 	free(tmp);
 
-	f.procName = (char *)soap_malloc(&soap,processPath.length()+1);
+	f.procName = (char *)malloc(processPath.length()+1);
 	sprintf(f.procName, "%ls", processPath.c_str());
 
-	f.fileName = (char *)soap_malloc(&soap,fileEventPath.length()+1);
+	f.fileName = (char *)malloc(fileEventPath.length()+1);
 	sprintf(f.fileName, "%ls", fileEventPath.c_str());
 
+	if(debug){
+		int * b = (int *)&f;
+		for(int i = 0; i < 5; i++){
+			printf("f[%d] = %#x\n", i, b[i]);
+		}
+	}
 	fileList.push_back(f);
 	printf("added one event to fileList. Now there are %d elements in the list\n", fileList.size());
-
 
 }
 
@@ -154,10 +170,10 @@ void CaptureSoapServer::onProcessEvent(BOOLEAN created, wstring time,
 {
 	printf("CaptureSoapServer::onProcessEvent got an event for time = %ls\n", time.c_str());
 	ns__procEvent_t p;
-	p.time = (char *)soap_malloc(&soap,time.length()+1);
+	p.time = (char *)malloc(time.length()+1);
 	sprintf(p.time, "%ls", time.c_str());
 
-	p.eventType = (char *)soap_malloc(&soap,11); //11 == max length == "terminated"
+	p.eventType = (char *)malloc(11); //11 == max length == "terminated"
 	if(created){
 		sprintf(p.eventType, "created");
 	}
@@ -167,12 +183,12 @@ void CaptureSoapServer::onProcessEvent(BOOLEAN created, wstring time,
 
 	p.parentPID = parentProcessId;
 
-	p.parentName = (char *)soap_malloc(&soap,parentProcess.length()+1);
+	p.parentName = (char *)malloc(parentProcess.length()+1);
 	sprintf(p.parentName, "%ls", parentProcess.c_str());
 
 	p.procPID = processId;
 
-	p.procName = (char *)soap_malloc(&soap,process.length()+1);
+	p.procName = (char *)malloc(process.length()+1);
 	sprintf(p.procName, "%ls", process.c_str());
 
 	procList.push_back(p);
@@ -377,7 +393,7 @@ int ns__openDocument(struct soap *soap, char * fileName, int waitTimeMillisec, i
 
 //If maxEventsReturned == -1, then then send as many as possible.
 int ns__returnEvents(struct soap *soap, int maxEventsToReturn, struct ns__allEvents &result){
-	char debug = 0;
+	char debug = 1;
 
 	struct ns__allEvents * all = soap_new_ns__allEvents(soap, 1);
 	all->regEvents = NULL;
@@ -407,15 +423,20 @@ int ns__returnEvents(struct soap *soap, int maxEventsToReturn, struct ns__allEve
 		dRegArray->__ptr = ns__regEventArray;
 
 		for(unsigned int i = 0; i < dRegArray->__size; i++){
-			memcpy(&ns__regEventArray[i],&regList.front(), sizeof(struct ns__regEvent));
-			regList.pop_front();
 			if(debug){
-			printf("i = %d\n", i);
-			printf("regList.front().time %s, %#x\n", regList.front().time, regList.front().time);
-			printf("regList.front().eventType %s, %#x\n", regList.front().eventType, regList.front().eventType);
-			printf("regList.front().procPID %d, %#x\n", regList.front().procPID, regList.front().procPID);
-			printf("regList.front().procName %s, %#x\n", regList.front().procName, regList.front().procName);
+				printf("i = %d\n", i);
+//				printf("regList.front().time %s, %#x\n", regList.front().time, regList.front().time);
+//				printf("regList.front().eventType %s, %#x\n", regList.front().eventType, regList.front().eventType);
+//				printf("regList.front().procPID %d, %#x\n", regList.front().procPID, regList.front().procPID);
+//				printf("regList.front().procName %s, %#x\n", regList.front().procName, regList.front().procName);
+				int * b = (int *)&regList.front();
+				for(int i = 0; i < 8; i++){
+					printf("r[%d] = %#x\n", i, b[i]);
+				}
 			}
+			memcpy(&ns__regEventArray[i],&regList.front(), sizeof(struct ns__regEvent));
+			regDeallocList.push_back(regList.front()); //Need to keep track of it to dealloc its elements later
+			regList.pop_front();
 		}
 	}
 
@@ -440,6 +461,7 @@ int ns__returnEvents(struct soap *soap, int maxEventsToReturn, struct ns__allEve
 
 		for(unsigned int i = 0; i < dFileArray->__size; i++){
 			memcpy(&ns__fileEventArray[i],&fileList.front(), sizeof(struct ns__fileEvent));
+			fileDeallocList.push_back(fileList.front());
 			fileList.pop_front();
 		}
 	}
@@ -464,21 +486,57 @@ int ns__returnEvents(struct soap *soap, int maxEventsToReturn, struct ns__allEve
 
 		for(unsigned int i = 0; i < dProcArray->__size; i++){
 			memcpy(&ns__procEventArray[i],&procList.front(), sizeof(struct ns__procEvent));
+			procDeallocList.push_back(procList.front());
 			procList.pop_front();
 		}
 	}
 
 	result = *all;
-	printf("result = %#x, *all = %#x\n", result, *all);
-	printf("all = %#x, result.regEvents = %#x\n", all, result.regEvents);
 	printf("all->regEvents = %#x, all->fileEvents = %#x, all->procEvents = %#x\n", all->regEvents, all->fileEvents, all->procEvents);
-	printf("&dRegArray = %#x, dRegArray->__ptr = %#x\n",&dRegArray, dRegArray->__ptr);
-	printf("dRegArray->__ptr[0][1][2][3] = %#x %#x %#x %#x\n", dRegArray->__ptr[0], dRegArray->__ptr[1], dRegArray->__ptr[2], dRegArray->__ptr[3]);
-
+//	printf("&dRegArray = %#x, dRegArray->__ptr = %#x\n",&dRegArray, dRegArray->__ptr);
+//	printf("dRegArray->__ptr[0][1][2][3] = %#x %#x %#x %#x\n", dRegArray->__ptr[0], dRegArray->__ptr[1], dRegArray->__ptr[2], dRegArray->__ptr[3]);
+	printf("regList.size() = %d, fileList.size() = %d, procList.size() = %d\n", regList.size(), fileList.size(), procList.size());
 
 	return SOAP_OK;
 }
 
+//Helper function to deallocate any memory in events which have already had their data sent via SOAP
+void dealloc_events(){
+
+	if(!regDeallocList.empty()){
+		for(int i = 0; i < regDeallocList.size(); i++){
+			free(regDeallocList.front().time);
+			free(regDeallocList.front().eventType);
+			free(regDeallocList.front().procName);
+			free(regDeallocList.front().keyName);
+			free(regDeallocList.front().valueName);
+			free(regDeallocList.front().valueType);
+			free(regDeallocList.front().valueData);
+			regDeallocList.pop_front();
+		}
+	}
+
+	if(!fileDeallocList.empty()){
+		for(int i = 0; i < fileDeallocList.size(); i++){
+			free(fileDeallocList.front().time);
+			free(fileDeallocList.front().eventType);
+			free(fileDeallocList.front().procName);
+			free(fileDeallocList.front().fileName);
+			fileDeallocList.pop_front();
+		}
+	}
+
+	if(!procDeallocList.empty()){
+		for(int i = 0; i < procDeallocList.size(); i++){
+			free(procDeallocList.front().time);
+			free(procDeallocList.front().eventType);
+			free(procDeallocList.front().parentName);
+			free(procDeallocList.front().procName);
+			procDeallocList.pop_front();
+		}
+	}
+
+}
 
 //Thus far, SOAP::Lite hasn't been sending the data correctly, so we never get into this function.
 //Removing the "This is a multipart message in MIME format..." from MIME::Entity's Entity.pm at least gets 

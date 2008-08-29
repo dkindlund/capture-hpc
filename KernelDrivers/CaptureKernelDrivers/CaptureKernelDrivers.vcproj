@@ -28,7 +28,7 @@
 				CleanCommandLine=""
 				Output="CaptureKernelDrivers.exe"
 				PreprocessorDefinitions="WIN32;_DEBUG"
-				IncludeSearchPath="D:\WinDDK\6000\inc\ddk;D:\WinDDK\6000\inc\api"
+				IncludeSearchPath="F:\WinDDK\6000\inc\ddk;F:\WinDDK\6000\inc\api;F:\capture-mod\ddkbuild_v70b7;F:\Program Files\Microsoft Visual Studio 8\VC\bin;F:\capture-mod\NSIS;F:\capture-mod\expatpp\src_pp;F:\capture-mod\expatpp\expat\lib;F:\Program Files\Microsoft Visual Studio 8\VC\INCLUDE;"
 				ForcedIncludes=""
 				AssemblySearchPath=""
 				ForcedUsingAssemblies=""
