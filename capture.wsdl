@@ -256,7 +256,7 @@
 <service name="capture">
  <documentation>gSOAP 2.7.10 generated service definition</documentation>
  <port name="capture" binding="tns:capture">
-  <SOAP:address location="http://192.168.0.131:1234"/>
+  <SOAP:address location="http://0.0.0.0:1234"/>
  </port>
 </service>
 

@@ -6,7 +6,7 @@
 //gsoap ns service name: capture
 //gsoap ns service style: rpc
 //gsoap ns service encoding: encoded
-//gsoap ns service port: http://192.168.0.131:1234
+//gsoap ns service port: http://0.0.0.0:1234
 //gsoap ns service namespace: capture
 
 //structures for events

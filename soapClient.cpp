@@ -6,14 +6,14 @@
 */
 #include "soapH.h"
 
-SOAP_SOURCE_STAMP("@(#) soapClient.cpp ver 2.7.10 2008-08-29 03:46:42 GMT")
+SOAP_SOURCE_STAMP("@(#) soapClient.cpp ver 2.7.10 2008-08-29 08:12:30 GMT")
 
 
 SOAP_FMAC5 int SOAP_FMAC6 soap_call_ns__ping(struct soap *soap, const char *soap_endpoint, const char *soap_action, char *a, char **result)
 {	struct ns__ping soap_tmp_ns__ping;
 	struct ns__pingResponse *soap_tmp_ns__pingResponse;
 	if (!soap_endpoint)
-		soap_endpoint = "http://192.168.0.131:1234";
+		soap_endpoint = "http://0.0.0.0:1234";
 	soap->encodingStyle = "";
 	soap_tmp_ns__ping.a = a;
 	soap_begin(soap);
@@ -65,7 +65,7 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call_ns__ping(struct soap *soap, const char *soap
 SOAP_FMAC5 int SOAP_FMAC6 soap_call_ns__visitURL(struct soap *soap, const char *soap_endpoint, const char *soap_action, char *URL, struct ns__allEvents &result)
 {	struct ns__visitURL soap_tmp_ns__visitURL;
 	if (!soap_endpoint)
-		soap_endpoint = "http://192.168.0.131:1234";
+		soap_endpoint = "http://0.0.0.0:1234";
 	soap->encodingStyle = "";
 	soap_tmp_ns__visitURL.URL = URL;
 	soap_begin(soap);
@@ -116,7 +116,7 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call_ns__sendFileBase64(struct soap *soap, const 
 {	struct ns__sendFileBase64 soap_tmp_ns__sendFileBase64;
 	struct ns__sendFileBase64Response *soap_tmp_ns__sendFileBase64Response;
 	if (!soap_endpoint)
-		soap_endpoint = "http://192.168.0.131:1234";
+		soap_endpoint = "http://0.0.0.0:1234";
 	soap->encodingStyle = "";
 	soap_tmp_ns__sendFileBase64.fileName = fileName;
 	soap_tmp_ns__sendFileBase64.data = data;
@@ -170,7 +170,7 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call_ns__sendFileBase64(struct soap *soap, const 
 SOAP_FMAC5 int SOAP_FMAC6 soap_call_ns__receiveFileBase64(struct soap *soap, const char *soap_endpoint, const char *soap_action, char *fileName, struct s1 &result)
 {	struct ns__receiveFileBase64 soap_tmp_ns__receiveFileBase64;
 	if (!soap_endpoint)
-		soap_endpoint = "http://192.168.0.131:1234";
+		soap_endpoint = "http://0.0.0.0:1234";
 	soap->encodingStyle = "";
 	soap_tmp_ns__receiveFileBase64.fileName = fileName;
 	soap_begin(soap);
@@ -221,7 +221,7 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call_ns__openDocument(struct soap *soap, const ch
 {	struct ns__openDocument soap_tmp_ns__openDocument;
 	struct ns__openDocumentResponse *soap_tmp_ns__openDocumentResponse;
 	if (!soap_endpoint)
-		soap_endpoint = "http://192.168.0.131:1234";
+		soap_endpoint = "http://0.0.0.0:1234";
 	soap->encodingStyle = "";
 	soap_tmp_ns__openDocument.fileName = fileName;
 	soap_tmp_ns__openDocument.waitTimeMillisec = waitTimeMillisec;
@@ -273,7 +273,7 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call_ns__openDocument(struct soap *soap, const ch
 SOAP_FMAC5 int SOAP_FMAC6 soap_call_ns__returnEvents(struct soap *soap, const char *soap_endpoint, const char *soap_action, int maxEventsToReturn, struct ns__allEvents &result)
 {	struct ns__returnEvents soap_tmp_ns__returnEvents;
 	if (!soap_endpoint)
-		soap_endpoint = "http://192.168.0.131:1234";
+		soap_endpoint = "http://0.0.0.0:1234";
 	soap->encodingStyle = "";
 	soap_tmp_ns__returnEvents.maxEventsToReturn = maxEventsToReturn;
 	soap_begin(soap);
@@ -324,7 +324,7 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call_ns__sendMIME(struct soap *soap, const char *
 {	struct ns__sendMIME soap_tmp_ns__sendMIME;
 	struct ns__sendMIMEResponse *soap_tmp_ns__sendMIMEResponse;
 	if (!soap_endpoint)
-		soap_endpoint = "http://192.168.0.131:1234";
+		soap_endpoint = "http://0.0.0.0:1234";
 	soap->encodingStyle = "";
 	soap_tmp_ns__sendMIME.magicNumber = magicNumber;
 	soap_begin(soap);

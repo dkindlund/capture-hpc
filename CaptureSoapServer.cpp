@@ -47,8 +47,8 @@ CaptureSoapServer::run(){
 
    //The below code is taken mostly from the gsoap standalone server example page
    soap_init(&soap);
-   //FIXME TODO: This needs to be configurable
-   m = soap_bind(&soap, "192.168.0.131", 1234, 100);
+   //TODO: change this to the desired port
+   m = soap_bind(&soap, "0.0.0.0", 1234, 100);
    if (m < 0)
       soap_print_fault(&soap, stderr);
    else
@@ -85,10 +85,9 @@ void CaptureSoapServer::onRegistryEvent (wstring registryEventType, wstring time
 										vector<wstring> extra)
 {
 	char debug = 0;
-	printf("CaptureSoapServer::onRegistryEvent got an event for time = %ls, length = %d\n", time.c_str(), time.length());
+	if(debug) printf("CaptureSoapServer::onRegistryEvent got an event for time = %ls, length = %d\n", time.c_str(), time.length());
 
 	//now begins the arduous process of converting the values into char *s
-	//TODO: use a soap function to make r
 	ns__regEvent_t r;
 	r.time = (char *)malloc(time.length()+1);
 	sprintf(r.time, "%ls", time.c_str());
@@ -116,13 +115,15 @@ void CaptureSoapServer::onRegistryEvent (wstring registryEventType, wstring time
 	r.valueData = (char *)malloc(extra.at(3).length()+1);
 	sprintf(r.valueData, "%ls", extra.at(3).c_str());
 	
-	int * b = (int *)&r;
-	for(int i = 0; i < 8; i++){
-		printf("r[%d] = %#x\n", i, b[i]);
+	if(debug){
+		int * b = (int *)&r;
+		for(int i = 0; i < 8; i++){
+			printf("r[%d] = %#x\n", i, b[i]);
+		}
 	}
 
 	regList.push_back(r);
-	printf("added one event to regList. Now there are %d elements in the list\n", regList.size());
+	if(debug) printf("added one event to regList. Now there are %d elements in the list\n", regList.size());
 }
 
 //From FileMonitor.cpp
@@ -132,7 +133,7 @@ void CaptureSoapServer::onFileEvent(wstring fileEventType, wstring time,
 									vector<wstring> extra)
 {
 	char debug = 0;
-	printf("CaptureSoapServer::onFileEvent got an event for time = %ls\n", time.c_str());
+	if(debug) printf("CaptureSoapServer::onFileEvent got an event for time = %ls\n", time.c_str());
 	ns__fileEvent_t f;
 	f.time = (char *)malloc(time.length()+1);
 	sprintf(f.time, "%ls", time.c_str());
@@ -158,7 +159,7 @@ void CaptureSoapServer::onFileEvent(wstring fileEventType, wstring time,
 		}
 	}
 	fileList.push_back(f);
-	printf("added one event to fileList. Now there are %d elements in the list\n", fileList.size());
+	if(debug) printf("added one event to fileList. Now there are %d elements in the list\n", fileList.size());
 
 }
 
@@ -166,7 +167,8 @@ void CaptureSoapServer::onProcessEvent(BOOLEAN created, wstring time,
 										DWORD parentProcessId, wstring parentProcess, 
 										DWORD processId, wstring process)
 {
-	printf("CaptureSoapServer::onProcessEvent got an event for time = %ls\n", time.c_str());
+	char debug = 0;
+	if(debug) printf("CaptureSoapServer::onProcessEvent got an event for time = %ls\n", time.c_str());
 	ns__procEvent_t p;
 	p.time = (char *)malloc(time.length()+1);
 	sprintf(p.time, "%ls", time.c_str());
@@ -190,7 +192,7 @@ void CaptureSoapServer::onProcessEvent(BOOLEAN created, wstring time,
 	sprintf(p.procName, "%ls", process.c_str());
 
 	procList.push_back(p);
-	printf("added one event to procList. Now there are %d elements in the list\n", procList.size());
+	if(debug) printf("added one event to procList. Now there are %d elements in the list\n", procList.size());
 
 }
 
@@ -205,6 +207,7 @@ int ns__ping(struct soap *soap, char * a, char ** result)
 
 //Give it a url to browse to
 int ns__visitURL(struct soap *soap, char * url, struct ns__allEvents &result){
+	char debug = 1;
 	wchar_t xURL[1024];
 	wsprintf(xURL, L"%hs", url);
 	//Build my own new-fangled Element to pass to Visitor:onServerEvent
@@ -217,17 +220,40 @@ int ns__visitURL(struct soap *soap, char * url, struct ns__allEvents &result){
 	e.attributes.push_back(att);
 	e.data = NULL;
 	e.dataLength = 0;
-	printf("visiting %s\n", url);
+	if(debug) printf("visitURL to %s\n", url);
+	EventController::getInstance()->notifyListeners(&e);
+
 	//TODO: We currently run the browser visit event as a black box.
 	//In the future we will want to be able to report back about events before
 	//it times out or it's cleanly done with the browse.
-	EventController::getInstance()->notifyListeners(&e);
+	//NOTE: For now, telling the browser to run is not a blocking operation.
+	//The alternate way I had done it in the past (calling Visitor::onServerEvent directly IIRC)
+	//was a blocking way, and might need to be brought back, both for the blocking, and for
+	//being able to get richer information back
 
-	struct ns__allEvents all;
-	memset(&all, 0, sizeof(struct ns__allEvents));
+	//hack, becase of the above
+	Sleep(5000);
+	if(!regList.empty() || !fileList.empty() || !procList.empty()){
+		goto done;
+	}
+	Sleep(5000);
+	if(!regList.empty() || !fileList.empty() || !procList.empty()){
+		goto done;
+	}
+	Sleep(5000);
+	if(!regList.empty() || !fileList.empty() || !procList.empty()){
+		goto done;
+	}
+	Sleep(5000);
+
+done:
+	struct ns__allEvents * all = soap_new_ns__allEvents(soap, 1);
+	memset(all, 0, sizeof(struct ns__allEvents));
 
 	if(!regList.empty() || !fileList.empty() || !procList.empty()){
-		return ns__returnEvents(soap, -1, all);
+		int ret = ns__returnEvents(soap, -1, *all);
+		if(debug) printf("all->regEvents = %#x, all->fileEvents = %#x, all->procEvents = %#x\n", all->regEvents, all->fileEvents, all->procEvents);
+		return ret;
 	}
 	else{
 		return SOAP_OK;
@@ -235,9 +261,10 @@ int ns__visitURL(struct soap *soap, char * url, struct ns__allEvents &result){
 }
 
 int ns__sendFileBase64(struct soap *soap, char * fileName, char * data, unsigned int encodedLength, unsigned int decodedLength, int &result){
-	printf("in ns__sendFileBase64\n");
+	char debug = 0;
+	if(debug) printf("in ns__sendFileBase64\n");
 
-	printf("encodedLength = %d, decodedLength = %d, data[0][1][2][3] = %c%c%c%c\n", encodedLength, decodedLength,
+	if(debug) printf("encodedLength = %d, decodedLength = %d, data[0][1][2][3] = %c%c%c%c\n", encodedLength, decodedLength,
 		data[0], data[1], data[2], data[3]);
 
 	//Sanity check
@@ -262,7 +289,7 @@ int ns__sendFileBase64(struct soap *soap, char * fileName, char * data, unsigned
 	DWORD numWrote;
 	BOOL b = WriteFile(myHandle, decodedData, decodedLength, &numWrote, NULL);
 	if(b){
-		printf("Wrote %d bytes of data to %s\n", numWrote, fileName);
+		if(debug) printf("Wrote %d bytes of data to %s\n", numWrote, fileName);
 	}
 	CloseHandle(myHandle);
 	delete[] decodedData;
@@ -311,6 +338,7 @@ int ns__receiveFileBase64(struct soap *soap, char * fileName, ns__receiveFileStr
 	//base64 the file
 	unsigned int encodedLength = (unsigned int)b64::b64_encode(buffer, fileSize, NULL, NULL);
 	if(debug) printf("encodedLength = %d\n", encodedLength);
+	//TODO: make this a soap_malloc()
 	char * encodedData = new char[encodedLength];
 	memset(encodedData, 0, encodedLength);
 	size_t ret = b64::b64_encode(buffer, fileSize, encodedData, encodedLength);
@@ -345,7 +373,7 @@ int ns__receiveFileBase64(struct soap *soap, char * fileName, ns__receiveFileStr
 //waitTimeMillisec = milliseconds to Sleep() for. Should be unsigned int but SOAP::Lite doesn't
 // have an 'unsigned int' type by default, and I didn't want to make one. Make sure you cast it to DWORD.
 int ns__openDocument(struct soap *soap, char * fileName, int waitTimeMillisec, int &result){
-	int debug = 1;
+	int debug = 0;
 	if(debug) printf("in ns__openDocument, waitTimeMillisec = %d\n", waitTimeMillisec);
 
 	//Create the string for the parameters
@@ -372,7 +400,7 @@ int ns__openDocument(struct soap *soap, char * fileName, int waitTimeMillisec, i
 		return SOAP_ERR;
 	}
 	
-	//Add the process to the job object
+	//Add the process to the job object.
 	b = AssignProcessToJobObject(myJobObj, procInfo.hProcess);
 	if(!b){
 		printf("AssignProcessToJobObject failed with error %d\n", GetLastError());
@@ -386,13 +414,13 @@ int ns__openDocument(struct soap *soap, char * fileName, int waitTimeMillisec, i
 	
 	//TODO: Before we terminate the jobs, see if it created any events. If so, let it run, and tell the
 	//HC Manager about it. The Manager should then request the information about events separately.
+	//This is the sort of check we would like for browsing as well
 
 	b = TerminateJobObject(myJobObj, 0);
 	if(!b){
 		printf("TerminateProcess failed with error %d\n", GetLastError());
 		return SOAP_ERR;
 	}
-	//Just incase. I don't know if this is still needed
 	CloseHandle(procInfo.hProcess);
 	CloseHandle(procInfo.hThread);
 
@@ -402,7 +430,7 @@ int ns__openDocument(struct soap *soap, char * fileName, int waitTimeMillisec, i
 
 //If maxEventsReturned == -1, then then send as many as possible.
 int ns__returnEvents(struct soap *soap, int maxEventsToReturn, struct ns__allEvents &result){
-	char debug = 1;
+	char debug = 0;
 
 	struct ns__allEvents * all = soap_new_ns__allEvents(soap, 1);
 	all->regEvents = NULL;
@@ -424,7 +452,7 @@ int ns__returnEvents(struct soap *soap, int maxEventsToReturn, struct ns__allEve
 		if(maxEventsToReturn < dRegArray->__size && maxEventsToReturn != -1){
 			dRegArray->__size = maxEventsToReturn;
 		}
-		printf("Sending back %d registy events\n",dRegArray->__size);
+		if(debug) printf("Sending back %d registy events\n",dRegArray->__size);
 
 		//Allocate a flat array to hold our ns__regEvents in
 		//TODO: see if soap_new_ns__regEvent(soap, dRegArray->__size) works
@@ -463,7 +491,7 @@ int ns__returnEvents(struct soap *soap, int maxEventsToReturn, struct ns__allEve
 		if(maxEventsToReturn < dFileArray->__size && maxEventsToReturn != -1){
 			dFileArray->__size = maxEventsToReturn;
 		}
-		printf("Sending back %d file events\n",dFileArray->__size);
+		if(debug) printf("Sending back %d file events\n",dFileArray->__size);
 
 		struct ns__fileEvent * ns__fileEventArray = (struct ns__fileEvent *)soap_malloc(soap, dFileArray->__size*sizeof(struct ns__fileEvent));
 		dFileArray->__ptr = ns__fileEventArray;
@@ -488,7 +516,7 @@ int ns__returnEvents(struct soap *soap, int maxEventsToReturn, struct ns__allEve
 		if(maxEventsToReturn < dProcArray->__size && maxEventsToReturn != -1){
 			dProcArray->__size = maxEventsToReturn;
 		}
-		printf("Sending back %d process events\n",dProcArray->__size);
+		if(debug) printf("Sending back %d process events\n",dProcArray->__size);
 
 		struct ns__procEvent * ns__procEventArray = (struct ns__procEvent *)soap_malloc(soap, dProcArray->__size*sizeof(struct ns__procEvent));
 		dProcArray->__ptr = ns__procEventArray;
@@ -501,10 +529,8 @@ int ns__returnEvents(struct soap *soap, int maxEventsToReturn, struct ns__allEve
 	}
 
 	result = *all;
-	printf("all->regEvents = %#x, all->fileEvents = %#x, all->procEvents = %#x\n", all->regEvents, all->fileEvents, all->procEvents);
-//	printf("&dRegArray = %#x, dRegArray->__ptr = %#x\n",&dRegArray, dRegArray->__ptr);
-//	printf("dRegArray->__ptr[0][1][2][3] = %#x %#x %#x %#x\n", dRegArray->__ptr[0], dRegArray->__ptr[1], dRegArray->__ptr[2], dRegArray->__ptr[3]);
-	printf("regList.size() = %d, fileList.size() = %d, procList.size() = %d\n", regList.size(), fileList.size(), procList.size());
+	if(debug) printf("all->regEvents = %#x, all->fileEvents = %#x, all->procEvents = %#x\n", all->regEvents, all->fileEvents, all->procEvents);
+	if(debug) printf("regList.size() = %d, fileList.size() = %d, procList.size() = %d\n", regList.size(), fileList.size(), procList.size());
 
 	return SOAP_OK;
 }
