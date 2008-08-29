@@ -6,7 +6,7 @@
 */
 #include "soapH.h"
 
-SOAP_SOURCE_STAMP("@(#) soapClient.cpp ver 2.7.10 2008-08-28 01:59:02 GMT")
+SOAP_SOURCE_STAMP("@(#) soapClient.cpp ver 2.7.10 2008-08-29 03:46:42 GMT")
 
 
 SOAP_FMAC5 int SOAP_FMAC6 soap_call_ns__ping(struct soap *soap, const char *soap_endpoint, const char *soap_action, char *a, char **result)
@@ -62,13 +62,12 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call_ns__ping(struct soap *soap, const char *soap
 	return soap_closesock(soap);
 }
 
-SOAP_FMAC5 int SOAP_FMAC6 soap_call_ns__visitURL(struct soap *soap, const char *soap_endpoint, const char *soap_action, char *a, char **result)
+SOAP_FMAC5 int SOAP_FMAC6 soap_call_ns__visitURL(struct soap *soap, const char *soap_endpoint, const char *soap_action, char *URL, struct ns__allEvents &result)
 {	struct ns__visitURL soap_tmp_ns__visitURL;
-	struct ns__visitURLResponse *soap_tmp_ns__visitURLResponse;
 	if (!soap_endpoint)
 		soap_endpoint = "http://192.168.0.131:1234";
 	soap->encodingStyle = "";
-	soap_tmp_ns__visitURL.a = a;
+	soap_tmp_ns__visitURL.URL = URL;
 	soap_begin(soap);
 	soap_serializeheader(soap);
 	soap_serialize_ns__visitURL(soap, &soap_tmp_ns__visitURL);
@@ -94,13 +93,13 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call_ns__visitURL(struct soap *soap, const char *
 	 || soap_envelope_end_out(soap)
 	 || soap_end_send(soap))
 		return soap_closesock(soap);
-	*result = NULL;
+	soap_default_ns__allEvents(soap, &result);
 	if (soap_begin_recv(soap)
 	 || soap_envelope_begin_in(soap)
 	 || soap_recv_header(soap)
 	 || soap_body_begin_in(soap))
 		return soap_closesock(soap);
-	soap_tmp_ns__visitURLResponse = soap_get_ns__visitURLResponse(soap, NULL, "ns:visitURLResponse", "");
+	soap_get_ns__allEvents(soap, &result, "ns:allEvents", "");
 	if (soap->error)
 	{	if (soap->error == SOAP_TAG_MISMATCH && soap->level == 2)
 			return soap_recv_fault(soap);
@@ -110,8 +109,6 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call_ns__visitURL(struct soap *soap, const char *
 	 || soap_envelope_end_in(soap)
 	 || soap_end_recv(soap))
 		return soap_closesock(soap);
-	if (result && soap_tmp_ns__visitURLResponse->result)
-		*result = *soap_tmp_ns__visitURLResponse->result;
 	return soap_closesock(soap);
 }
 

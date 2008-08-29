@@ -150,23 +150,13 @@ public:
 };
 #endif
 
-#ifndef SOAP_TYPE_ns__visitURLResponse
-#define SOAP_TYPE_ns__visitURLResponse (28)
-/* ns:visitURLResponse */
-struct ns__visitURLResponse
-{
-public:
-	char **result;	/* SOAP 1.2 RPC return element (when namespace qualified) */	/* optional element of type xsd:string */
-};
-#endif
-
 #ifndef SOAP_TYPE_ns__visitURL
 #define SOAP_TYPE_ns__visitURL (29)
 /* ns:visitURL */
 struct ns__visitURL
 {
 public:
-	char *a;	/* optional element of type xsd:string */
+	char *URL;	/* optional element of type xsd:string */
 };
 #endif
 
@@ -225,7 +215,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ns__returnEvents
-#define SOAP_TYPE_ns__returnEvents (42)
+#define SOAP_TYPE_ns__returnEvents (41)
 /* ns:returnEvents */
 struct ns__returnEvents
 {
@@ -235,7 +225,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ns__sendMIMEResponse
-#define SOAP_TYPE_ns__sendMIMEResponse (44)
+#define SOAP_TYPE_ns__sendMIMEResponse (43)
 /* ns:sendMIMEResponse */
 struct ns__sendMIMEResponse
 {
@@ -245,7 +235,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ns__sendMIME
-#define SOAP_TYPE_ns__sendMIME (45)
+#define SOAP_TYPE_ns__sendMIME (44)
 /* ns:sendMIME */
 struct ns__sendMIME
 {
@@ -255,7 +245,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_SOAP_ENV__Header
-#define SOAP_TYPE_SOAP_ENV__Header (46)
+#define SOAP_TYPE_SOAP_ENV__Header (45)
 /* SOAP Header: */
 struct SOAP_ENV__Header
 {
@@ -267,7 +257,7 @@ private:
 #endif
 
 #ifndef SOAP_TYPE_SOAP_ENV__Code
-#define SOAP_TYPE_SOAP_ENV__Code (47)
+#define SOAP_TYPE_SOAP_ENV__Code (46)
 /* SOAP Fault Code: */
 struct SOAP_ENV__Code
 {
@@ -278,7 +268,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_SOAP_ENV__Detail
-#define SOAP_TYPE_SOAP_ENV__Detail (49)
+#define SOAP_TYPE_SOAP_ENV__Detail (48)
 /* SOAP-ENV:Detail */
 struct SOAP_ENV__Detail
 {
@@ -290,7 +280,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_SOAP_ENV__Reason
-#define SOAP_TYPE_SOAP_ENV__Reason (52)
+#define SOAP_TYPE_SOAP_ENV__Reason (51)
 /* SOAP-ENV:Reason */
 struct SOAP_ENV__Reason
 {
@@ -300,7 +290,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_SOAP_ENV__Fault
-#define SOAP_TYPE_SOAP_ENV__Fault (53)
+#define SOAP_TYPE_SOAP_ENV__Fault (52)
 /* SOAP Fault: */
 struct SOAP_ENV__Fault
 {
@@ -369,7 +359,7 @@ typedef struct s1 ns__receiveFileStruct;
 
 SOAP_FMAC5 int SOAP_FMAC6 ns__ping(struct soap*, char *a, char **result);
 
-SOAP_FMAC5 int SOAP_FMAC6 ns__visitURL(struct soap*, char *a, char **result);
+SOAP_FMAC5 int SOAP_FMAC6 ns__visitURL(struct soap*, char *URL, struct ns__allEvents &result);
 
 SOAP_FMAC5 int SOAP_FMAC6 ns__sendFileBase64(struct soap*, char *fileName, char *data, unsigned int encodedLength, unsigned int decodedLength, int &result);
 
@@ -390,7 +380,7 @@ SOAP_FMAC5 int SOAP_FMAC6 ns__sendMIME(struct soap*, int magicNumber, int &resul
 
 SOAP_FMAC5 int SOAP_FMAC6 soap_call_ns__ping(struct soap *soap, const char *soap_endpoint, const char *soap_action, char *a, char **result);
 
-SOAP_FMAC5 int SOAP_FMAC6 soap_call_ns__visitURL(struct soap *soap, const char *soap_endpoint, const char *soap_action, char *a, char **result);
+SOAP_FMAC5 int SOAP_FMAC6 soap_call_ns__visitURL(struct soap *soap, const char *soap_endpoint, const char *soap_action, char *URL, struct ns__allEvents &result);
 
 SOAP_FMAC5 int SOAP_FMAC6 soap_call_ns__sendFileBase64(struct soap *soap, const char *soap_endpoint, const char *soap_action, char *fileName, char *data, unsigned int encodedLength, unsigned int decodedLength, int &result);
 

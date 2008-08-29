@@ -6,7 +6,7 @@
 */
 #include "soapH.h"
 
-SOAP_SOURCE_STAMP("@(#) soapServer.cpp ver 2.7.10 2008-08-28 01:59:02 GMT")
+SOAP_SOURCE_STAMP("@(#) soapServer.cpp ver 2.7.10 2008-08-29 03:46:42 GMT")
 
 
 SOAP_FMAC5 int SOAP_FMAC6 soap_serve(struct soap *soap)
@@ -137,11 +137,8 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_serve_ns__ping(struct soap *soap)
 
 SOAP_FMAC5 int SOAP_FMAC6 soap_serve_ns__visitURL(struct soap *soap)
 {	struct ns__visitURL soap_tmp_ns__visitURL;
-	struct ns__visitURLResponse soap_tmp_ns__visitURLResponse;
-	char * soap_tmp_string;
-	soap_default_ns__visitURLResponse(soap, &soap_tmp_ns__visitURLResponse);
-	soap_tmp_string = NULL;
-	soap_tmp_ns__visitURLResponse.result = &soap_tmp_string;
+	struct ns__allEvents result;
+	soap_default_ns__allEvents(soap, &result);
 	soap_default_ns__visitURL(soap, &soap_tmp_ns__visitURL);
 	soap->encodingStyle = "";
 	if (!soap_get_ns__visitURL(soap, &soap_tmp_ns__visitURL, "ns:visitURL", NULL))
@@ -150,18 +147,18 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_serve_ns__visitURL(struct soap *soap)
 	 || soap_envelope_end_in(soap)
 	 || soap_end_recv(soap))
 		return soap->error;
-	soap->error = ns__visitURL(soap, soap_tmp_ns__visitURL.a, &soap_tmp_string);
+	soap->error = ns__visitURL(soap, soap_tmp_ns__visitURL.URL, result);
 	if (soap->error)
 		return soap->error;
 	soap_serializeheader(soap);
-	soap_serialize_ns__visitURLResponse(soap, &soap_tmp_ns__visitURLResponse);
+	soap_serialize_ns__allEvents(soap, &result);
 	if (soap_begin_count(soap))
 		return soap->error;
 	if (soap->mode & SOAP_IO_LENGTH)
 	{	if (soap_envelope_begin_out(soap)
 		 || soap_putheader(soap)
 		 || soap_body_begin_out(soap)
-		 || soap_put_ns__visitURLResponse(soap, &soap_tmp_ns__visitURLResponse, "ns:visitURLResponse", "")
+		 || soap_put_ns__allEvents(soap, &result, "ns:allEvents", "")
 		 || soap_body_end_out(soap)
 		 || soap_envelope_end_out(soap))
 			 return soap->error;
@@ -171,7 +168,7 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_serve_ns__visitURL(struct soap *soap)
 	 || soap_envelope_begin_out(soap)
 	 || soap_putheader(soap)
 	 || soap_body_begin_out(soap)
-	 || soap_put_ns__visitURLResponse(soap, &soap_tmp_ns__visitURLResponse, "ns:visitURLResponse", "")
+	 || soap_put_ns__allEvents(soap, &result, "ns:allEvents", "")
 	 || soap_body_end_out(soap)
 	 || soap_envelope_end_out(soap)
 	 || soap_end_send(soap))

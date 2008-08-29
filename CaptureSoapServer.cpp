@@ -30,8 +30,6 @@ CaptureSoapServer::CaptureSoapServer(Visitor* v, RegistryMonitor * r, FileMonito
 }
 
 CaptureSoapServer::~CaptureSoapServer(){
-	//FIXME: I have no idea if these are appropriate here. Also need to find the correct way to cleanly shut down
-	//so that it doesn't output a connection error at the end.
 	soap_destroy(&soap);
 	soap_end(&soap);
 	soap_done(&soap);
@@ -206,7 +204,7 @@ int ns__ping(struct soap *soap, char * a, char ** result)
 }
 
 //Give it a url to browse to
-int ns__visitURL(struct soap *soap, char * url, char ** result){
+int ns__visitURL(struct soap *soap, char * url, struct ns__allEvents &result){
 	wchar_t xURL[1024];
 	wsprintf(xURL, L"%hs", url);
 	//Build my own new-fangled Element to pass to Visitor:onServerEvent
@@ -220,9 +218,20 @@ int ns__visitURL(struct soap *soap, char * url, char ** result){
 	e.data = NULL;
 	e.dataLength = 0;
 	printf("visiting %s\n", url);
+	//TODO: We currently run the browser visit event as a black box.
+	//In the future we will want to be able to report back about events before
+	//it times out or it's cleanly done with the browse.
 	EventController::getInstance()->notifyListeners(&e);
 
-	return SOAP_OK;
+	struct ns__allEvents all;
+	memset(&all, 0, sizeof(struct ns__allEvents));
+
+	if(!regList.empty() || !fileList.empty() || !procList.empty()){
+		return ns__returnEvents(soap, -1, all);
+	}
+	else{
+		return SOAP_OK;
+	}
 }
 
 int ns__sendFileBase64(struct soap *soap, char * fileName, char * data, unsigned int encodedLength, unsigned int decodedLength, int &result){
@@ -431,7 +440,7 @@ int ns__returnEvents(struct soap *soap, int maxEventsToReturn, struct ns__allEve
 //				printf("regList.front().procName %s, %#x\n", regList.front().procName, regList.front().procName);
 				int * b = (int *)&regList.front();
 				for(int i = 0; i < 8; i++){
-					printf("r[%d] = %#x\n", i, b[i]);
+					printf("b[%d] = %#x\n", i, b[i]);
 				}
 			}
 			memcpy(&ns__regEventArray[i],&regList.front(), sizeof(struct ns__regEvent));

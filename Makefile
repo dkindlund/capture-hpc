@@ -18,9 +18,10 @@ all:
 	echo "                   files will be located in the install directory."
 	echo "   - release-bat - will build the capture-bat solution from scratch. The resulting"
 	echo "                   files will be located in the install directory."
-	
-release-hpc: clean \
-			 prepare \
+
+#clean \ #deleted from release-hpc and release-bat for now cause it makes it take too much longer
+#run it manually as necessary
+release-hpc: 		 prepare \
 			 build \
 			 copy-hpc \
 

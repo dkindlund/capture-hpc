@@ -377,8 +377,7 @@ Analyzer::onProcessEvent(BOOLEAN created, wstring time,
 	} else {
 		processType = L"terminated";
 	}
-	//Xeno sez ? Is this comment still valid
-	//FIXME: use the right constructor instead
+	//TODO: cleanup a little
 	vector<wstring> extra;
 	wchar_t parentProcessIdString[11];
 	swprintf(parentProcessIdString, 11, L"%ld", parentProcessId);
