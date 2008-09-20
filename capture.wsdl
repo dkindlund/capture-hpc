@@ -25,56 +25,69 @@
   elementFormDefault="unqualified"
   attributeFormDefault="unqualified">
   <import namespace="http://schemas.xmlsoap.org/soap/encoding/"/>
+  <complexType name="allEvents">
+   <complexContent>
+    <restriction base="ns:a1">
+    </restriction>
+   </complexContent>
+  </complexType>
   <complexType name="receiveFileStruct">
    <complexContent>
     <restriction base="ns:s1">
     </restriction>
    </complexContent>
   </complexType>
-  <complexType name="regEvent">
+  <complexType name="regkey">
    <sequence>
-     <element name="time" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
-     <element name="eventType" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
-     <element name="procPID" type="xsd:int" minOccurs="1" maxOccurs="1"/>
-     <element name="procName" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
-     <element name="keyName" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
-     <element name="valueName" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
-     <element name="valueType" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
-     <element name="valueData" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="created-at" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="event-type" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="pid" type="xsd:int" minOccurs="1" maxOccurs="1"/>
+     <element name="proc-name" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="name" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="value-name" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="value-type" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="value" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
    </sequence>
   </complexType>
-  <complexType name="fileEvent">
+  <complexType name="processFile">
    <sequence>
-     <element name="time" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
-     <element name="eventType" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
-     <element name="procPID" type="xsd:int" minOccurs="1" maxOccurs="1"/>
-     <element name="procName" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
-     <element name="fileName" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="created-at" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="event-type" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="pid" type="xsd:int" minOccurs="1" maxOccurs="1"/>
+     <element name="proc-name" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="name" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
    </sequence>
   </complexType>
-  <complexType name="procEvent">
+  <complexType name="osProcess">
    <sequence>
-     <element name="time" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
-     <element name="eventType" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
-     <element name="parentPID" type="xsd:int" minOccurs="1" maxOccurs="1"/>
-     <element name="parentName" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
-     <element name="procPID" type="xsd:int" minOccurs="1" maxOccurs="1"/>
-     <element name="procName" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="created-at" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="event-type" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="parent-pid" type="xsd:int" minOccurs="1" maxOccurs="1"/>
+     <element name="parent-name" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="pid" type="xsd:int" minOccurs="1" maxOccurs="1"/>
+     <element name="name" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
    </sequence>
   </complexType>
   <complexType name="dynRegArray">
    <sequence>
-    <element name="item" type="ns:regEvent" minOccurs="0" maxOccurs="unbounded" nillable="true"/>
+    <element name="item" type="ns:regkey" minOccurs="0" maxOccurs="unbounded" nillable="true"/>
    </sequence>
   </complexType>
   <complexType name="dynFileArray">
    <sequence>
-    <element name="item" type="ns:fileEvent" minOccurs="0" maxOccurs="unbounded" nillable="true"/>
+    <element name="item" type="ns:processFile" minOccurs="0" maxOccurs="unbounded" nillable="true"/>
    </sequence>
   </complexType>
   <complexType name="dynProcArray">
    <sequence>
-    <element name="item" type="ns:procEvent" minOccurs="0" maxOccurs="unbounded" nillable="true"/>
+    <element name="item" type="ns:osProcess" minOccurs="0" maxOccurs="unbounded" nillable="true"/>
+   </sequence>
+  </complexType>
+  <complexType name="a1">
+   <sequence>
+     <element name="regkeys" type="ns:dynRegArray" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="process-files" type="ns:dynFileArray" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="os-processes" type="ns:dynProcArray" minOccurs="0" maxOccurs="1" nillable="true"/>
    </sequence>
   </complexType>
   <complexType name="s1">
@@ -134,14 +147,36 @@
  <part name="result" type="xsd:int"/>
 </message>
 
-<message name="returnEvents">
+<message name="returnRegistryEventsRequest">
  <part name="maxEventsToReturn" type="xsd:int"/>
 </message>
 
-<message name="allEvents">
- <part name="regEvents" type="ns:dynRegArray"/>
- <part name="fileEvents" type="ns:dynFileArray"/>
- <part name="procEvents" type="ns:dynProcArray"/>
+<message name="returnRegistryEventsResponse">
+ <part name="result" type="ns:dynRegArray"/>
+</message>
+
+<message name="returnFileEventsRequest">
+ <part name="maxEventsToReturn" type="xsd:int"/>
+</message>
+
+<message name="returnFileEventsResponse">
+ <part name="result" type="ns:dynFileArray"/>
+</message>
+
+<message name="returnProcessEventsRequest">
+ <part name="maxEventsToReturn" type="xsd:int"/>
+</message>
+
+<message name="returnProcessEventsResponse">
+ <part name="result" type="ns:dynProcArray"/>
+</message>
+
+<message name="returnEventsRequest">
+ <part name="maxEventsToReturn" type="xsd:int"/>
+</message>
+
+<message name="returnEventsResponse">
+ <part name="result" type="ns:allEvents"/>
 </message>
 
 <message name="sendMIMERequest">
@@ -178,10 +213,25 @@
   <input message="tns:openDocumentRequest"/>
   <output message="tns:openDocumentResponse"/>
  </operation>
+ <operation name="returnRegistryEvents">
+  <documentation>Service definition of function ns__returnRegistryEvents</documentation>
+  <input message="tns:returnRegistryEventsRequest"/>
+  <output message="tns:returnRegistryEventsResponse"/>
+ </operation>
+ <operation name="returnFileEvents">
+  <documentation>Service definition of function ns__returnFileEvents</documentation>
+  <input message="tns:returnFileEventsRequest"/>
+  <output message="tns:returnFileEventsResponse"/>
+ </operation>
+ <operation name="returnProcessEvents">
+  <documentation>Service definition of function ns__returnProcessEvents</documentation>
+  <input message="tns:returnProcessEventsRequest"/>
+  <output message="tns:returnProcessEventsResponse"/>
+ </operation>
  <operation name="returnEvents">
   <documentation>Service definition of function ns__returnEvents</documentation>
-  <input message="tns:returnEvents"/>
-  <output message="tns:allEvents"/>
+  <input message="tns:returnEventsRequest"/>
+  <output message="tns:returnEventsResponse"/>
  </operation>
  <operation name="sendMIME">
   <documentation>Service definition of function ns__sendMIME</documentation>
@@ -229,6 +279,33 @@
   </output>
  </operation>
  <operation name="openDocument">
+  <SOAP:operation style="rpc" soapAction=""/>
+  <input>
+     <SOAP:body use="encoded" namespace="capture" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+  </input>
+  <output>
+     <SOAP:body use="encoded" namespace="capture" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+  </output>
+ </operation>
+ <operation name="returnRegistryEvents">
+  <SOAP:operation style="rpc" soapAction=""/>
+  <input>
+     <SOAP:body use="encoded" namespace="capture" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+  </input>
+  <output>
+     <SOAP:body use="encoded" namespace="capture" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+  </output>
+ </operation>
+ <operation name="returnFileEvents">
+  <SOAP:operation style="rpc" soapAction=""/>
+  <input>
+     <SOAP:body use="encoded" namespace="capture" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+  </input>
+  <output>
+     <SOAP:body use="encoded" namespace="capture" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+  </output>
+ </operation>
+ <operation name="returnProcessEvents">
   <SOAP:operation style="rpc" soapAction=""/>
   <input>
      <SOAP:body use="encoded" namespace="capture" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>

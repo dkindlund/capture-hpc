@@ -13,12 +13,12 @@
 //that I didn't want to deal with
 struct soap soap;
 
-std::list<struct ns__regEvent> regList;
-std::list<struct ns__regEvent> regDeallocList;
-std::list<struct ns__fileEvent> fileList;
-std::list<struct ns__fileEvent> fileDeallocList;
-std::list<struct ns__procEvent> procList;
-std::list<struct ns__procEvent> procDeallocList;
+std::list<struct ns__regkey> regList;
+std::list<struct ns__regkey> regDeallocList;
+std::list<struct ns__processFile> fileList;
+std::list<struct ns__processFile> fileDeallocList;
+std::list<struct ns__osProcess> procList;
+std::list<struct ns__osProcess> procDeallocList;
 void dealloc_events(); //For cleaning up when we're done with them
 
 CaptureSoapServer::CaptureSoapServer(Visitor* v, RegistryMonitor * r, FileMonitor * f, ProcessMonitor * p){
@@ -88,32 +88,32 @@ void CaptureSoapServer::onRegistryEvent (wstring registryEventType, wstring time
 	if(debug) printf("CaptureSoapServer::onRegistryEvent got an event for time = %ls, length = %d\n", time.c_str(), time.length());
 
 	//now begins the arduous process of converting the values into char *s
-	ns__regEvent_t r;
-	r.time = (char *)malloc(time.length()+1);
-	sprintf(r.time, "%ls", time.c_str());
+	ns__regkey_t r;
+	r.created_at = (char *)malloc(time.length()+1);
+	sprintf(r.created_at, "%ls", time.c_str());
 
-	r.eventType = (char *)malloc(registryEventType.length()+1);
-	sprintf(r.eventType, "%ls", registryEventType.c_str());
+	r.event_type = (char *)malloc(registryEventType.length()+1);
+	sprintf(r.event_type, "%ls", registryEventType.c_str());
 
 	char * tmp = (char *)malloc(extra.at(0).length()+1);
 	sprintf(tmp, "%ls", extra.at(0).c_str());
-	r.procPID = atoi(tmp);
+	r.pid = atoi(tmp);
 	free(tmp);
 
-	r.procName = (char *)malloc(processPath.length()+1);
-	sprintf(r.procName, "%ls", processPath.c_str());
+	r.proc_name = (char *)malloc(processPath.length()+1);
+	sprintf(r.proc_name, "%ls", processPath.c_str());
 
-	r.keyName = (char *)malloc(registryEventPath.length()+1);
-	sprintf(r.keyName, "%ls", registryEventPath.c_str());
+	r.name = (char *)malloc(registryEventPath.length()+1);
+	sprintf(r.name, "%ls", registryEventPath.c_str());
 
-	r.valueName = (char *)malloc(extra.at(1).length()+1);
-	sprintf(r.valueName, "%ls", extra.at(1).c_str());
+	r.value_name = (char *)malloc(extra.at(1).length()+1);
+	sprintf(r.value_name, "%ls", extra.at(1).c_str());
 
-	r.valueType = (char *)malloc(extra.at(2).length()+1);
-	sprintf(r.valueType, "%ls", extra.at(2).c_str());
+	r.value_type = (char *)malloc(extra.at(2).length()+1);
+	sprintf(r.value_type, "%ls", extra.at(2).c_str());
 
-	r.valueData = (char *)malloc(extra.at(3).length()+1);
-	sprintf(r.valueData, "%ls", extra.at(3).c_str());
+	r.value = (char *)malloc(extra.at(3).length()+1);
+	sprintf(r.value, "%ls", extra.at(3).c_str());
 	
 	if(debug){
 		int * b = (int *)&r;
@@ -134,23 +134,23 @@ void CaptureSoapServer::onFileEvent(wstring fileEventType, wstring time,
 {
 	char debug = 0;
 	if(debug) printf("CaptureSoapServer::onFileEvent got an event for time = %ls\n", time.c_str());
-	ns__fileEvent_t f;
-	f.time = (char *)malloc(time.length()+1);
-	sprintf(f.time, "%ls", time.c_str());
+	ns__processFile_t f;
+	f.created_at = (char *)malloc(time.length()+1);
+	sprintf(f.created_at, "%ls", time.c_str());
 
-	f.eventType = (char *)malloc(fileEventType.length()+1);
-	sprintf(f.eventType, "%ls", fileEventType.c_str());
+	f.event_type = (char *)malloc(fileEventType.length()+1);
+	sprintf(f.event_type, "%ls", fileEventType.c_str());
 
 	char * tmp = (char *)malloc(extra.at(0).length()+1);
 	sprintf(tmp, "%ls", extra.at(0).c_str());
-	f.procPID = atoi(tmp);
+	f.pid = atoi(tmp);
 	free(tmp);
 
-	f.procName = (char *)malloc(processPath.length()+1);
-	sprintf(f.procName, "%ls", processPath.c_str());
+	f.proc_name = (char *)malloc(processPath.length()+1);
+	sprintf(f.proc_name, "%ls", processPath.c_str());
 
-	f.fileName = (char *)malloc(fileEventPath.length()+1);
-	sprintf(f.fileName, "%ls", fileEventPath.c_str());
+	f.name = (char *)malloc(fileEventPath.length()+1);
+	sprintf(f.name, "%ls", fileEventPath.c_str());
 
 	if(debug){
 		int * b = (int *)&f;
@@ -169,27 +169,27 @@ void CaptureSoapServer::onProcessEvent(BOOLEAN created, wstring time,
 {
 	char debug = 0;
 	if(debug) printf("CaptureSoapServer::onProcessEvent got an event for time = %ls\n", time.c_str());
-	ns__procEvent_t p;
-	p.time = (char *)malloc(time.length()+1);
-	sprintf(p.time, "%ls", time.c_str());
+	ns__osProcess_t p;
+	p.created_at = (char *)malloc(time.length()+1);
+	sprintf(p.created_at, "%ls", time.c_str());
 
-	p.eventType = (char *)malloc(11); //11 == max length == "terminated"
+	p.event_type = (char *)malloc(11); //11 == max length == "terminated"
 	if(created){
-		sprintf(p.eventType, "created");
+		sprintf(p.event_type, "created");
 	}
 	else{
-		sprintf(p.eventType, "terminated");
+		sprintf(p.event_type, "terminated");
 	}
 
-	p.parentPID = parentProcessId;
+	p.parent_pid = parentProcessId;
 
-	p.parentName = (char *)malloc(parentProcess.length()+1);
-	sprintf(p.parentName, "%ls", parentProcess.c_str());
+	p.parent_name = (char *)malloc(parentProcess.length()+1);
+	sprintf(p.parent_name, "%ls", parentProcess.c_str());
 
-	p.procPID = processId;
+	p.pid = processId;
 
-	p.procName = (char *)malloc(process.length()+1);
-	sprintf(p.procName, "%ls", process.c_str());
+	p.name = (char *)malloc(process.length()+1);
+	sprintf(p.name, "%ls", process.c_str());
 
 	procList.push_back(p);
 	if(debug) printf("added one event to procList. Now there are %d elements in the list\n", procList.size());
@@ -405,107 +405,126 @@ int ns__openDocument(struct soap *soap, char * fileName, int waitTimeMillisec, i
 }
 
 //If maxEventsReturned == -1, then then send as many as possible.
-int ns__returnEvents(struct soap *soap, int maxEventsToReturn, struct ns__allEvents &result){
+int ns__returnRegistryEvents(struct soap *soap, int maxEventsToReturn, struct ns__dynRegArray **result){
 	char debug = 1;
 
-	struct ns__allEvents * all = soap_new_ns__allEvents(soap, 1);
-	all->regEvents = NULL;
-	all->fileEvents = NULL;
-	all->procEvents = NULL;
-
 	struct ns__dynRegArray * dRegArray;
+	//Set up a dynamic array for each of the event types
+	dRegArray = soap_new_ns__dynRegArray(soap,1);
+	dRegArray->__ptr = NULL;
+	dRegArray->__size = regList.size();
+
+	//Figure out how many entries we will send back
+	if(maxEventsToReturn < dRegArray->__size && maxEventsToReturn != -1){
+		dRegArray->__size = maxEventsToReturn;
+	}
+	if(debug) printf("Sending back %d registy events\n",dRegArray->__size);
+
+	//Allocate a flat array to hold our ns__regkeys in
+	//TODO: see if soap_new_ns__regkey(soap, dRegArray->__size) works
+	struct ns__regkey * ns__regkeyArray = (struct ns__regkey *)soap_malloc(soap, dRegArray->__size*sizeof(struct ns__regkey));
+	dRegArray->__ptr = ns__regkeyArray;
+
+	for(unsigned int i = 0; i < dRegArray->__size; i++){
+		if(debug){
+			printf("i = %d\n", i);
+//			printf("regList.front().time %s, %#x\n", regList.front().time, regList.front().time);
+//			printf("regList.front().eventType %s, %#x\n", regList.front().eventType, regList.front().eventType);
+//			printf("regList.front().procPID %d, %#x\n", regList.front().procPID, regList.front().procPID);
+//			printf("regList.front().procName %s, %#x\n", regList.front().procName, regList.front().procName);
+			int * b = (int *)&regList.front();
+			for(int i = 0; i < 8; i++){
+				printf("regEvent[%d] = %#x\n", i, b[i]);
+			}
+		}
+		memcpy(&ns__regkeyArray[i],&regList.front(), sizeof(struct ns__regkey));
+		regDeallocList.push_back(regList.front()); //Need to keep track of it to dealloc its elements later
+		regList.pop_front();
+	}
+	*result = dRegArray;
+	return SOAP_OK;
+}
+int ns__returnFileEvents(struct soap *soap, int maxEventsToReturn, struct ns__dynFileArray **result){
+	char debug = 1;
+
+	struct ns__dynFileArray * dFileArray;
+	dFileArray = soap_new_ns__dynFileArray(soap,1);
+	dFileArray->__ptr = NULL;
+	dFileArray->__size = fileList.size();
+	printf("SIZE= %d",dFileArray->__size);
+	printf("MAX= %d",maxEventsToReturn);
+
+	//Figure out how many entries we will send back
+	if(maxEventsToReturn < dFileArray->__size && maxEventsToReturn != -1){
+		dFileArray->__size = maxEventsToReturn;
+	}
+	if(debug) printf("Sending back %d file events\n",dFileArray->__size);
+
+	struct ns__processFile * ns__processFileArray = (struct ns__processFile *)soap_malloc(soap, dFileArray->__size*sizeof(struct ns__processFile));
+	dFileArray->__ptr = ns__processFileArray;
+
+	for(unsigned int i = 0; i < dFileArray->__size; i++){
+		memcpy(&ns__processFileArray[i],&fileList.front(), sizeof(struct ns__processFile));
+		fileDeallocList.push_back(fileList.front());
+		fileList.pop_front();
+	}
+	
+	*result = dFileArray;
+	return SOAP_OK;
+}
+int ns__returnProcessEvents(struct soap *soap, int maxEventsToReturn, struct ns__dynProcArray **result){
+	char debug = 1;
+
+	struct ns__dynProcArray * dProcArray;
+	dProcArray = soap_new_ns__dynProcArray(soap,1);
+	dProcArray->__ptr = NULL;
+	dProcArray->__size = procList.size();
+
+	if(maxEventsToReturn < dProcArray->__size && maxEventsToReturn != -1){
+		dProcArray->__size = maxEventsToReturn;
+	}
+	if(debug) printf("Sending back %d process events\n",dProcArray->__size);
+
+	struct ns__osProcess * ns__osProcessArray = (struct ns__osProcess *)soap_malloc(soap, dProcArray->__size*sizeof(struct ns__osProcess));
+	dProcArray->__ptr = ns__osProcessArray;
+
+	for(unsigned int i = 0; i < dProcArray->__size; i++){
+		memcpy(&ns__osProcessArray[i],&procList.front(), sizeof(struct ns__osProcess));
+		procDeallocList.push_back(procList.front());
+		procList.pop_front();
+	}
+	
+	*result = dProcArray;
+	return SOAP_OK;
+}
+int ns__returnEvents(struct soap *soap, int maxEventsToReturn, ns__allEvents **result){
+	char debug = 1;
+
+	ns__allEvents * all = soap_new_ns__allEvents(soap, 1);
+	all->regkeys = NULL;
+	all->process_files = NULL;
+	all->os_processes = NULL;
 	if(regList.empty() || maxEventsToReturn == 0){
 		printf("No registry events to send back\n");
 	}
 	else{
-		//Set up a dynamic array for each of the event types
-		dRegArray = soap_new_ns__dynRegArray(soap,1);
-		dRegArray->__ptr = NULL;
-		dRegArray->__size = regList.size();
-		all->regEvents = dRegArray;
-
-		//Figure out how many entries we will send back
-		if(maxEventsToReturn < dRegArray->__size && maxEventsToReturn != -1){
-			dRegArray->__size = maxEventsToReturn;
-		}
-		if(debug) printf("Sending back %d registy events\n",dRegArray->__size);
-
-		//Allocate a flat array to hold our ns__regEvents in
-		//TODO: see if soap_new_ns__regEvent(soap, dRegArray->__size) works
-		struct ns__regEvent * ns__regEventArray = (struct ns__regEvent *)soap_malloc(soap, dRegArray->__size*sizeof(struct ns__regEvent));
-		dRegArray->__ptr = ns__regEventArray;
-
-		for(unsigned int i = 0; i < dRegArray->__size; i++){
-			if(debug){
-				printf("i = %d\n", i);
-//				printf("regList.front().time %s, %#x\n", regList.front().time, regList.front().time);
-//				printf("regList.front().eventType %s, %#x\n", regList.front().eventType, regList.front().eventType);
-//				printf("regList.front().procPID %d, %#x\n", regList.front().procPID, regList.front().procPID);
-//				printf("regList.front().procName %s, %#x\n", regList.front().procName, regList.front().procName);
-				int * b = (int *)&regList.front();
-				for(int i = 0; i < 8; i++){
-					printf("regEvent[%d] = %#x\n", i, b[i]);
-				}
-			}
-			memcpy(&ns__regEventArray[i],&regList.front(), sizeof(struct ns__regEvent));
-			regDeallocList.push_back(regList.front()); //Need to keep track of it to dealloc its elements later
-			regList.pop_front();
-		}
+		ns__returnRegistryEvents(soap,maxEventsToReturn,&all->regkeys);
 	}
-
-	struct ns__dynFileArray * dFileArray;
 	if(fileList.empty() || maxEventsToReturn == 0){
 		printf("No file events to send back\n");
 	}
 	else{
-		dFileArray = soap_new_ns__dynFileArray(soap,1);
-		dFileArray->__ptr = NULL;
-		dFileArray->__size = fileList.size();
-		all->fileEvents = dFileArray;
-
-		//Figure out how many entries we will send back
-		if(maxEventsToReturn < dFileArray->__size && maxEventsToReturn != -1){
-			dFileArray->__size = maxEventsToReturn;
-		}
-		if(debug) printf("Sending back %d file events\n",dFileArray->__size);
-
-		struct ns__fileEvent * ns__fileEventArray = (struct ns__fileEvent *)soap_malloc(soap, dFileArray->__size*sizeof(struct ns__fileEvent));
-		dFileArray->__ptr = ns__fileEventArray;
-
-		for(unsigned int i = 0; i < dFileArray->__size; i++){
-			memcpy(&ns__fileEventArray[i],&fileList.front(), sizeof(struct ns__fileEvent));
-			fileDeallocList.push_back(fileList.front());
-			fileList.pop_front();
-		}
+		ns__returnFileEvents(soap,maxEventsToReturn,&all->process_files);
 	}
-
-	struct ns__dynProcArray * dProcArray;
 	if(procList.empty() || maxEventsToReturn == 0){
 		printf("No process events to send back\n");
 	}
 	else{
-		dProcArray = soap_new_ns__dynProcArray(soap,1);
-		dProcArray->__ptr = NULL;
-		dProcArray->__size = procList.size();
-		all->procEvents = dProcArray;
-
-		if(maxEventsToReturn < dProcArray->__size && maxEventsToReturn != -1){
-			dProcArray->__size = maxEventsToReturn;
-		}
-		if(debug) printf("Sending back %d process events\n",dProcArray->__size);
-
-		struct ns__procEvent * ns__procEventArray = (struct ns__procEvent *)soap_malloc(soap, dProcArray->__size*sizeof(struct ns__procEvent));
-		dProcArray->__ptr = ns__procEventArray;
-
-		for(unsigned int i = 0; i < dProcArray->__size; i++){
-			memcpy(&ns__procEventArray[i],&procList.front(), sizeof(struct ns__procEvent));
-			procDeallocList.push_back(procList.front());
-			procList.pop_front();
-		}
+		ns__returnProcessEvents(soap,maxEventsToReturn,&all->os_processes);
 	}
 
-	result = *all;
-	if(debug) printf("all->regEvents = %#x, all->fileEvents = %#x, all->procEvents = %#x\n", all->regEvents, all->fileEvents, all->procEvents);
+	*result = all;
+	if(debug) printf("all->regkeys = %#x, all->process_files = %#x, all->os_processes = %#x\n", all->regkeys, all->process_files, all->os_processes);
 	if(debug) printf("regList.size() = %d, fileList.size() = %d, procList.size() = %d\n", regList.size(), fileList.size(), procList.size());
 
 	return SOAP_OK;
@@ -516,33 +535,33 @@ void dealloc_events(){
 
 	if(!regDeallocList.empty()){
 		for(int i = 0; i < regDeallocList.size(); i++){
-			free(regDeallocList.front().time);
-			free(regDeallocList.front().eventType);
-			free(regDeallocList.front().procName);
-			free(regDeallocList.front().keyName);
-			free(regDeallocList.front().valueName);
-			free(regDeallocList.front().valueType);
-			free(regDeallocList.front().valueData);
+			free(regDeallocList.front().created_at);
+			free(regDeallocList.front().event_type);
+			free(regDeallocList.front().proc_name);
+			free(regDeallocList.front().name);
+			free(regDeallocList.front().value_name);
+			free(regDeallocList.front().value_type);
+			free(regDeallocList.front().value);
 			regDeallocList.pop_front();
 		}
 	}
 
 	if(!fileDeallocList.empty()){
 		for(int i = 0; i < fileDeallocList.size(); i++){
-			free(fileDeallocList.front().time);
-			free(fileDeallocList.front().eventType);
-			free(fileDeallocList.front().procName);
-			free(fileDeallocList.front().fileName);
+			free(fileDeallocList.front().created_at);
+			free(fileDeallocList.front().event_type);
+			free(fileDeallocList.front().proc_name);
+			free(fileDeallocList.front().name);
 			fileDeallocList.pop_front();
 		}
 	}
 
 	if(!procDeallocList.empty()){
 		for(int i = 0; i < procDeallocList.size(); i++){
-			free(procDeallocList.front().time);
-			free(procDeallocList.front().eventType);
-			free(procDeallocList.front().parentName);
-			free(procDeallocList.front().procName);
+			free(procDeallocList.front().created_at);
+			free(procDeallocList.front().event_type);
+			free(procDeallocList.front().parent_name);
+			free(procDeallocList.front().name);
 			procDeallocList.pop_front();
 		}
 	}

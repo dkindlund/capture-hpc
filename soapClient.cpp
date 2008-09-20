@@ -6,7 +6,7 @@
 */
 #include "soapH.h"
 
-SOAP_SOURCE_STAMP("@(#) soapClient.cpp ver 2.7.10 2008-08-29 08:41:22 GMT")
+SOAP_SOURCE_STAMP("@(#) soapClient.cpp ver 2.7.10 2008-09-17 18:29:41 GMT")
 
 
 SOAP_FMAC5 int SOAP_FMAC6 soap_call_ns__ping(struct soap *soap, const char *soap_endpoint, const char *soap_action, char *a, char **result)
@@ -272,8 +272,168 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call_ns__openDocument(struct soap *soap, const ch
 	return soap_closesock(soap);
 }
 
-SOAP_FMAC5 int SOAP_FMAC6 soap_call_ns__returnEvents(struct soap *soap, const char *soap_endpoint, const char *soap_action, int maxEventsToReturn, struct ns__allEvents &result)
+SOAP_FMAC5 int SOAP_FMAC6 soap_call_ns__returnRegistryEvents(struct soap *soap, const char *soap_endpoint, const char *soap_action, int maxEventsToReturn, struct ns__dynRegArray **result)
+{	struct ns__returnRegistryEvents soap_tmp_ns__returnRegistryEvents;
+	struct ns__returnRegistryEventsResponse *soap_tmp_ns__returnRegistryEventsResponse;
+	if (!soap_endpoint)
+		soap_endpoint = "http://0.0.0.0:1234";
+	soap->encodingStyle = "";
+	soap_tmp_ns__returnRegistryEvents.maxEventsToReturn = maxEventsToReturn;
+	soap_begin(soap);
+	soap_serializeheader(soap);
+	soap_serialize_ns__returnRegistryEvents(soap, &soap_tmp_ns__returnRegistryEvents);
+	if (soap_begin_count(soap))
+		return soap->error;
+	if (soap->mode & SOAP_IO_LENGTH)
+	{	if (soap_envelope_begin_out(soap)
+		 || soap_putheader(soap)
+		 || soap_body_begin_out(soap)
+		 || soap_put_ns__returnRegistryEvents(soap, &soap_tmp_ns__returnRegistryEvents, "ns:returnRegistryEvents", "")
+		 || soap_body_end_out(soap)
+		 || soap_envelope_end_out(soap))
+			 return soap->error;
+	}
+	if (soap_end_count(soap))
+		return soap->error;
+	if (soap_connect(soap, soap_endpoint, soap_action)
+	 || soap_envelope_begin_out(soap)
+	 || soap_putheader(soap)
+	 || soap_body_begin_out(soap)
+	 || soap_put_ns__returnRegistryEvents(soap, &soap_tmp_ns__returnRegistryEvents, "ns:returnRegistryEvents", "")
+	 || soap_body_end_out(soap)
+	 || soap_envelope_end_out(soap)
+	 || soap_end_send(soap))
+		return soap_closesock(soap);
+	*result = NULL;
+	if (soap_begin_recv(soap)
+	 || soap_envelope_begin_in(soap)
+	 || soap_recv_header(soap)
+	 || soap_body_begin_in(soap))
+		return soap_closesock(soap);
+	soap_tmp_ns__returnRegistryEventsResponse = soap_get_ns__returnRegistryEventsResponse(soap, NULL, "ns:returnRegistryEventsResponse", "");
+	if (soap->error)
+	{	if (soap->error == SOAP_TAG_MISMATCH && soap->level == 2)
+			return soap_recv_fault(soap);
+		return soap_closesock(soap);
+	}
+	if (soap_body_end_in(soap)
+	 || soap_envelope_end_in(soap)
+	 || soap_end_recv(soap))
+		return soap_closesock(soap);
+	if (result && soap_tmp_ns__returnRegistryEventsResponse->result)
+		*result = *soap_tmp_ns__returnRegistryEventsResponse->result;
+	return soap_closesock(soap);
+}
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_call_ns__returnFileEvents(struct soap *soap, const char *soap_endpoint, const char *soap_action, int maxEventsToReturn, struct ns__dynFileArray **result)
+{	struct ns__returnFileEvents soap_tmp_ns__returnFileEvents;
+	struct ns__returnFileEventsResponse *soap_tmp_ns__returnFileEventsResponse;
+	if (!soap_endpoint)
+		soap_endpoint = "http://0.0.0.0:1234";
+	soap->encodingStyle = "";
+	soap_tmp_ns__returnFileEvents.maxEventsToReturn = maxEventsToReturn;
+	soap_begin(soap);
+	soap_serializeheader(soap);
+	soap_serialize_ns__returnFileEvents(soap, &soap_tmp_ns__returnFileEvents);
+	if (soap_begin_count(soap))
+		return soap->error;
+	if (soap->mode & SOAP_IO_LENGTH)
+	{	if (soap_envelope_begin_out(soap)
+		 || soap_putheader(soap)
+		 || soap_body_begin_out(soap)
+		 || soap_put_ns__returnFileEvents(soap, &soap_tmp_ns__returnFileEvents, "ns:returnFileEvents", "")
+		 || soap_body_end_out(soap)
+		 || soap_envelope_end_out(soap))
+			 return soap->error;
+	}
+	if (soap_end_count(soap))
+		return soap->error;
+	if (soap_connect(soap, soap_endpoint, soap_action)
+	 || soap_envelope_begin_out(soap)
+	 || soap_putheader(soap)
+	 || soap_body_begin_out(soap)
+	 || soap_put_ns__returnFileEvents(soap, &soap_tmp_ns__returnFileEvents, "ns:returnFileEvents", "")
+	 || soap_body_end_out(soap)
+	 || soap_envelope_end_out(soap)
+	 || soap_end_send(soap))
+		return soap_closesock(soap);
+	*result = NULL;
+	if (soap_begin_recv(soap)
+	 || soap_envelope_begin_in(soap)
+	 || soap_recv_header(soap)
+	 || soap_body_begin_in(soap))
+		return soap_closesock(soap);
+	soap_tmp_ns__returnFileEventsResponse = soap_get_ns__returnFileEventsResponse(soap, NULL, "ns:returnFileEventsResponse", "");
+	if (soap->error)
+	{	if (soap->error == SOAP_TAG_MISMATCH && soap->level == 2)
+			return soap_recv_fault(soap);
+		return soap_closesock(soap);
+	}
+	if (soap_body_end_in(soap)
+	 || soap_envelope_end_in(soap)
+	 || soap_end_recv(soap))
+		return soap_closesock(soap);
+	if (result && soap_tmp_ns__returnFileEventsResponse->result)
+		*result = *soap_tmp_ns__returnFileEventsResponse->result;
+	return soap_closesock(soap);
+}
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_call_ns__returnProcessEvents(struct soap *soap, const char *soap_endpoint, const char *soap_action, int maxEventsToReturn, struct ns__dynProcArray **result)
+{	struct ns__returnProcessEvents soap_tmp_ns__returnProcessEvents;
+	struct ns__returnProcessEventsResponse *soap_tmp_ns__returnProcessEventsResponse;
+	if (!soap_endpoint)
+		soap_endpoint = "http://0.0.0.0:1234";
+	soap->encodingStyle = "";
+	soap_tmp_ns__returnProcessEvents.maxEventsToReturn = maxEventsToReturn;
+	soap_begin(soap);
+	soap_serializeheader(soap);
+	soap_serialize_ns__returnProcessEvents(soap, &soap_tmp_ns__returnProcessEvents);
+	if (soap_begin_count(soap))
+		return soap->error;
+	if (soap->mode & SOAP_IO_LENGTH)
+	{	if (soap_envelope_begin_out(soap)
+		 || soap_putheader(soap)
+		 || soap_body_begin_out(soap)
+		 || soap_put_ns__returnProcessEvents(soap, &soap_tmp_ns__returnProcessEvents, "ns:returnProcessEvents", "")
+		 || soap_body_end_out(soap)
+		 || soap_envelope_end_out(soap))
+			 return soap->error;
+	}
+	if (soap_end_count(soap))
+		return soap->error;
+	if (soap_connect(soap, soap_endpoint, soap_action)
+	 || soap_envelope_begin_out(soap)
+	 || soap_putheader(soap)
+	 || soap_body_begin_out(soap)
+	 || soap_put_ns__returnProcessEvents(soap, &soap_tmp_ns__returnProcessEvents, "ns:returnProcessEvents", "")
+	 || soap_body_end_out(soap)
+	 || soap_envelope_end_out(soap)
+	 || soap_end_send(soap))
+		return soap_closesock(soap);
+	*result = NULL;
+	if (soap_begin_recv(soap)
+	 || soap_envelope_begin_in(soap)
+	 || soap_recv_header(soap)
+	 || soap_body_begin_in(soap))
+		return soap_closesock(soap);
+	soap_tmp_ns__returnProcessEventsResponse = soap_get_ns__returnProcessEventsResponse(soap, NULL, "ns:returnProcessEventsResponse", "");
+	if (soap->error)
+	{	if (soap->error == SOAP_TAG_MISMATCH && soap->level == 2)
+			return soap_recv_fault(soap);
+		return soap_closesock(soap);
+	}
+	if (soap_body_end_in(soap)
+	 || soap_envelope_end_in(soap)
+	 || soap_end_recv(soap))
+		return soap_closesock(soap);
+	if (result && soap_tmp_ns__returnProcessEventsResponse->result)
+		*result = *soap_tmp_ns__returnProcessEventsResponse->result;
+	return soap_closesock(soap);
+}
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_call_ns__returnEvents(struct soap *soap, const char *soap_endpoint, const char *soap_action, int maxEventsToReturn, struct a1 **result)
 {	struct ns__returnEvents soap_tmp_ns__returnEvents;
+	struct ns__returnEventsResponse *soap_tmp_ns__returnEventsResponse;
 	if (!soap_endpoint)
 		soap_endpoint = "http://0.0.0.0:1234";
 	soap->encodingStyle = "";
@@ -303,13 +463,13 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call_ns__returnEvents(struct soap *soap, const ch
 	 || soap_envelope_end_out(soap)
 	 || soap_end_send(soap))
 		return soap_closesock(soap);
-	soap_default_ns__allEvents(soap, &result);
+	*result = NULL;
 	if (soap_begin_recv(soap)
 	 || soap_envelope_begin_in(soap)
 	 || soap_recv_header(soap)
 	 || soap_body_begin_in(soap))
 		return soap_closesock(soap);
-	soap_get_ns__allEvents(soap, &result, "ns:allEvents", "");
+	soap_tmp_ns__returnEventsResponse = soap_get_ns__returnEventsResponse(soap, NULL, "ns:returnEventsResponse", "");
 	if (soap->error)
 	{	if (soap->error == SOAP_TAG_MISMATCH && soap->level == 2)
 			return soap_recv_fault(soap);
@@ -319,6 +479,8 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call_ns__returnEvents(struct soap *soap, const ch
 	 || soap_envelope_end_in(soap)
 	 || soap_end_recv(soap))
 		return soap_closesock(soap);
+	if (result && soap_tmp_ns__returnEventsResponse->result)
+		*result = *soap_tmp_ns__returnEventsResponse->result;
 	return soap_closesock(soap);
 }
 

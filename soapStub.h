@@ -27,49 +27,49 @@
 
 #endif
 
-#ifndef SOAP_TYPE_ns__regEvent
-#define SOAP_TYPE_ns__regEvent (7)
-/* ns:regEvent */
-struct ns__regEvent
+#ifndef SOAP_TYPE_ns__regkey
+#define SOAP_TYPE_ns__regkey (7)
+/* ns:regkey */
+struct ns__regkey
 {
 public:
-	char *time;	/* optional element of type xsd:string */
-	char *eventType;	/* optional element of type xsd:string */
-	int procPID;	/* required element of type xsd:int */
-	char *procName;	/* optional element of type xsd:string */
-	char *keyName;	/* optional element of type xsd:string */
-	char *valueName;	/* optional element of type xsd:string */
-	char *valueType;	/* optional element of type xsd:string */
-	char *valueData;	/* optional element of type xsd:string */
+	char *created_at;	/* optional element of type xsd:string */
+	char *event_type;	/* optional element of type xsd:string */
+	int pid;	/* required element of type xsd:int */
+	char *proc_name;	/* optional element of type xsd:string */
+	char *name;	/* optional element of type xsd:string */
+	char *value_name;	/* optional element of type xsd:string */
+	char *value_type;	/* optional element of type xsd:string */
+	char *value;	/* optional element of type xsd:string */
 };
 #endif
 
-#ifndef SOAP_TYPE_ns__fileEvent
-#define SOAP_TYPE_ns__fileEvent (8)
-/* ns:fileEvent */
-struct ns__fileEvent
+#ifndef SOAP_TYPE_ns__processFile
+#define SOAP_TYPE_ns__processFile (8)
+/* ns:processFile */
+struct ns__processFile
 {
 public:
-	char *time;	/* optional element of type xsd:string */
-	char *eventType;	/* optional element of type xsd:string */
-	int procPID;	/* required element of type xsd:int */
-	char *procName;	/* optional element of type xsd:string */
-	char *fileName;	/* optional element of type xsd:string */
+	char *created_at;	/* optional element of type xsd:string */
+	char *event_type;	/* optional element of type xsd:string */
+	int pid;	/* required element of type xsd:int */
+	char *proc_name;	/* optional element of type xsd:string */
+	char *name;	/* optional element of type xsd:string */
 };
 #endif
 
-#ifndef SOAP_TYPE_ns__procEvent
-#define SOAP_TYPE_ns__procEvent (9)
-/* ns:procEvent */
-struct ns__procEvent
+#ifndef SOAP_TYPE_ns__osProcess
+#define SOAP_TYPE_ns__osProcess (9)
+/* ns:osProcess */
+struct ns__osProcess
 {
 public:
-	char *time;	/* optional element of type xsd:string */
-	char *eventType;	/* optional element of type xsd:string */
-	int parentPID;	/* required element of type xsd:int */
-	char *parentName;	/* optional element of type xsd:string */
-	int procPID;	/* required element of type xsd:int */
-	char *procName;	/* optional element of type xsd:string */
+	char *created_at;	/* optional element of type xsd:string */
+	char *event_type;	/* optional element of type xsd:string */
+	int parent_pid;	/* required element of type xsd:int */
+	char *parent_name;	/* optional element of type xsd:string */
+	int pid;	/* required element of type xsd:int */
+	char *name;	/* optional element of type xsd:string */
 };
 #endif
 
@@ -79,7 +79,7 @@ public:
 struct ns__dynRegArray
 {
 public:
-	struct ns__regEvent *__ptr;
+	struct ns__regkey *__ptr;
 	int __size;
 };
 #endif
@@ -90,7 +90,7 @@ public:
 struct ns__dynFileArray
 {
 public:
-	struct ns__fileEvent *__ptr;
+	struct ns__processFile *__ptr;
 	int __size;
 };
 #endif
@@ -101,25 +101,25 @@ public:
 struct ns__dynProcArray
 {
 public:
-	struct ns__procEvent *__ptr;
+	struct ns__osProcess *__ptr;
 	int __size;
 };
 #endif
 
-#ifndef SOAP_TYPE_ns__allEvents
-#define SOAP_TYPE_ns__allEvents (16)
-/* ns:allEvents */
-struct ns__allEvents
+#ifndef SOAP_TYPE_a1
+#define SOAP_TYPE_a1 (16)
+/* a1 */
+struct a1
 {
 public:
-	struct ns__dynRegArray *regEvents;	/* SOAP 1.2 RPC return element (when namespace qualified) */	/* optional element of type ns:dynRegArray */
-	struct ns__dynFileArray *fileEvents;	/* optional element of type ns:dynFileArray */
-	struct ns__dynProcArray *procEvents;	/* optional element of type ns:dynProcArray */
+	struct ns__dynRegArray *regkeys;	/* optional element of type ns:dynRegArray */
+	struct ns__dynFileArray *process_files;	/* optional element of type ns:dynFileArray */
+	struct ns__dynProcArray *os_processes;	/* optional element of type ns:dynProcArray */
 };
 #endif
 
 #ifndef SOAP_TYPE_s1
-#define SOAP_TYPE_s1 (20)
+#define SOAP_TYPE_s1 (21)
 /* s1 */
 struct s1
 {
@@ -131,7 +131,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ns__pingResponse
-#define SOAP_TYPE_ns__pingResponse (25)
+#define SOAP_TYPE_ns__pingResponse (26)
 /* ns:pingResponse */
 struct ns__pingResponse
 {
@@ -141,7 +141,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ns__ping
-#define SOAP_TYPE_ns__ping (26)
+#define SOAP_TYPE_ns__ping (27)
 /* ns:ping */
 struct ns__ping
 {
@@ -151,7 +151,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ns__visitURLResponse
-#define SOAP_TYPE_ns__visitURLResponse (29)
+#define SOAP_TYPE_ns__visitURLResponse (30)
 /* ns:visitURLResponse */
 struct ns__visitURLResponse
 {
@@ -161,7 +161,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ns__visitURL
-#define SOAP_TYPE_ns__visitURL (30)
+#define SOAP_TYPE_ns__visitURL (31)
 /* ns:visitURL */
 struct ns__visitURL
 {
@@ -171,7 +171,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ns__sendFileBase64Response
-#define SOAP_TYPE_ns__sendFileBase64Response (32)
+#define SOAP_TYPE_ns__sendFileBase64Response (33)
 /* ns:sendFileBase64Response */
 struct ns__sendFileBase64Response
 {
@@ -181,7 +181,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ns__sendFileBase64
-#define SOAP_TYPE_ns__sendFileBase64 (33)
+#define SOAP_TYPE_ns__sendFileBase64 (34)
 /* ns:sendFileBase64 */
 struct ns__sendFileBase64
 {
@@ -194,7 +194,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ns__receiveFileBase64
-#define SOAP_TYPE_ns__receiveFileBase64 (36)
+#define SOAP_TYPE_ns__receiveFileBase64 (37)
 /* ns:receiveFileBase64 */
 struct ns__receiveFileBase64
 {
@@ -204,7 +204,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ns__openDocumentResponse
-#define SOAP_TYPE_ns__openDocumentResponse (38)
+#define SOAP_TYPE_ns__openDocumentResponse (39)
 /* ns:openDocumentResponse */
 struct ns__openDocumentResponse
 {
@@ -214,7 +214,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ns__openDocument
-#define SOAP_TYPE_ns__openDocument (39)
+#define SOAP_TYPE_ns__openDocument (40)
 /* ns:openDocument */
 struct ns__openDocument
 {
@@ -224,8 +224,78 @@ public:
 };
 #endif
 
+#ifndef SOAP_TYPE_ns__returnRegistryEventsResponse
+#define SOAP_TYPE_ns__returnRegistryEventsResponse (43)
+/* ns:returnRegistryEventsResponse */
+struct ns__returnRegistryEventsResponse
+{
+public:
+	struct ns__dynRegArray **result;	/* SOAP 1.2 RPC return element (when namespace qualified) */	/* optional element of type ns:dynRegArray */
+};
+#endif
+
+#ifndef SOAP_TYPE_ns__returnRegistryEvents
+#define SOAP_TYPE_ns__returnRegistryEvents (44)
+/* ns:returnRegistryEvents */
+struct ns__returnRegistryEvents
+{
+public:
+	int maxEventsToReturn;	/* required element of type xsd:int */
+};
+#endif
+
+#ifndef SOAP_TYPE_ns__returnFileEventsResponse
+#define SOAP_TYPE_ns__returnFileEventsResponse (47)
+/* ns:returnFileEventsResponse */
+struct ns__returnFileEventsResponse
+{
+public:
+	struct ns__dynFileArray **result;	/* SOAP 1.2 RPC return element (when namespace qualified) */	/* optional element of type ns:dynFileArray */
+};
+#endif
+
+#ifndef SOAP_TYPE_ns__returnFileEvents
+#define SOAP_TYPE_ns__returnFileEvents (48)
+/* ns:returnFileEvents */
+struct ns__returnFileEvents
+{
+public:
+	int maxEventsToReturn;	/* required element of type xsd:int */
+};
+#endif
+
+#ifndef SOAP_TYPE_ns__returnProcessEventsResponse
+#define SOAP_TYPE_ns__returnProcessEventsResponse (51)
+/* ns:returnProcessEventsResponse */
+struct ns__returnProcessEventsResponse
+{
+public:
+	struct ns__dynProcArray **result;	/* SOAP 1.2 RPC return element (when namespace qualified) */	/* optional element of type ns:dynProcArray */
+};
+#endif
+
+#ifndef SOAP_TYPE_ns__returnProcessEvents
+#define SOAP_TYPE_ns__returnProcessEvents (52)
+/* ns:returnProcessEvents */
+struct ns__returnProcessEvents
+{
+public:
+	int maxEventsToReturn;	/* required element of type xsd:int */
+};
+#endif
+
+#ifndef SOAP_TYPE_ns__returnEventsResponse
+#define SOAP_TYPE_ns__returnEventsResponse (56)
+/* ns:returnEventsResponse */
+struct ns__returnEventsResponse
+{
+public:
+	struct a1 **result;	/* SOAP 1.2 RPC return element (when namespace qualified) */	/* optional element of type ns:allEvents */
+};
+#endif
+
 #ifndef SOAP_TYPE_ns__returnEvents
-#define SOAP_TYPE_ns__returnEvents (42)
+#define SOAP_TYPE_ns__returnEvents (57)
 /* ns:returnEvents */
 struct ns__returnEvents
 {
@@ -235,7 +305,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ns__sendMIMEResponse
-#define SOAP_TYPE_ns__sendMIMEResponse (44)
+#define SOAP_TYPE_ns__sendMIMEResponse (59)
 /* ns:sendMIMEResponse */
 struct ns__sendMIMEResponse
 {
@@ -245,7 +315,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ns__sendMIME
-#define SOAP_TYPE_ns__sendMIME (45)
+#define SOAP_TYPE_ns__sendMIME (60)
 /* ns:sendMIME */
 struct ns__sendMIME
 {
@@ -255,7 +325,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_SOAP_ENV__Header
-#define SOAP_TYPE_SOAP_ENV__Header (46)
+#define SOAP_TYPE_SOAP_ENV__Header (61)
 /* SOAP Header: */
 struct SOAP_ENV__Header
 {
@@ -267,7 +337,7 @@ private:
 #endif
 
 #ifndef SOAP_TYPE_SOAP_ENV__Code
-#define SOAP_TYPE_SOAP_ENV__Code (47)
+#define SOAP_TYPE_SOAP_ENV__Code (62)
 /* SOAP Fault Code: */
 struct SOAP_ENV__Code
 {
@@ -278,7 +348,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_SOAP_ENV__Detail
-#define SOAP_TYPE_SOAP_ENV__Detail (49)
+#define SOAP_TYPE_SOAP_ENV__Detail (64)
 /* SOAP-ENV:Detail */
 struct SOAP_ENV__Detail
 {
@@ -290,7 +360,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_SOAP_ENV__Reason
-#define SOAP_TYPE_SOAP_ENV__Reason (52)
+#define SOAP_TYPE_SOAP_ENV__Reason (67)
 /* SOAP-ENV:Reason */
 struct SOAP_ENV__Reason
 {
@@ -300,7 +370,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_SOAP_ENV__Fault
-#define SOAP_TYPE_SOAP_ENV__Fault (53)
+#define SOAP_TYPE_SOAP_ENV__Fault (68)
 /* SOAP Fault: */
 struct SOAP_ENV__Fault
 {
@@ -340,8 +410,13 @@ typedef char *_QName;
 typedef char *_XML;
 #endif
 
+#ifndef SOAP_TYPE_ns__allEvents
+#define SOAP_TYPE_ns__allEvents (20)
+typedef struct a1 ns__allEvents;
+#endif
+
 #ifndef SOAP_TYPE_ns__receiveFileStruct
-#define SOAP_TYPE_ns__receiveFileStruct (22)
+#define SOAP_TYPE_ns__receiveFileStruct (23)
 typedef struct s1 ns__receiveFileStruct;
 #endif
 
@@ -377,7 +452,13 @@ SOAP_FMAC5 int SOAP_FMAC6 ns__receiveFileBase64(struct soap*, char *fileName, st
 
 SOAP_FMAC5 int SOAP_FMAC6 ns__openDocument(struct soap*, char *fileName, int waitTimeMillisec, int &result);
 
-SOAP_FMAC5 int SOAP_FMAC6 ns__returnEvents(struct soap*, int maxEventsToReturn, struct ns__allEvents &result);
+SOAP_FMAC5 int SOAP_FMAC6 ns__returnRegistryEvents(struct soap*, int maxEventsToReturn, struct ns__dynRegArray **result);
+
+SOAP_FMAC5 int SOAP_FMAC6 ns__returnFileEvents(struct soap*, int maxEventsToReturn, struct ns__dynFileArray **result);
+
+SOAP_FMAC5 int SOAP_FMAC6 ns__returnProcessEvents(struct soap*, int maxEventsToReturn, struct ns__dynProcArray **result);
+
+SOAP_FMAC5 int SOAP_FMAC6 ns__returnEvents(struct soap*, int maxEventsToReturn, struct a1 **result);
 
 SOAP_FMAC5 int SOAP_FMAC6 ns__sendMIME(struct soap*, int magicNumber, int &result);
 
@@ -398,7 +479,13 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call_ns__receiveFileBase64(struct soap *soap, con
 
 SOAP_FMAC5 int SOAP_FMAC6 soap_call_ns__openDocument(struct soap *soap, const char *soap_endpoint, const char *soap_action, char *fileName, int waitTimeMillisec, int &result);
 
-SOAP_FMAC5 int SOAP_FMAC6 soap_call_ns__returnEvents(struct soap *soap, const char *soap_endpoint, const char *soap_action, int maxEventsToReturn, struct ns__allEvents &result);
+SOAP_FMAC5 int SOAP_FMAC6 soap_call_ns__returnRegistryEvents(struct soap *soap, const char *soap_endpoint, const char *soap_action, int maxEventsToReturn, struct ns__dynRegArray **result);
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_call_ns__returnFileEvents(struct soap *soap, const char *soap_endpoint, const char *soap_action, int maxEventsToReturn, struct ns__dynFileArray **result);
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_call_ns__returnProcessEvents(struct soap *soap, const char *soap_endpoint, const char *soap_action, int maxEventsToReturn, struct ns__dynProcArray **result);
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_call_ns__returnEvents(struct soap *soap, const char *soap_endpoint, const char *soap_action, int maxEventsToReturn, struct a1 **result);
 
 SOAP_FMAC5 int SOAP_FMAC6 soap_call_ns__sendMIME(struct soap *soap, const char *soap_endpoint, const char *soap_action, int magicNumber, int &result);
 
@@ -421,6 +508,12 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_serve_ns__sendFileBase64(struct soap*);
 SOAP_FMAC5 int SOAP_FMAC6 soap_serve_ns__receiveFileBase64(struct soap*);
 
 SOAP_FMAC5 int SOAP_FMAC6 soap_serve_ns__openDocument(struct soap*);
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_serve_ns__returnRegistryEvents(struct soap*);
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_serve_ns__returnFileEvents(struct soap*);
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_serve_ns__returnProcessEvents(struct soap*);
 
 SOAP_FMAC5 int SOAP_FMAC6 soap_serve_ns__returnEvents(struct soap*);
 

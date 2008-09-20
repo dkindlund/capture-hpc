@@ -6,7 +6,7 @@
 */
 #include "soapH.h"
 
-SOAP_SOURCE_STAMP("@(#) soapServer.cpp ver 2.7.10 2008-08-29 08:41:22 GMT")
+SOAP_SOURCE_STAMP("@(#) soapServer.cpp ver 2.7.10 2008-09-17 18:29:41 GMT")
 
 
 SOAP_FMAC5 int SOAP_FMAC6 soap_serve(struct soap *soap)
@@ -83,6 +83,12 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_serve_request(struct soap *soap)
 		return soap_serve_ns__receiveFileBase64(soap);
 	if (!soap_match_tag(soap, soap->tag, "ns:openDocument"))
 		return soap_serve_ns__openDocument(soap);
+	if (!soap_match_tag(soap, soap->tag, "ns:returnRegistryEvents"))
+		return soap_serve_ns__returnRegistryEvents(soap);
+	if (!soap_match_tag(soap, soap->tag, "ns:returnFileEvents"))
+		return soap_serve_ns__returnFileEvents(soap);
+	if (!soap_match_tag(soap, soap->tag, "ns:returnProcessEvents"))
+		return soap_serve_ns__returnProcessEvents(soap);
 	if (!soap_match_tag(soap, soap->tag, "ns:returnEvents"))
 		return soap_serve_ns__returnEvents(soap);
 	if (!soap_match_tag(soap, soap->tag, "ns:sendMIME"))
@@ -299,30 +305,33 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_serve_ns__openDocument(struct soap *soap)
 	return soap_closesock(soap);
 }
 
-SOAP_FMAC5 int SOAP_FMAC6 soap_serve_ns__returnEvents(struct soap *soap)
-{	struct ns__returnEvents soap_tmp_ns__returnEvents;
-	struct ns__allEvents result;
-	soap_default_ns__allEvents(soap, &result);
-	soap_default_ns__returnEvents(soap, &soap_tmp_ns__returnEvents);
+SOAP_FMAC5 int SOAP_FMAC6 soap_serve_ns__returnRegistryEvents(struct soap *soap)
+{	struct ns__returnRegistryEvents soap_tmp_ns__returnRegistryEvents;
+	struct ns__returnRegistryEventsResponse soap_tmp_ns__returnRegistryEventsResponse;
+	struct ns__dynRegArray * soap_tmp_PointerTons__dynRegArray;
+	soap_default_ns__returnRegistryEventsResponse(soap, &soap_tmp_ns__returnRegistryEventsResponse);
+	soap_tmp_PointerTons__dynRegArray = NULL;
+	soap_tmp_ns__returnRegistryEventsResponse.result = &soap_tmp_PointerTons__dynRegArray;
+	soap_default_ns__returnRegistryEvents(soap, &soap_tmp_ns__returnRegistryEvents);
 	soap->encodingStyle = "";
-	if (!soap_get_ns__returnEvents(soap, &soap_tmp_ns__returnEvents, "ns:returnEvents", NULL))
+	if (!soap_get_ns__returnRegistryEvents(soap, &soap_tmp_ns__returnRegistryEvents, "ns:returnRegistryEvents", NULL))
 		return soap->error;
 	if (soap_body_end_in(soap)
 	 || soap_envelope_end_in(soap)
 	 || soap_end_recv(soap))
 		return soap->error;
-	soap->error = ns__returnEvents(soap, soap_tmp_ns__returnEvents.maxEventsToReturn, result);
+	soap->error = ns__returnRegistryEvents(soap, soap_tmp_ns__returnRegistryEvents.maxEventsToReturn, &soap_tmp_PointerTons__dynRegArray);
 	if (soap->error)
 		return soap->error;
 	soap_serializeheader(soap);
-	soap_serialize_ns__allEvents(soap, &result);
+	soap_serialize_ns__returnRegistryEventsResponse(soap, &soap_tmp_ns__returnRegistryEventsResponse);
 	if (soap_begin_count(soap))
 		return soap->error;
 	if (soap->mode & SOAP_IO_LENGTH)
 	{	if (soap_envelope_begin_out(soap)
 		 || soap_putheader(soap)
 		 || soap_body_begin_out(soap)
-		 || soap_put_ns__allEvents(soap, &result, "ns:allEvents", "")
+		 || soap_put_ns__returnRegistryEventsResponse(soap, &soap_tmp_ns__returnRegistryEventsResponse, "ns:returnRegistryEventsResponse", "")
 		 || soap_body_end_out(soap)
 		 || soap_envelope_end_out(soap))
 			 return soap->error;
@@ -332,7 +341,139 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_serve_ns__returnEvents(struct soap *soap)
 	 || soap_envelope_begin_out(soap)
 	 || soap_putheader(soap)
 	 || soap_body_begin_out(soap)
-	 || soap_put_ns__allEvents(soap, &result, "ns:allEvents", "")
+	 || soap_put_ns__returnRegistryEventsResponse(soap, &soap_tmp_ns__returnRegistryEventsResponse, "ns:returnRegistryEventsResponse", "")
+	 || soap_body_end_out(soap)
+	 || soap_envelope_end_out(soap)
+	 || soap_end_send(soap))
+		return soap->error;
+	return soap_closesock(soap);
+}
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_serve_ns__returnFileEvents(struct soap *soap)
+{	struct ns__returnFileEvents soap_tmp_ns__returnFileEvents;
+	struct ns__returnFileEventsResponse soap_tmp_ns__returnFileEventsResponse;
+	struct ns__dynFileArray * soap_tmp_PointerTons__dynFileArray;
+	soap_default_ns__returnFileEventsResponse(soap, &soap_tmp_ns__returnFileEventsResponse);
+	soap_tmp_PointerTons__dynFileArray = NULL;
+	soap_tmp_ns__returnFileEventsResponse.result = &soap_tmp_PointerTons__dynFileArray;
+	soap_default_ns__returnFileEvents(soap, &soap_tmp_ns__returnFileEvents);
+	soap->encodingStyle = "";
+	if (!soap_get_ns__returnFileEvents(soap, &soap_tmp_ns__returnFileEvents, "ns:returnFileEvents", NULL))
+		return soap->error;
+	if (soap_body_end_in(soap)
+	 || soap_envelope_end_in(soap)
+	 || soap_end_recv(soap))
+		return soap->error;
+	soap->error = ns__returnFileEvents(soap, soap_tmp_ns__returnFileEvents.maxEventsToReturn, &soap_tmp_PointerTons__dynFileArray);
+	if (soap->error)
+		return soap->error;
+	soap_serializeheader(soap);
+	soap_serialize_ns__returnFileEventsResponse(soap, &soap_tmp_ns__returnFileEventsResponse);
+	if (soap_begin_count(soap))
+		return soap->error;
+	if (soap->mode & SOAP_IO_LENGTH)
+	{	if (soap_envelope_begin_out(soap)
+		 || soap_putheader(soap)
+		 || soap_body_begin_out(soap)
+		 || soap_put_ns__returnFileEventsResponse(soap, &soap_tmp_ns__returnFileEventsResponse, "ns:returnFileEventsResponse", "")
+		 || soap_body_end_out(soap)
+		 || soap_envelope_end_out(soap))
+			 return soap->error;
+	};
+	if (soap_end_count(soap)
+	 || soap_response(soap, SOAP_OK)
+	 || soap_envelope_begin_out(soap)
+	 || soap_putheader(soap)
+	 || soap_body_begin_out(soap)
+	 || soap_put_ns__returnFileEventsResponse(soap, &soap_tmp_ns__returnFileEventsResponse, "ns:returnFileEventsResponse", "")
+	 || soap_body_end_out(soap)
+	 || soap_envelope_end_out(soap)
+	 || soap_end_send(soap))
+		return soap->error;
+	return soap_closesock(soap);
+}
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_serve_ns__returnProcessEvents(struct soap *soap)
+{	struct ns__returnProcessEvents soap_tmp_ns__returnProcessEvents;
+	struct ns__returnProcessEventsResponse soap_tmp_ns__returnProcessEventsResponse;
+	struct ns__dynProcArray * soap_tmp_PointerTons__dynProcArray;
+	soap_default_ns__returnProcessEventsResponse(soap, &soap_tmp_ns__returnProcessEventsResponse);
+	soap_tmp_PointerTons__dynProcArray = NULL;
+	soap_tmp_ns__returnProcessEventsResponse.result = &soap_tmp_PointerTons__dynProcArray;
+	soap_default_ns__returnProcessEvents(soap, &soap_tmp_ns__returnProcessEvents);
+	soap->encodingStyle = "";
+	if (!soap_get_ns__returnProcessEvents(soap, &soap_tmp_ns__returnProcessEvents, "ns:returnProcessEvents", NULL))
+		return soap->error;
+	if (soap_body_end_in(soap)
+	 || soap_envelope_end_in(soap)
+	 || soap_end_recv(soap))
+		return soap->error;
+	soap->error = ns__returnProcessEvents(soap, soap_tmp_ns__returnProcessEvents.maxEventsToReturn, &soap_tmp_PointerTons__dynProcArray);
+	if (soap->error)
+		return soap->error;
+	soap_serializeheader(soap);
+	soap_serialize_ns__returnProcessEventsResponse(soap, &soap_tmp_ns__returnProcessEventsResponse);
+	if (soap_begin_count(soap))
+		return soap->error;
+	if (soap->mode & SOAP_IO_LENGTH)
+	{	if (soap_envelope_begin_out(soap)
+		 || soap_putheader(soap)
+		 || soap_body_begin_out(soap)
+		 || soap_put_ns__returnProcessEventsResponse(soap, &soap_tmp_ns__returnProcessEventsResponse, "ns:returnProcessEventsResponse", "")
+		 || soap_body_end_out(soap)
+		 || soap_envelope_end_out(soap))
+			 return soap->error;
+	};
+	if (soap_end_count(soap)
+	 || soap_response(soap, SOAP_OK)
+	 || soap_envelope_begin_out(soap)
+	 || soap_putheader(soap)
+	 || soap_body_begin_out(soap)
+	 || soap_put_ns__returnProcessEventsResponse(soap, &soap_tmp_ns__returnProcessEventsResponse, "ns:returnProcessEventsResponse", "")
+	 || soap_body_end_out(soap)
+	 || soap_envelope_end_out(soap)
+	 || soap_end_send(soap))
+		return soap->error;
+	return soap_closesock(soap);
+}
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_serve_ns__returnEvents(struct soap *soap)
+{	struct ns__returnEvents soap_tmp_ns__returnEvents;
+	struct ns__returnEventsResponse soap_tmp_ns__returnEventsResponse;
+	struct a1 * soap_tmp_PointerTons__allEvents;
+	soap_default_ns__returnEventsResponse(soap, &soap_tmp_ns__returnEventsResponse);
+	soap_tmp_PointerTons__allEvents = NULL;
+	soap_tmp_ns__returnEventsResponse.result = &soap_tmp_PointerTons__allEvents;
+	soap_default_ns__returnEvents(soap, &soap_tmp_ns__returnEvents);
+	soap->encodingStyle = "";
+	if (!soap_get_ns__returnEvents(soap, &soap_tmp_ns__returnEvents, "ns:returnEvents", NULL))
+		return soap->error;
+	if (soap_body_end_in(soap)
+	 || soap_envelope_end_in(soap)
+	 || soap_end_recv(soap))
+		return soap->error;
+	soap->error = ns__returnEvents(soap, soap_tmp_ns__returnEvents.maxEventsToReturn, &soap_tmp_PointerTons__allEvents);
+	if (soap->error)
+		return soap->error;
+	soap_serializeheader(soap);
+	soap_serialize_ns__returnEventsResponse(soap, &soap_tmp_ns__returnEventsResponse);
+	if (soap_begin_count(soap))
+		return soap->error;
+	if (soap->mode & SOAP_IO_LENGTH)
+	{	if (soap_envelope_begin_out(soap)
+		 || soap_putheader(soap)
+		 || soap_body_begin_out(soap)
+		 || soap_put_ns__returnEventsResponse(soap, &soap_tmp_ns__returnEventsResponse, "ns:returnEventsResponse", "")
+		 || soap_body_end_out(soap)
+		 || soap_envelope_end_out(soap))
+			 return soap->error;
+	};
+	if (soap_end_count(soap)
+	 || soap_response(soap, SOAP_OK)
+	 || soap_envelope_begin_out(soap)
+	 || soap_putheader(soap)
+	 || soap_body_begin_out(soap)
+	 || soap_put_ns__returnEventsResponse(soap, &soap_tmp_ns__returnEventsResponse, "ns:returnEventsResponse", "")
 	 || soap_body_end_out(soap)
 	 || soap_envelope_end_out(soap)
 	 || soap_end_send(soap))
