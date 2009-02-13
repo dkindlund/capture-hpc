@@ -279,7 +279,7 @@ int ns__sendFileBase64(struct soap *soap, char * fileName, char * data, unsigned
 //Allows you to ask for a file and get it back in base64.
 //NOTE: While I know it will be mitigated by the network architecture, features like this
 //are why we should look into SOAP over SSL
-int ns__receiveFileBase64(struct soap *soap, char * fileName, ns__receiveFileStruct &result){
+int ns__receiveFileBase64(struct soap *soap, char * fileName, ns__receiveFileStruct **result){
 	int debug = 0;
 	
 	if(debug) printf("in ns__receiveFileBase64, about to open %s\n", fileName);
@@ -324,9 +324,10 @@ int ns__receiveFileBase64(struct soap *soap, char * fileName, ns__receiveFileStr
 	}
 
 	//return the file
-	result.data = encodedData;
-	result.encodedLength = encodedLength;
-	result.decodedLength = fileSize;
+	*result = soap_new_ns__receiveFileStruct(soap, 1);
+	(*result)->data = encodedData;
+	(*result)->encodedLength = encodedLength;
+	(*result)->decodedLength = fileSize;
 
 	if(debug) printf("cleaning up\n");
 	CloseHandle(myHandle);

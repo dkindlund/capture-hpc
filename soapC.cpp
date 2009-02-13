@@ -7,7 +7,7 @@
 
 #include "soapH.h"
 
-SOAP_SOURCE_STAMP("@(#) soapC.cpp ver 2.7.10 2008-09-17 18:29:42 GMT")
+SOAP_SOURCE_STAMP("@(#) soapC.cpp ver 2.7.10 2009-02-13 20:50:07 GMT")
 
 
 #ifndef WITH_NOGLOBAL
@@ -187,6 +187,8 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_getelement(struct soap *soap, int *type)
 		return soap_in_ns__openDocumentResponse(soap, NULL, NULL, "ns:openDocumentResponse");
 	case SOAP_TYPE_ns__receiveFileBase64:
 		return soap_in_ns__receiveFileBase64(soap, NULL, NULL, "ns:receiveFileBase64");
+	case SOAP_TYPE_ns__receiveFileBase64Response:
+		return soap_in_ns__receiveFileBase64Response(soap, NULL, NULL, "ns:receiveFileBase64Response");
 	case SOAP_TYPE_ns__sendFileBase64:
 		return soap_in_ns__sendFileBase64(soap, NULL, NULL, "ns:sendFileBase64");
 	case SOAP_TYPE_ns__sendFileBase64Response:
@@ -229,6 +231,10 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_getelement(struct soap *soap, int *type)
 		return soap_in_PointerToPointerTons__dynFileArray(soap, NULL, NULL, "ns:dynFileArray");
 	case SOAP_TYPE_PointerToPointerTons__dynRegArray:
 		return soap_in_PointerToPointerTons__dynRegArray(soap, NULL, NULL, "ns:dynRegArray");
+	case SOAP_TYPE_PointerToPointerTons__receiveFileStruct:
+		return soap_in_PointerToPointerTons__receiveFileStruct(soap, NULL, NULL, "ns:receiveFileStruct");
+	case SOAP_TYPE_PointerTons__receiveFileStruct:
+		return soap_in_PointerTons__receiveFileStruct(soap, NULL, NULL, "ns:receiveFileStruct");
 	case SOAP_TYPE_PointerTostring:
 		return soap_in_PointerTostring(soap, NULL, NULL, "xsd:string");
 	case SOAP_TYPE_PointerTons__dynProcArray:
@@ -315,6 +321,10 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_getelement(struct soap *soap, int *type)
 		if (!soap_match_tag(soap, t, "ns:receiveFileBase64"))
 		{	*type = SOAP_TYPE_ns__receiveFileBase64;
 			return soap_in_ns__receiveFileBase64(soap, NULL, NULL, NULL);
+		}
+		if (!soap_match_tag(soap, t, "ns:receiveFileBase64Response"))
+		{	*type = SOAP_TYPE_ns__receiveFileBase64Response;
+			return soap_in_ns__receiveFileBase64Response(soap, NULL, NULL, NULL);
 		}
 		if (!soap_match_tag(soap, t, "ns:sendFileBase64"))
 		{	*type = SOAP_TYPE_ns__sendFileBase64;
@@ -490,6 +500,8 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_putelement(struct soap *soap, const void *ptr, co
 		return soap_out_ns__openDocumentResponse(soap, tag, id, (const struct ns__openDocumentResponse *)ptr, "ns:openDocumentResponse");
 	case SOAP_TYPE_ns__receiveFileBase64:
 		return soap_out_ns__receiveFileBase64(soap, tag, id, (const struct ns__receiveFileBase64 *)ptr, "ns:receiveFileBase64");
+	case SOAP_TYPE_ns__receiveFileBase64Response:
+		return soap_out_ns__receiveFileBase64Response(soap, tag, id, (const struct ns__receiveFileBase64Response *)ptr, "ns:receiveFileBase64Response");
 	case SOAP_TYPE_ns__sendFileBase64:
 		return soap_out_ns__sendFileBase64(soap, tag, id, (const struct ns__sendFileBase64 *)ptr, "ns:sendFileBase64");
 	case SOAP_TYPE_ns__sendFileBase64Response:
@@ -532,6 +544,10 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_putelement(struct soap *soap, const void *ptr, co
 		return soap_out_PointerToPointerTons__dynFileArray(soap, tag, id, (struct ns__dynFileArray **const*)ptr, "ns:dynFileArray");
 	case SOAP_TYPE_PointerToPointerTons__dynRegArray:
 		return soap_out_PointerToPointerTons__dynRegArray(soap, tag, id, (struct ns__dynRegArray **const*)ptr, "ns:dynRegArray");
+	case SOAP_TYPE_PointerToPointerTons__receiveFileStruct:
+		return soap_out_PointerToPointerTons__receiveFileStruct(soap, tag, id, (struct s1 **const*)ptr, "ns:receiveFileStruct");
+	case SOAP_TYPE_PointerTons__receiveFileStruct:
+		return soap_out_PointerTons__receiveFileStruct(soap, tag, id, (struct s1 *const*)ptr, "ns:receiveFileStruct");
 	case SOAP_TYPE_PointerTostring:
 		return soap_out_PointerTostring(soap, tag, id, (char **const*)ptr, "xsd:string");
 	case SOAP_TYPE_PointerTons__dynProcArray:
@@ -608,6 +624,9 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_markelement(struct soap *soap, const void *ptr, 
 	case SOAP_TYPE_ns__receiveFileBase64:
 		soap_serialize_ns__receiveFileBase64(soap, (const struct ns__receiveFileBase64 *)ptr);
 		break;
+	case SOAP_TYPE_ns__receiveFileBase64Response:
+		soap_serialize_ns__receiveFileBase64Response(soap, (const struct ns__receiveFileBase64Response *)ptr);
+		break;
 	case SOAP_TYPE_ns__sendFileBase64:
 		soap_serialize_ns__sendFileBase64(soap, (const struct ns__sendFileBase64 *)ptr);
 		break;
@@ -670,6 +689,12 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_markelement(struct soap *soap, const void *ptr, 
 		break;
 	case SOAP_TYPE_PointerToPointerTons__dynRegArray:
 		soap_serialize_PointerToPointerTons__dynRegArray(soap, (struct ns__dynRegArray **const*)ptr);
+		break;
+	case SOAP_TYPE_PointerToPointerTons__receiveFileStruct:
+		soap_serialize_PointerToPointerTons__receiveFileStruct(soap, (struct s1 **const*)ptr);
+		break;
+	case SOAP_TYPE_PointerTons__receiveFileStruct:
+		soap_serialize_PointerTons__receiveFileStruct(soap, (struct s1 *const*)ptr);
 		break;
 	case SOAP_TYPE_PointerTostring:
 		soap_serialize_PointerTostring(soap, (char **const*)ptr);
@@ -738,6 +763,8 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_instantiate(struct soap *soap, int t, const ch
 		return (void*)soap_instantiate_ns__sendFileBase64Response(soap, -1, type, arrayType, n);
 	case SOAP_TYPE_ns__sendFileBase64:
 		return (void*)soap_instantiate_ns__sendFileBase64(soap, -1, type, arrayType, n);
+	case SOAP_TYPE_ns__receiveFileBase64Response:
+		return (void*)soap_instantiate_ns__receiveFileBase64Response(soap, -1, type, arrayType, n);
 	case SOAP_TYPE_ns__receiveFileBase64:
 		return (void*)soap_instantiate_ns__receiveFileBase64(soap, -1, type, arrayType, n);
 	case SOAP_TYPE_ns__openDocumentResponse:
@@ -878,6 +905,12 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_fdelete(struct soap_clist *p)
 			delete (struct ns__sendFileBase64*)p->ptr;
 		else
 			delete[] (struct ns__sendFileBase64*)p->ptr;
+		break;
+	case SOAP_TYPE_ns__receiveFileBase64Response:
+		if (p->size < 0)
+			delete (struct ns__receiveFileBase64Response*)p->ptr;
+		else
+			delete[] (struct ns__receiveFileBase64Response*)p->ptr;
 		break;
 	case SOAP_TYPE_ns__receiveFileBase64:
 		if (p->size < 0)
@@ -3225,6 +3258,116 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_copy_ns__receiveFileBase64(struct soap *soap, in
 {
 	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Copying struct ns__receiveFileBase64 %p -> %p\n", q, p));
 	*(struct ns__receiveFileBase64*)p = *(struct ns__receiveFileBase64*)q;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_ns__receiveFileBase64Response(struct soap *soap, struct ns__receiveFileBase64Response *a)
+{
+	(void)soap; (void)a; /* appease -Wall -Werror */
+	a->result = NULL;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_ns__receiveFileBase64Response(struct soap *soap, const struct ns__receiveFileBase64Response *a)
+{
+	(void)soap; (void)a; /* appease -Wall -Werror */
+	soap_serialize_PointerToPointerTons__receiveFileStruct(soap, &a->result);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_ns__receiveFileBase64Response(struct soap *soap, const struct ns__receiveFileBase64Response *a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_ns__receiveFileBase64Response);
+	if (soap_out_ns__receiveFileBase64Response(soap, tag, id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns__receiveFileBase64Response(struct soap *soap, const char *tag, int id, const struct ns__receiveFileBase64Response *a, const char *type)
+{
+	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ns__receiveFileBase64Response), type))
+		return soap->error;
+	if (soap_out_PointerToPointerTons__receiveFileStruct(soap, "result", -1, &a->result, ""))
+		return soap->error;
+	return soap_element_end_out(soap, tag);
+}
+
+SOAP_FMAC3 struct ns__receiveFileBase64Response * SOAP_FMAC4 soap_get_ns__receiveFileBase64Response(struct soap *soap, struct ns__receiveFileBase64Response *p, const char *tag, const char *type)
+{
+	if ((p = soap_in_ns__receiveFileBase64Response(soap, tag, p, type)))
+		if (soap_getindependent(soap))
+			return NULL;
+	return p;
+}
+
+SOAP_FMAC3 struct ns__receiveFileBase64Response * SOAP_FMAC4 soap_in_ns__receiveFileBase64Response(struct soap *soap, const char *tag, struct ns__receiveFileBase64Response *a, const char *type)
+{
+	short soap_flag_result = 1;
+	if (soap_element_begin_in(soap, tag, 0, type))
+		return NULL;
+	a = (struct ns__receiveFileBase64Response *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_ns__receiveFileBase64Response, sizeof(struct ns__receiveFileBase64Response), 0, NULL, NULL, NULL);
+	if (!a)
+		return NULL;
+	soap_default_ns__receiveFileBase64Response(soap, a);
+	if (soap->body && !*soap->href)
+	{
+		for (;;)
+		{	soap->error = SOAP_TAG_MISMATCH;
+			if (soap_flag_result && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerToPointerTons__receiveFileStruct(soap, "result", &a->result, "ns:receiveFileStruct"))
+				{	soap_flag_result--;
+					continue;
+				}
+			if (soap->error == SOAP_TAG_MISMATCH)
+				soap->error = soap_ignore_element(soap);
+			if (soap->error == SOAP_NO_TAG)
+				break;
+			if (soap->error)
+				return NULL;
+		}
+		if (soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	else
+	{	a = (struct ns__receiveFileBase64Response *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_ns__receiveFileBase64Response, 0, sizeof(struct ns__receiveFileBase64Response), 0, NULL);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC5 struct ns__receiveFileBase64Response * SOAP_FMAC6 soap_new_ns__receiveFileBase64Response(struct soap *soap, int n)
+{	return soap_instantiate_ns__receiveFileBase64Response(soap, n, NULL, NULL, NULL);
+}
+
+SOAP_FMAC5 void SOAP_FMAC6 soap_delete_ns__receiveFileBase64Response(struct soap *soap, struct ns__receiveFileBase64Response *p)
+{	soap_delete(soap, p);
+}
+
+SOAP_FMAC3 struct ns__receiveFileBase64Response * SOAP_FMAC4 soap_instantiate_ns__receiveFileBase64Response(struct soap *soap, int n, const char *type, const char *arrayType, size_t *size)
+{
+	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "soap_instantiate_ns__receiveFileBase64Response(%d, %s, %s)\n", n, type?type:"", arrayType?arrayType:""));
+	struct soap_clist *cp = soap_link(soap, NULL, SOAP_TYPE_ns__receiveFileBase64Response, n, soap_fdelete);
+	if (!cp)
+		return NULL;
+	if (n < 0)
+	{	cp->ptr = (void*)new struct ns__receiveFileBase64Response;
+		if (size)
+			*size = sizeof(struct ns__receiveFileBase64Response);
+	}
+	else
+	{	cp->ptr = (void*)new struct ns__receiveFileBase64Response[n];
+		if (!cp->ptr)
+		{	soap->error = SOAP_EOM;
+			return NULL;
+		}
+		if (size)
+			*size = n * sizeof(struct ns__receiveFileBase64Response);
+	}
+		DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Instantiated location=%p\n", cp->ptr));
+	return (struct ns__receiveFileBase64Response*)cp->ptr;
+}
+SOAP_FMAC3 void SOAP_FMAC4 soap_copy_ns__receiveFileBase64Response(struct soap *soap, int st, int tt, void *p, size_t len, const void *q, size_t n)
+{
+	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Copying struct ns__receiveFileBase64Response %p -> %p\n", q, p));
+	*(struct ns__receiveFileBase64Response*)p = *(struct ns__receiveFileBase64Response*)q;
 }
 
 SOAP_FMAC3 void SOAP_FMAC4 soap_default_ns__sendFileBase64(struct soap *soap, struct ns__sendFileBase64 *a)
@@ -5770,6 +5913,108 @@ SOAP_FMAC3 struct ns__dynRegArray *** SOAP_FMAC4 soap_in_PointerToPointerTons__d
 	}
 	else
 	{	a = (struct ns__dynRegArray ***)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_PointerTons__dynRegArray, sizeof(struct ns__dynRegArray *), 1);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerToPointerTons__receiveFileStruct(struct soap *soap, struct s1 **const*a)
+{
+	if (!soap_reference(soap, *a, SOAP_TYPE_PointerTons__receiveFileStruct))
+		soap_serialize_PointerTons__receiveFileStruct(soap, *a);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerToPointerTons__receiveFileStruct(struct soap *soap, struct s1 **const*a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerToPointerTons__receiveFileStruct);
+	if (soap_out_PointerToPointerTons__receiveFileStruct(soap, tag, id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerToPointerTons__receiveFileStruct(struct soap *soap, const char *tag, int id, struct s1 **const*a, const char *type)
+{
+	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_PointerTons__receiveFileStruct);
+	if (id < 0)
+		return soap->error;
+	return soap_out_PointerTons__receiveFileStruct(soap, tag, id, *a, type);
+}
+
+SOAP_FMAC3 struct s1 *** SOAP_FMAC4 soap_get_PointerToPointerTons__receiveFileStruct(struct soap *soap, struct s1 ***p, const char *tag, const char *type)
+{
+	if ((p = soap_in_PointerToPointerTons__receiveFileStruct(soap, tag, p, type)))
+		if (soap_getindependent(soap))
+			return NULL;
+	return p;
+}
+
+SOAP_FMAC3 struct s1 *** SOAP_FMAC4 soap_in_PointerToPointerTons__receiveFileStruct(struct soap *soap, const char *tag, struct s1 ***a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 1, NULL))
+		return NULL;
+	if (!a)
+		if (!(a = (struct s1 ***)soap_malloc(soap, sizeof(struct s1 **))))
+			return NULL;
+	*a = NULL;
+	if (!soap->null && *soap->href != '#')
+	{	soap_revert(soap);
+		if (!(*a = soap_in_PointerTons__receiveFileStruct(soap, tag, *a, type)))
+			return NULL;
+	}
+	else
+	{	a = (struct s1 ***)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_PointerTons__receiveFileStruct, sizeof(struct s1 *), 1);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTons__receiveFileStruct(struct soap *soap, struct s1 *const*a)
+{
+	if (!soap_reference(soap, *a, SOAP_TYPE_ns__receiveFileStruct))
+		soap_serialize_ns__receiveFileStruct(soap, *a);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTons__receiveFileStruct(struct soap *soap, struct s1 *const*a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTons__receiveFileStruct);
+	if (soap_out_PointerTons__receiveFileStruct(soap, tag, id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTons__receiveFileStruct(struct soap *soap, const char *tag, int id, struct s1 *const*a, const char *type)
+{
+	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ns__receiveFileStruct);
+	if (id < 0)
+		return soap->error;
+	return soap_out_ns__receiveFileStruct(soap, tag, id, *a, type);
+}
+
+SOAP_FMAC3 struct s1 ** SOAP_FMAC4 soap_get_PointerTons__receiveFileStruct(struct soap *soap, struct s1 **p, const char *tag, const char *type)
+{
+	if ((p = soap_in_PointerTons__receiveFileStruct(soap, tag, p, type)))
+		if (soap_getindependent(soap))
+			return NULL;
+	return p;
+}
+
+SOAP_FMAC3 struct s1 ** SOAP_FMAC4 soap_in_PointerTons__receiveFileStruct(struct soap *soap, const char *tag, struct s1 **a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 1, NULL))
+		return NULL;
+	if (!a)
+		if (!(a = (struct s1 **)soap_malloc(soap, sizeof(struct s1 *))))
+			return NULL;
+	*a = NULL;
+	if (!soap->null && *soap->href != '#')
+	{	soap_revert(soap);
+		if (!(*a = soap_in_ns__receiveFileStruct(soap, tag, *a, type)))
+			return NULL;
+	}
+	else
+	{	a = (struct s1 **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ns__receiveFileStruct, sizeof(struct s1), 0);
 		if (soap->body && soap_element_end_in(soap, tag))
 			return NULL;
 	}

@@ -73,7 +73,7 @@ typedef struct s1{
 int ns__ping(char * a, char ** result);
 int ns__visitURL(char * URL, int &result);
 int ns__sendFileBase64(char * fileName, char * data, unsigned int encodedLength, unsigned int decodedLength, int &result);
-int ns__receiveFileBase64(char * fileName, ns__receiveFileStruct &result);
+int ns__receiveFileBase64(char * fileName, ns__receiveFileStruct **result);
 int ns__openDocument(char * fileName, int waitTimeMillisec, int &result);
 int ns__returnRegistryEvents(int maxEventsToReturn, struct ns__dynRegArray **result);
 int ns__returnFileEvents(int maxEventsToReturn, struct ns__dynFileArray **result);

@@ -124,7 +124,7 @@ public:
 struct s1
 {
 public:
-	char *data;	/* SOAP 1.2 RPC return element (when namespace qualified) */	/* optional element of type xsd:string */
+	char *data;	/* optional element of type xsd:string */
 	unsigned int encodedLength;	/* required element of type xsd:unsignedInt */
 	unsigned int decodedLength;	/* required element of type xsd:unsignedInt */
 };
@@ -193,8 +193,18 @@ public:
 };
 #endif
 
+#ifndef SOAP_TYPE_ns__receiveFileBase64Response
+#define SOAP_TYPE_ns__receiveFileBase64Response (38)
+/* ns:receiveFileBase64Response */
+struct ns__receiveFileBase64Response
+{
+public:
+	struct s1 **result;	/* SOAP 1.2 RPC return element (when namespace qualified) */	/* optional element of type ns:receiveFileStruct */
+};
+#endif
+
 #ifndef SOAP_TYPE_ns__receiveFileBase64
-#define SOAP_TYPE_ns__receiveFileBase64 (37)
+#define SOAP_TYPE_ns__receiveFileBase64 (39)
 /* ns:receiveFileBase64 */
 struct ns__receiveFileBase64
 {
@@ -204,7 +214,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ns__openDocumentResponse
-#define SOAP_TYPE_ns__openDocumentResponse (39)
+#define SOAP_TYPE_ns__openDocumentResponse (41)
 /* ns:openDocumentResponse */
 struct ns__openDocumentResponse
 {
@@ -214,7 +224,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ns__openDocument
-#define SOAP_TYPE_ns__openDocument (40)
+#define SOAP_TYPE_ns__openDocument (42)
 /* ns:openDocument */
 struct ns__openDocument
 {
@@ -225,7 +235,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ns__returnRegistryEventsResponse
-#define SOAP_TYPE_ns__returnRegistryEventsResponse (43)
+#define SOAP_TYPE_ns__returnRegistryEventsResponse (45)
 /* ns:returnRegistryEventsResponse */
 struct ns__returnRegistryEventsResponse
 {
@@ -235,7 +245,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ns__returnRegistryEvents
-#define SOAP_TYPE_ns__returnRegistryEvents (44)
+#define SOAP_TYPE_ns__returnRegistryEvents (46)
 /* ns:returnRegistryEvents */
 struct ns__returnRegistryEvents
 {
@@ -245,7 +255,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ns__returnFileEventsResponse
-#define SOAP_TYPE_ns__returnFileEventsResponse (47)
+#define SOAP_TYPE_ns__returnFileEventsResponse (49)
 /* ns:returnFileEventsResponse */
 struct ns__returnFileEventsResponse
 {
@@ -255,7 +265,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ns__returnFileEvents
-#define SOAP_TYPE_ns__returnFileEvents (48)
+#define SOAP_TYPE_ns__returnFileEvents (50)
 /* ns:returnFileEvents */
 struct ns__returnFileEvents
 {
@@ -265,7 +275,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ns__returnProcessEventsResponse
-#define SOAP_TYPE_ns__returnProcessEventsResponse (51)
+#define SOAP_TYPE_ns__returnProcessEventsResponse (53)
 /* ns:returnProcessEventsResponse */
 struct ns__returnProcessEventsResponse
 {
@@ -275,7 +285,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ns__returnProcessEvents
-#define SOAP_TYPE_ns__returnProcessEvents (52)
+#define SOAP_TYPE_ns__returnProcessEvents (54)
 /* ns:returnProcessEvents */
 struct ns__returnProcessEvents
 {
@@ -285,7 +295,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ns__returnEventsResponse
-#define SOAP_TYPE_ns__returnEventsResponse (56)
+#define SOAP_TYPE_ns__returnEventsResponse (58)
 /* ns:returnEventsResponse */
 struct ns__returnEventsResponse
 {
@@ -295,7 +305,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ns__returnEvents
-#define SOAP_TYPE_ns__returnEvents (57)
+#define SOAP_TYPE_ns__returnEvents (59)
 /* ns:returnEvents */
 struct ns__returnEvents
 {
@@ -305,7 +315,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ns__sendMIMEResponse
-#define SOAP_TYPE_ns__sendMIMEResponse (59)
+#define SOAP_TYPE_ns__sendMIMEResponse (61)
 /* ns:sendMIMEResponse */
 struct ns__sendMIMEResponse
 {
@@ -315,7 +325,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ns__sendMIME
-#define SOAP_TYPE_ns__sendMIME (60)
+#define SOAP_TYPE_ns__sendMIME (62)
 /* ns:sendMIME */
 struct ns__sendMIME
 {
@@ -325,7 +335,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_SOAP_ENV__Header
-#define SOAP_TYPE_SOAP_ENV__Header (61)
+#define SOAP_TYPE_SOAP_ENV__Header (63)
 /* SOAP Header: */
 struct SOAP_ENV__Header
 {
@@ -337,7 +347,7 @@ private:
 #endif
 
 #ifndef SOAP_TYPE_SOAP_ENV__Code
-#define SOAP_TYPE_SOAP_ENV__Code (62)
+#define SOAP_TYPE_SOAP_ENV__Code (64)
 /* SOAP Fault Code: */
 struct SOAP_ENV__Code
 {
@@ -348,7 +358,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_SOAP_ENV__Detail
-#define SOAP_TYPE_SOAP_ENV__Detail (64)
+#define SOAP_TYPE_SOAP_ENV__Detail (66)
 /* SOAP-ENV:Detail */
 struct SOAP_ENV__Detail
 {
@@ -360,7 +370,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_SOAP_ENV__Reason
-#define SOAP_TYPE_SOAP_ENV__Reason (67)
+#define SOAP_TYPE_SOAP_ENV__Reason (69)
 /* SOAP-ENV:Reason */
 struct SOAP_ENV__Reason
 {
@@ -370,7 +380,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_SOAP_ENV__Fault
-#define SOAP_TYPE_SOAP_ENV__Fault (68)
+#define SOAP_TYPE_SOAP_ENV__Fault (70)
 /* SOAP Fault: */
 struct SOAP_ENV__Fault
 {
@@ -448,7 +458,7 @@ SOAP_FMAC5 int SOAP_FMAC6 ns__visitURL(struct soap*, char *URL, int &result);
 
 SOAP_FMAC5 int SOAP_FMAC6 ns__sendFileBase64(struct soap*, char *fileName, char *data, unsigned int encodedLength, unsigned int decodedLength, int &result);
 
-SOAP_FMAC5 int SOAP_FMAC6 ns__receiveFileBase64(struct soap*, char *fileName, struct s1 &result);
+SOAP_FMAC5 int SOAP_FMAC6 ns__receiveFileBase64(struct soap*, char *fileName, struct s1 **result);
 
 SOAP_FMAC5 int SOAP_FMAC6 ns__openDocument(struct soap*, char *fileName, int waitTimeMillisec, int &result);
 
@@ -475,7 +485,7 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call_ns__visitURL(struct soap *soap, const char *
 
 SOAP_FMAC5 int SOAP_FMAC6 soap_call_ns__sendFileBase64(struct soap *soap, const char *soap_endpoint, const char *soap_action, char *fileName, char *data, unsigned int encodedLength, unsigned int decodedLength, int &result);
 
-SOAP_FMAC5 int SOAP_FMAC6 soap_call_ns__receiveFileBase64(struct soap *soap, const char *soap_endpoint, const char *soap_action, char *fileName, struct s1 &result);
+SOAP_FMAC5 int SOAP_FMAC6 soap_call_ns__receiveFileBase64(struct soap *soap, const char *soap_endpoint, const char *soap_action, char *fileName, struct s1 **result);
 
 SOAP_FMAC5 int SOAP_FMAC6 soap_call_ns__openDocument(struct soap *soap, const char *soap_endpoint, const char *soap_action, char *fileName, int waitTimeMillisec, int &result);
 

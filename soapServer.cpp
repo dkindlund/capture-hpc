@@ -6,7 +6,7 @@
 */
 #include "soapH.h"
 
-SOAP_SOURCE_STAMP("@(#) soapServer.cpp ver 2.7.10 2008-09-17 18:29:41 GMT")
+SOAP_SOURCE_STAMP("@(#) soapServer.cpp ver 2.7.10 2009-02-13 20:50:07 GMT")
 
 
 SOAP_FMAC5 int SOAP_FMAC6 soap_serve(struct soap *soap)
@@ -225,8 +225,11 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_serve_ns__sendFileBase64(struct soap *soap)
 
 SOAP_FMAC5 int SOAP_FMAC6 soap_serve_ns__receiveFileBase64(struct soap *soap)
 {	struct ns__receiveFileBase64 soap_tmp_ns__receiveFileBase64;
-	struct s1 result;
-	soap_default_ns__receiveFileStruct(soap, &result);
+	struct ns__receiveFileBase64Response soap_tmp_ns__receiveFileBase64Response;
+	struct s1 * soap_tmp_PointerTons__receiveFileStruct;
+	soap_default_ns__receiveFileBase64Response(soap, &soap_tmp_ns__receiveFileBase64Response);
+	soap_tmp_PointerTons__receiveFileStruct = NULL;
+	soap_tmp_ns__receiveFileBase64Response.result = &soap_tmp_PointerTons__receiveFileStruct;
 	soap_default_ns__receiveFileBase64(soap, &soap_tmp_ns__receiveFileBase64);
 	soap->encodingStyle = "";
 	if (!soap_get_ns__receiveFileBase64(soap, &soap_tmp_ns__receiveFileBase64, "ns:receiveFileBase64", NULL))
@@ -235,18 +238,18 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_serve_ns__receiveFileBase64(struct soap *soap)
 	 || soap_envelope_end_in(soap)
 	 || soap_end_recv(soap))
 		return soap->error;
-	soap->error = ns__receiveFileBase64(soap, soap_tmp_ns__receiveFileBase64.fileName, result);
+	soap->error = ns__receiveFileBase64(soap, soap_tmp_ns__receiveFileBase64.fileName, &soap_tmp_PointerTons__receiveFileStruct);
 	if (soap->error)
 		return soap->error;
 	soap_serializeheader(soap);
-	soap_serialize_ns__receiveFileStruct(soap, &result);
+	soap_serialize_ns__receiveFileBase64Response(soap, &soap_tmp_ns__receiveFileBase64Response);
 	if (soap_begin_count(soap))
 		return soap->error;
 	if (soap->mode & SOAP_IO_LENGTH)
 	{	if (soap_envelope_begin_out(soap)
 		 || soap_putheader(soap)
 		 || soap_body_begin_out(soap)
-		 || soap_put_ns__receiveFileStruct(soap, &result, "ns:receiveFileStruct", "")
+		 || soap_put_ns__receiveFileBase64Response(soap, &soap_tmp_ns__receiveFileBase64Response, "ns:receiveFileBase64Response", "")
 		 || soap_body_end_out(soap)
 		 || soap_envelope_end_out(soap))
 			 return soap->error;
@@ -256,7 +259,7 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_serve_ns__receiveFileBase64(struct soap *soap)
 	 || soap_envelope_begin_out(soap)
 	 || soap_putheader(soap)
 	 || soap_body_begin_out(soap)
-	 || soap_put_ns__receiveFileStruct(soap, &result, "ns:receiveFileStruct", "")
+	 || soap_put_ns__receiveFileBase64Response(soap, &soap_tmp_ns__receiveFileBase64Response, "ns:receiveFileBase64Response", "")
 	 || soap_body_end_out(soap)
 	 || soap_envelope_end_out(soap)
 	 || soap_end_send(soap))

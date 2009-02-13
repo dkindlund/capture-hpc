@@ -6,7 +6,7 @@
 */
 #include "soapH.h"
 
-SOAP_SOURCE_STAMP("@(#) soapClient.cpp ver 2.7.10 2008-09-17 18:29:41 GMT")
+SOAP_SOURCE_STAMP("@(#) soapClient.cpp ver 2.7.10 2009-02-13 20:50:07 GMT")
 
 
 SOAP_FMAC5 int SOAP_FMAC6 soap_call_ns__ping(struct soap *soap, const char *soap_endpoint, const char *soap_action, char *a, char **result)
@@ -169,8 +169,9 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call_ns__sendFileBase64(struct soap *soap, const 
 	return soap_closesock(soap);
 }
 
-SOAP_FMAC5 int SOAP_FMAC6 soap_call_ns__receiveFileBase64(struct soap *soap, const char *soap_endpoint, const char *soap_action, char *fileName, struct s1 &result)
+SOAP_FMAC5 int SOAP_FMAC6 soap_call_ns__receiveFileBase64(struct soap *soap, const char *soap_endpoint, const char *soap_action, char *fileName, struct s1 **result)
 {	struct ns__receiveFileBase64 soap_tmp_ns__receiveFileBase64;
+	struct ns__receiveFileBase64Response *soap_tmp_ns__receiveFileBase64Response;
 	if (!soap_endpoint)
 		soap_endpoint = "http://0.0.0.0:1234";
 	soap->encodingStyle = "";
@@ -200,13 +201,13 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call_ns__receiveFileBase64(struct soap *soap, con
 	 || soap_envelope_end_out(soap)
 	 || soap_end_send(soap))
 		return soap_closesock(soap);
-	soap_default_ns__receiveFileStruct(soap, &result);
+	*result = NULL;
 	if (soap_begin_recv(soap)
 	 || soap_envelope_begin_in(soap)
 	 || soap_recv_header(soap)
 	 || soap_body_begin_in(soap))
 		return soap_closesock(soap);
-	soap_get_ns__receiveFileStruct(soap, &result, "ns:receiveFileStruct", "");
+	soap_tmp_ns__receiveFileBase64Response = soap_get_ns__receiveFileBase64Response(soap, NULL, "ns:receiveFileBase64Response", "");
 	if (soap->error)
 	{	if (soap->error == SOAP_TAG_MISMATCH && soap->level == 2)
 			return soap_recv_fault(soap);
@@ -216,6 +217,8 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call_ns__receiveFileBase64(struct soap *soap, con
 	 || soap_envelope_end_in(soap)
 	 || soap_end_recv(soap))
 		return soap_closesock(soap);
+	if (result && soap_tmp_ns__receiveFileBase64Response->result)
+		*result = *soap_tmp_ns__receiveFileBase64Response->result;
 	return soap_closesock(soap);
 }
 

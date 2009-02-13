@@ -128,14 +128,12 @@
  <part name="result" type="xsd:int"/>
 </message>
 
-<message name="receiveFileBase64">
+<message name="receiveFileBase64Request">
  <part name="fileName" type="xsd:string"/>
 </message>
 
-<message name="s1">
- <part name="data" type="xsd:string"/>
- <part name="encodedLength" type="xsd:unsignedInt"/>
- <part name="decodedLength" type="xsd:unsignedInt"/>
+<message name="receiveFileBase64Response">
+ <part name="result" type="ns:receiveFileStruct"/>
 </message>
 
 <message name="openDocumentRequest">
@@ -205,8 +203,8 @@
  </operation>
  <operation name="receiveFileBase64">
   <documentation>Service definition of function ns__receiveFileBase64</documentation>
-  <input message="tns:receiveFileBase64"/>
-  <output message="tns:s1"/>
+  <input message="tns:receiveFileBase64Request"/>
+  <output message="tns:receiveFileBase64Response"/>
  </operation>
  <operation name="openDocument">
   <documentation>Service definition of function ns__openDocument</documentation>

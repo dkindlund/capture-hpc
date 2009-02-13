@@ -185,10 +185,61 @@ FileMonitor::connect_onFileEvent(const signal_fileEvent::slot_type& s)
 	return signal_onFileEvent.connect(s); 
 }
 
+void printFileAttribs(DWORD attribs) {
+	if((attribs&FILE_ATTRIBUTE_ARCHIVE)) {
+		printf("    FILE_ATTRIBUTE_ARCHIVE\n");
+	}
+	if((attribs&FILE_ATTRIBUTE_COMPRESSED)) {
+		printf("    FILE_ATTRIBUTE_COMPRESSED\n");
+	}
+	if((attribs&FILE_ATTRIBUTE_DEVICE)) {
+		printf("    FILE_ATTRIBUTE_DEVICE\n");
+	}
+	if((attribs&FILE_ATTRIBUTE_DIRECTORY)) {
+		printf("    FILE_ATTRIBUTE_DIRECTORY\n");
+	}
+	if((attribs&FILE_ATTRIBUTE_ENCRYPTED)) {
+		printf("    FILE_ATTRIBUTE_ENCRYPTED\n");
+	}
+	if((attribs&FILE_ATTRIBUTE_HIDDEN)) {
+		printf("    FILE_ATTRIBUTE_HIDDEN\n");
+	}
+	if((attribs&FILE_ATTRIBUTE_NORMAL)) {
+		printf("    FILE_ATTRIBUTE_NORMAL\n");
+	}
+	if((attribs&FILE_ATTRIBUTE_NOT_CONTENT_INDEXED)) {
+		printf("    FILE_ATTRIBUTE_NOT_CONTENT_INDEXED\n");
+	}
+	if((attribs&FILE_ATTRIBUTE_OFFLINE)) {
+		printf("    FILE_ATTRIBUTE_OFFLINE\n");
+	}
+	if((attribs&FILE_ATTRIBUTE_READONLY)) {
+		printf("    FILE_ATTRIBUTE_READONLY\n");
+	}
+	if((attribs&FILE_ATTRIBUTE_REPARSE_POINT)) {
+		printf("    FILE_ATTRIBUTE_REPARSE_POINT\n");
+	}
+	if((attribs&FILE_ATTRIBUTE_SPARSE_FILE)) {
+		printf("    FILE_ATTRIBUTE_SPARSE_FILE\n");
+	}
+	if((attribs&FILE_ATTRIBUTE_SYSTEM)) {
+		printf("    FILE_ATTRIBUTE_SYSTEM\n");
+	}
+	if((attribs&FILE_ATTRIBUTE_TEMPORARY)) {
+		printf("    FILE_ATTRIBUTE_TEMPORARY\n");
+	}
+#define FILE_ATTRIBUTE_VIRTUAL 0x10000
+	if((attribs&FILE_ATTRIBUTE_VIRTUAL)) {
+		printf("    FILE_ATTRIBUTE_VIRTUAL\n");
+	}
+}
 bool
 FileMonitor::isDirectory(wstring filePath)
 {
+	//printf("Checking if %s is a directory %S\n",filePath);
 	DWORD code = GetFileAttributes(filePath.c_str());
+	printf("  FileAttributes:\n");
+	printFileAttribs(code);
 	if (code==INVALID_FILE_ATTRIBUTES)
 		return false;
 	if ((code&FILE_ATTRIBUTE_DIRECTORY)==FILE_ATTRIBUTE_DIRECTORY) 
@@ -390,14 +441,17 @@ FileMonitor::run()
 					fileEventPath = e->filePath;
 					fileEventPath = convertFileObjectNameToDosName(fileEventPath);
 
+					//printf("Checking fileEventPath: %S\n",fileEventPath);
+
 					if((fileEventPath != L"UNKNOWN"))
 					{
+						//printf("Calling isEventAllowed: %S\n",fileEventName);
 						if(!Monitor::isEventAllowed(fileEventName, processPath, fileEventPath))
 						{
-							if(monitorModifiedFiles)
+							if(!isDirectory(fileEventPath))
 							{
 		
-								if(!isDirectory(fileEventPath))
+								if(monitorModifiedFiles)
 								{
 									if(e->majorFileEventType == IRP_MJ_CREATE || 
 										e->majorFileEventType == IRP_MJ_WRITE )
@@ -408,13 +462,12 @@ FileMonitor::run()
 										modifiedFiles.erase(fileEventPath);
 									}	
 								}
+								wchar_t szTempTime[256];
+								convertTimefieldsToString(e->time, szTempTime, 256);
+								wstring time = szTempTime;
+
+								signal_onFileEvent(fileEventName, time, processPath, fileEventPath, extraData);
 							}
-
-							wchar_t szTempTime[256];
-							convertTimefieldsToString(e->time, szTempTime, 256);
-							wstring time = szTempTime;
-
-							signal_onFileEvent(fileEventName, time, processPath, fileEventPath, extraData);
 						}
 					}
 				}
