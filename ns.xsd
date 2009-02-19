@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ <schema targetNamespace="capture"
+  xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"
+  xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  xmlns:ns="capture"
+  xmlns="http://www.w3.org/2001/XMLSchema"
+  elementFormDefault="unqualified"
+  attributeFormDefault="unqualified">
+  <import namespace="http://schemas.xmlsoap.org/soap/encoding/"/>
+  <complexType name="allEvents">
+   <complexContent>
+    <restriction base="ns:a1">
+    </restriction>
+   </complexContent>
+  </complexType>
+  <complexType name="receiveFileStruct">
+   <complexContent>
+    <restriction base="ns:s1">
+    </restriction>
+   </complexContent>
+  </complexType>
+  <complexType name="regkey">
+   <sequence>
+     <element name="created-at" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="event-type" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="pid" type="xsd:int" minOccurs="1" maxOccurs="1"/>
+     <element name="proc-name" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="name" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="value-name" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="value-type" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="value" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+   </sequence>
+  </complexType>
+  <complexType name="processFile">
+   <sequence>
+     <element name="created-at" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="event-type" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="pid" type="xsd:int" minOccurs="1" maxOccurs="1"/>
+     <element name="proc-name" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="name" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+   </sequence>
+  </complexType>
+  <complexType name="osProcess">
+   <sequence>
+     <element name="created-at" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="event-type" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="parent-pid" type="xsd:int" minOccurs="1" maxOccurs="1"/>
+     <element name="parent-name" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="pid" type="xsd:int" minOccurs="1" maxOccurs="1"/>
+     <element name="name" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+   </sequence>
+  </complexType>
+  <complexType name="dynRegArray">
+   <sequence>
+    <element name="item" type="ns:regkey" minOccurs="0" maxOccurs="unbounded" nillable="true"/>
+   </sequence>
+  </complexType>
+  <complexType name="dynFileArray">
+   <sequence>
+    <element name="item" type="ns:processFile" minOccurs="0" maxOccurs="unbounded" nillable="true"/>
+   </sequence>
+  </complexType>
+  <complexType name="dynProcArray">
+   <sequence>
+    <element name="item" type="ns:osProcess" minOccurs="0" maxOccurs="unbounded" nillable="true"/>
+   </sequence>
+  </complexType>
+ </schema>
+
